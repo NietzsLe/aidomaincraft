@@ -41,6 +41,14 @@
 - Break-even trung thực: trả phí hợp lý khi cần lặp lại nhiều output đúng taste đóng gói; làm 1 lần lẻ → free + engine đủ, đừng trả.
 - So với `../reactbits/` (bricks code React sở hữu source): Skillry phủ cả video/slides/image/OG, không chỉ code React. Quyết định: cần motion film/deck/OG image → Skillry; cần component React → React Bits.
 
+### Bản đồ phủ usecase (quét hết 617 skill 29/10/2026 — ★ mạnh nhất đầu)
+- ★ Launch video phong cách đóng gói (Manus 2.0, Pixel Promo, LaunchMotion — Video 359, installs 200-518 cao nhất Dot Avatar 518/27, Plush Crew 380-384): xem Usecase 1.
+- ★ Landing mẫu (Web 115: Mint Noir free, Cadence 342/16, Harbor): xem Usecase 2 — phần web dùng CHO UI (`../../domains/ui/using-skillry.md`).
+- ★ Slide deck + narrated report (Slides 61: Field Notes 287/8, Mint Marker, Starlit): xem Usecase 3.
+- ★ OG image/avatar (Image 82: Notion OG 222/7, GrokBot 307/14, Dot Avatar 518/27): xem Usecase 4 — ảnh qua GPT Image.
+- Trung bình: các skill web/slides/image còn lại trong catalog (xem preview + installs từng skill, đa số 1–45 installs).
+- KHÔNG hỗ trợ → thay thế: review code/PR, data/bảng tính → skills.sh + Anthropic official; UI pass gates → Hallmark (`../hallmark/`); bricks React → React Bits (`../reactbits/`); offline/cấm vendor trả phí → free engine (HyperFrames/Remotion, pptx official, Satori/Playwright).
+
 ### Hồ sơ quyết định
 - Việc DÙNG: 1. launch video phong cách Manus/Linear (dùng skill video + HyperFrames); 2. landing/saaS site mẫu (Mint Noir, Cadence); 3. slide deck + narrated report (Field Notes, audio report deck); 4. OG image/avatar theo phong cách brand (Notion-style OG, GrokBot avatar).
 - Việc KHÔNG DÙNG: 1. review code/PR → dùng skill pr-review hệ mở; 2. xử lý data/bảng tính → dùng skill chính chủ Anthropic (xlsx/csv); 3. UI cần pass gates contrast/focus → dùng Hallmark.
@@ -105,6 +113,14 @@
 - CLI login cần browser + OS keychain (macOS/Windows); trên Linux `status` báo lỗi secure storage — headless/CI chuẩn bị prompt/ZIP thay thế.
 - Output theo taste Skillry, không có gates như Hallmark — cần chuẩn riêng thì sweep lại bằng Hallmark.
 
+### Tham khảo sử dụng (quyết định được + số có trọng số, chốt 29/10/2026)
+- Nhận xét sâu nhất: [AI IDE List 30/09/2026](https://aiidelist.com/blog/skillry-review) *"Skillry is a curated marketplace for Agent Skills, not a conventional prompt library... closer to an app store for agent workflows"* + *"The main tradeoff is scale versus curation"* → khuyên test A/B bằng 1 free skill trước khi trả tiền. 4 limitations: *"Runs in is not the same as tested in"*, outside costs (image/video tooling, API), output lệch kỳ vọng (HTML deck thay vì PPTX), *"Install counters should be treated as an adoption signal, not as a reliable quality score."*
+- Verdict cân bằng: [Toolin.ai 07/10/2026](https://toolin.ai/en/tools/skillry) *"genuinely usable, well engineered CLI, clear positioning — not a hollow shell"* nhưng solo indie, không công ty đăng ký, mới live ~1 tháng, zero buzz Reddit/HN, payments non-refundable, 0 review. Nhầm lẫn `skillry.com`/`skillry.ai`/open-source cùng tên → phải đúng `skillry.dev`.
+- Đối thủ viết (đọc với bias): [SkillGild 25/10/2026](https://skillgild.dev/learn/skillgild-vs-skillry) đối chiếu giá Monthly $9.99 vs $6.99, Yearly $79 vs $49, Lifetime $169 (SkillGild không có); khác biệt mô hình thật: Skillry trả files vs SkillGild hosted-tools qua MCP.
+- Doanh thu Stripe-verified: [TrustMRR 29/10/2026](https://trustmrr.com/startup/skillry) All-time $13,090 / MRR $4,111 / 417 subs (tăng ~3.4× từ $1,191 MRR/121 subs đầu 10/2026); founder 1 người, China, 08/2026. Top installs 200–518 (Dot Avatar 518/27 cao nhất, Plush Crew 380-384, Mint Noir 328, Cadence 342/16, Field Notes 287/8). Catalog trôi nhanh: AI IDE List 30/09 đếm 382 → homepage 29/10 ghi 617.
+- Điểm yếu đã xác minh từ nguồn chính chủ: [Terms 17/10/2026](https://skillry.dev/terms) non-refundable + giới hạn 50 downloads/ngày + Lifetime gắn vận hành service; [docs install](https://skillry.dev/learn/install) Linux KHÔNG CLI (macOS/Windows + Node 22+ + OS keychain), free VẪN cần tài khoản. Trust deficit: 0 review Toolin/Uneed, 0 kết quả Reddit/HN/ProductHunt. Tiếng Việt: không tìm thấy review Việt → `chưa xác minh`.
+- Mâu thuẫn: testimonial "curation đáng tiền" (Sunilkumar, Able, Celine) vs phe free "trả tiền cho thứ có free trên GitHub" → phán quyết: trả phí chỉ khi cần đúng taste đóng gói + lặp lại nhiều (break-even theo tháng ở Hồ sơ quyết định).
+
 ### Tham khảo
 - Trang chủ + catalog: https://skillry.dev/skills (617 skill, Web 115 / Slides 61 / Video 359 / Image 82, Free 40 — đọc ngày 2026-10-29)
 - Học + cài đặt: https://skillry.dev/learn (SKILL.md, install prompt, CLI, MCP vs skills)
@@ -114,8 +130,12 @@
 - skills.sh đối chứng: https://github.com/vercel-labs/skills (CLI 35.4k★) + https://github.com/vercel-labs/agent-skills (collection 32.3k★), MIT, 75+ agent
 - Đã chạy xác minh: `skillry --help` (không cần login, liệt kê login/status/logout/install + 7 agent), `skillry status` trên Linux → lỗi secure storage chỉ macOS/Windows
 
+### Được dùng ở đâu
+- Dùng CHO UI (phần web): xem `../../domains/ui/using-skillry.md` — index `../../domains/ui/README.md`.
+- Dùng CHO media (video/deck/OG): xem `../../domains/media/using-skillry.md` — index `../../domains/media/README.md`.
+
 ### Quay lại index
-- Về `../README.md` để so hiệu năng/chi phí với `hallmark/`, `reactbits/`.
+- Về `../../domains/ui/README.md` (web) + `../../domains/media/README.md` (video/deck/OG) để so hiệu năng/chi phí với `hallmark/`, `reactbits/`.
 - Xem thêm item liên quan: `../hallmark/` khi cần system pass gates; `../reactbits/` khi cần bricks React.
 
 ---
@@ -235,5 +255,5 @@
 - Verified by running: `skillry --help` (no login needed, lists login/status/logout/install + 7 agents), `skillry status` on Linux → secure-storage error (macOS/Windows only)
 
 ### Back to index
-- Back to `../README.md` to compare cost/performance with `hallmark/`, `reactbits/`.
-- Related items: `../hallmark/` when a gated system is needed; `../reactbits/` when React bricks are needed.
+- Back to `../../domains/ui/README.md` (web) + `../../domains/media/README.md` (video/deck/OG).
+- Related items: `../hallmark/` (gated system); `../reactbits/` (React bricks). Where used: `../../domains/ui/using-skillry.md` (web) + `../../domains/media/using-skillry.md` (media).

@@ -35,6 +35,12 @@ rồi `npx shadcn@latest mcp init --client claude` (đổi client: claude/cursor
 - So với collection animated viral (Magic UI, Aceternity UI): cùng cho bricks copy-paste, khác ở React Bits có 4 biến thể rõ (`-JS-TW/-TS-CSS...`), registry MCP chuẩn (`@react-bits`), 5 tool Studio/Lab xuất asset/video/GIF. Quyết định chọn React Bits khi cần variant khớp stack + MCP + tool asset; chỉ cần 1 snippet Tailwind lẻ → Magic UI/Aceternity nhanh hơn.
 - Khi nào dùng sẽ phù hợp: project React cần 1-2 motion có demo xem trước, sở hữu source, sau đó sweep lại bằng Hallmark để không vỡ gates.
 
+### Bản đồ phủ usecase (quét hết reactbits.dev — ★ mạnh nhất đầu)
+- ★ Text Animations (33: `SplitText`, typewriter, rotating words, scroll reveal) + Backgrounds (63: gradient/particle/grid/shader) — điểm ăn tiền nhất, demo + controls trực tiếp.
+- ★ Components (48: card/nav/carousel/gallery) + Micro (34) + Animations (38: cursor/hover/border/ảnh) — lắp nguyên cụm, tùy biến props.
+- Trung bình: 5 tool web free (Background Studio xuất code/ảnh/MP4; Center Stage product shot 4K/video/GIF; Shape Magic logo mark; Texture Lab 160 styles; Sound Lab 200 âm thanh).
+- KHÔNG hỗ trợ → thay thế: full page system/gates → Hallmark; orchestration phức tạp (timeline/scroll-choreography/layout transition) → Motion/GSAP trực tiếp; form/table/design-system chặt → shadcn/Radix; project phi React → `vue-bits.dev` / `sveltebits.xyz` (port riêng).
+
 ### Bảng usecase con → cách dùng
 | Việc | Lấy gì / lệnh nào |
 |---|---|
@@ -67,6 +73,14 @@ rồi `npx shadcn@latest mcp init --client claude` (đổi client: claude/cursor
 - Ảnh/video export quá nặng, hero visual >2MB → LCP fail; ảnh thư viện hotlink stock (Unsplash/Pexels/Pixabay) → vi phạm điều khoản + gate 76.
 - Dùng React Bits để thay design system: nó không có tokens/gates/review như Hallmark, lắp xong vẫn phải sweep Hallmark.
 
+### Tham khảo sử dụng (quyết định được + số có trọng số, chốt 29/10/2026)
+- Nhận xét sâu: [PkgPulse 25/03/2026](https://www.pkgpulse.com/guides/react-bits-animated-components-2026) *"react-bits is the fastest-rising animated component library — #2 overall in JS Rising Stars 2025 (+32.8K/năm, 37.1K total), ahead of shadcn/ui"* + *"If you want animated UIs without locking into a single animation engine, react-bits is the 2026 default."* → chọn khi fresh React chưa có animation stack; cần Framer Motion out-of-box → Aceternity/Magic UI.
+- Nhận xét sâu: [21st.dev 21/08/2026](https://21st.dev/blog/react-bits-alternatives) *"Six effects from six places produce a page where nothing shares an easing curve"* → quy tắc: `Pick one source for movement and stay in it... then allow yourself one exception`; browse React Bits để tìm effect rồi quyết định cách lấy (thường không phải install).
+- Nhận xét sâu (vendor đối thủ nhưng trung thực): [Annnimate compare](https://annnimate.com/compare/annnimate-vs-react-bits) *"Pick React Bits when you're React-only and want a free, community-backed catalog... 110+ components"*; React Bits *"mixes Motion and CSS per component"* nên kém nhất quán hơn single GSAP engine; Annnimate thắng khi cần Vue/HTML + a11y/reduced-motion mặc định.
+- Nhận xét chính chủ: [Motion Mag interview David Haz 08/01/2026](https://motion.dev/magazine/interview-david-haz-creator-of-react-bits) *">30k stars"* + *"abandoning components because some devices can't handle them performance-wise"* → thư viện thiên sáng tạo/thử nghiệm, test thủ công + cộng đồng.
+- Số trung bình có trọng số: GitHub API live 29/10/2026: 50,552★ / 2,510 forks / 144 watchers / 8 open issues (`pushed 19/10/2026`); BestofJS 49K/136 contributors; star-history 50.5K (Rank #508, +709/tuần). npm downloads: KHÔNG áp dụng (repo `private: true`, phân phối qua shadcn/jsrepo copy-source). Rating G2/Capterra/Trustpilot: `chưa xác minh`. Tiếng Việt: `React Bits đánh giá` không trả về review chuyên sâu → `chưa xác minh`.
+- Khiếu nại lặp lại (≥2 nguồn): license MIT + Commons Clause gây hiểu nhầm (không bán/sublicense template); copy-paste = không `npm update`; WebGL/Three.js nặng + thiếu reduced-motion; dễ lắp 6 effect 6 triết lý → vỡ coherence + phình bundle.
+
 ### Tham khảo
 - Trang chủ: https://reactbits.dev
 - Cài đặt: https://reactbits.dev/get-started/installation
@@ -75,8 +89,11 @@ rồi `npx shadcn@latest mcp init --client claude` (đổi client: claude/cursor
 - Tools: https://reactbits.dev/tools (Background Studio, Center Stage, Shape Magic, Texture Lab, Sound Lab)
 - Port khác: https://vue-bits.dev/, https://sveltebits.xyz/
 
+### Được dùng ở đâu
+- Dùng CHO UI: xem `../../domains/ui/using-reactbits.md` — index `../../domains/ui/README.md`.
+
 ### Quay lại index
-- Về `../README.md` để so sánh định vị với `hallmark/`.
+- Về `../../domains/ui/README.md` để so sánh định vị với `hallmark/` + `skillry` (web).
 - Xem thêm item liên quan: `../hallmark/` để sweep lại system/gates sau khi lắp effect.
 
 ---
@@ -157,5 +174,5 @@ then `npx shadcn@latest mcp init --client claude` (swap client per `get-started/
 - Other ports: https://vue-bits.dev/, https://sveltebits.xyz/
 
 ### Back to index
-- Back to `../README.md` to compare positioning with `hallmark/`.
-- Related item: `../hallmark/` to re-sweep system/gates after installing effects.
+- Back to `../../domains/ui/README.md` to compare positioning with `hallmark/` + `skillry` (web).
+- Related items: `../hallmark/` (system/gates) + `../skillry/` (presentable outputs). Where used: `../../domains/ui/using-reactbits.md`.

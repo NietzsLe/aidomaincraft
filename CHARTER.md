@@ -1,111 +1,115 @@
-# CHARTER.md — aidomaincraft — v6
+# CHARTER.md — aidomaincraft — v7
 
 ## Tiếng Việt
 
 ### 1. Mục đích
-Tổng hợp kinh nghiệm dùng AI theo lĩnh vực (trước mắt: UI), dưới dạng chỉ dẫn theo usecase để tái dùng khi tạo dự án mới và làm việc với AI agent.
+Tổng hợp kinh nghiệm dùng AI theo lĩnh vực, dưới dạng chỉ dẫn theo usecase để tái dùng khi tạo dự án mới và làm việc với AI agent.
 
 ### 2. Phạm vi
-- Có: chỉ dẫn usecase, prompt mẫu, pitfalls, tham chiếu tới tool/skill/repo ngoài.
+- Có: chỉ dẫn usecase, prompt mẫu, pitfalls, tham chiếu tới tool/skill/repo ngoài + đánh giá sử dụng.
 - Không: copy nguyên code/tool ngoài vào đây; lưu log, token, dữ liệu khách hàng.
 
-### 3. Tổ chức
+### 3. Tổ chức (v7: tách kho item khỏi hướng dẫn domain)
 - Tầng chung (mỏng): root `README.md`, `AGENTS.md`, `CHARTER.md`, `CHANGELOG.md`.
-- Tầng domain: thư mục ngang nhau theo lĩnh vực (`ui/`, sau này `hardware/`...). Mỗi domain có `README.md` làm index + bảng giải pháp → item.
-- Tầng item: mỗi công cụ/giải pháp là 1 thư mục con trong domain (1 tool = 1 item), chứa `README.md` chi tiết. Các usecase con của tool đó nằm bên trong file dưới dạng bảng, không tách thành item riêng. Không tạo thêm tầng con trừ khi CHARTER nâng version.
+- Tầng `items/`: 1 item = 1 thư mục, kiến thức TRUNG LẬP domain của 1 công cụ/giải pháp. `items/<x>/README.md` chứa: là gì, ai làm, cài đặt mọi OS, cơ chế core, định vị vs đối thủ viral, giá/license, pitfalls chung, bản đồ phủ usecase (mạnh ★ / trung bình / không hỗ trợ + thay thế), tham khảo sử dụng (review sâu + số trung bình có trọng số), được dùng ở domain nào (link ngược).
+- Tầng `domains/`: 1 domain = 1 thư mục lĩnh vực (`domains/ui/`, `domains/media/`...). Mỗi domain có `README.md` làm index chọn item theo usecase (cho phép NHIỀU item cùng phục vụ 1 usecase, mỗi cái 1 cách, kèm tiêu chí phân biệt) + 1 file `using-<item>.md` cho MỖI cặp item-domain (usecase trong domain này, lệnh mẫu cụ thể, lưu ý riêng, điểm mạnh cốt lõi của item CHO domain đó, link về đúng section item gốc).
+- Không tạo tầng khác trừ khi bump CHARTER.
 
 ### 4. Quy ước đặt tên
-- Tên thư mục domain/item viết thường, kebab-case, tiếng Anh.
-- Tên item = tên giải pháp, ví dụ `hallmark`, `relay-logs`. Không đặt theo usecase lẻ.
-- Bảng usecase → lệnh dùng ghi bên trong `README.md` của item.
+- Thư mục items/domains viết thường, kebab-case, tiếng Anh.
+- Tên item = tên giải pháp (`hallmark`, `reactbits`, `skillry`). Không đặt theo usecase lẻ.
+- File domain-usage: `domains/<d>/using-<item>.md`.
 
-### 5. Template item (bắt buộc trong mỗi item README)
-Mỗi usecase con là 1 block riêng với đủ 6 field: `Tên usecase / Khi dùng - điều kiện cụ thể / Khi bỏ qua / Lệnh copy-paste / Ngưỡng số cần đạt / Ví dụ input-output + pitfalls riêng`. Khung file: `Dùng khi / Bỏ qua khi / Cài đặt / Cách item hoạt động / Định vị khác biệt / Các usecase con (mỗi usecase 1 block 6 field) / Các bước chung / Prompt mẫu / Pitfalls / Tham khảo / Quay lại index`, song ngữ Việt trước Anh sau.
-- Cấm động từ mơ hồ (`tối ưu`, `nâng cao`, `hiện đại hóa`) nếu không kèm lệnh chạy được + ngưỡng đo được.
-- Mỗi usecase con phải có ít nhất 1 lệnh copy-paste chạy được + 1 ví dụ input-output thật.
-- Pitfalls phải gắn lỗi/gate cụ thể (ví dụ Hallmark Floor 46a/54/70), cấm ghi chung chung kiểu `chú ý hiệu năng`.
+### 5. Template item (bắt buộc)
+`Dùng khi / Bỏ qua khi / Cài đặt / Cách item hoạt động (3 phần) / Định vị khác biệt / Bản đồ phủ usecase (★ mạnh nhất lên đầu + trung bình + không hỗ trợ) / Các usecase con (mỗi usecase 1 block 6 field) / Các bước chung / Prompt mẫu / Pitfalls / Tham khảo sử dụng (review sâu + số trung bình có trọng số) / Tham khảo / Được dùng ở đâu (link domain) / Quay lại index`, song ngữ VI trước EN sau.
+- Cấm động từ mơ hồ nếu không kèm lệnh + ngưỡng đo được.
+- Mỗi usecase con: 1 lệnh copy-paste chạy được + 1 ví dụ input-output thật.
+- Pitfalls gắn gate/lỗi cụ thể.
+- Bản đồ phủ: quét HẾT catalog/tính năng, không chọn lọc. Usecase mạnh nhất gắn ★, đặt đầu, có prompt mẫu đầy đủ. Usecase yếu ghi 1 dòng + hướng thay thế.
+- Tham khảo sử dụng (bắt buộc, xem VERIFY F6): trích review sâu quyết định được (nguồn + ngày + kết luận lật/xác nhận gì) + số trung bình có trọng số (điểm + số lượng reviews/installs + ngày đo). Review ẩn danh/không nguồn = loại. Mâu thuẫn review sâu vs số đông thì ghi cả hai + phán quyết.
 
 ### 5b. Cách item hoạt động (bắt buộc, có thẩm tra)
-- Mỗi item phải có mục `Cách item hoạt động` với 3 phần: `Tổ chức đứng sau` (ai làm, repo/registry chính, license, nhịp update, kèm link + số liệu) / `Phương thức hoạt động chung` (cơ chế cốt lõi, ví dụ Hallmark = gates + scaffold + sweep; React Bits = copy source + variant; lib prompts UI = lấy video sẵn + áp style thay vì tự vẽ model/animation) / `Khác biệt vận hành theo usecase` (mỗi usecase con chạy khác gì: input nào, script/lệnh nào, output ra gì).
-- Cấm 1 mô tả chung cho mọi usecase. Mỗi khẳng định vận hành phải có nguồn (link file/dòng docs hoặc lệnh đã chạy).
-- Agent phải tự thẩm tra: mở repo/docs/registry + ít nhất 1 file nguồn (`SKILL.md`, `package.json`, script install, trang install/MCP) rồi mới ghi, không chép mô tả marketing.
+- 3 phần: `Tổ chức đứng sau` (ai làm, repo/registry chính, license, nhịp update, link + số liệu) / `Phương thức chung` (cơ chế cốt lõi) / `Khác biệt vận hành theo usecase` (mỗi usecase chạy khác gì).
+- Mỗi khẳng định có nguồn (link file/dòng docs hoặc lệnh đã chạy). Cấm chép marketing.
 
-### 5a. Định vị khác biệt trong item (bắt buộc)
-- Mỗi item phải có mục `Định vị khác biệt`, so thẳng với 1-2 hệ cùng phân khúc, viral, nhiều người dùng (có số stars/installs làm bằng chứng). Ví dụ: skill chống AI-slop so với skill chống AI-slop viral khác; harness so với harness viral khác; bricks animated so với lib animated viral khác.
-- Bảng so sánh chỉ gồm tiêu chí ảnh hưởng quyết định: usecase khớp, stack yêu cầu, giá/license, chất lượng output, chi phí học-cài, bảo trì. Mỗi dòng kết bằng `Khi nào chọn nó / khi nào bỏ`.
-- Cấm mô tả thưởng thức (`cũng tốt`, `nổi tiếng`, `mạnh`). Mỗi điểm khác biệt phải kèm ngưỡng hoặc ví dụ khiến người đọc đổi lựa chọn, và nêu rõ `khi nào dùng sẽ phù hợp`.
-- Hệ đem ra so sánh phải là hệ viral đã kiểm chứng (nêu tên + số liệu), không so với hệ vô danh.
+### 5a. Định vị khác biệt (bắt buộc)
+- So thẳng 1-2 hệ cùng phân khúc, viral, có số stars/installs. Bảng chỉ gồm tiêu chí quyết định (usecase, stack, giá/license, chất lượng, chi phí học-cài, bảo trì). Mỗi dòng kết bằng `Khi nào chọn nó / khi nào bỏ`. Cấm mô tả thưởng thức.
 
-### 6. Template index domain (bắt buộc trong mỗi domain README)
-`Mục đích domain 1 dòng / Bảng điều hướng: Việc cần làm - Item chính - Item hỗ trợ - Lệnh bắt đầu / Bảng định vị: Item - Mục đích điển hình - Vận hành tóm tắt 1 câu - Điểm mạnh - Điểm yếu - Dùng chính khi - Tránh khi - Thay thế bởi - Vì sao chọn A thay vì B trong case này / Ma trận chồng lấn: hàng là việc, ô là chính-hỗ trợ-thay thế-không dùng kèm 1 dòng tiêu chí chọn phân biệt / Workflow phối hợp mẫu / Danh sách item`, song ngữ Việt trước Anh sau.
-- Mỗi item phải xuất hiện ít nhất 1 lần trong index; mỗi việc chỉ 1 item chính.
-- Mọi overlap phải ghi rõ, cấm 2 item cùng `chính` cho 1 việc mà không có tiêu chí phân biệt. Cột `Vì sao chọn A thay vì B` là bắt buộc, 1 câu gắn tiêu chí quyết định (stack/giá/output/a11y/perf), không ghi thưởng thức.
+### 6. Template index domain (bắt buộc)
+`Mục đích 1 dòng / Bảng điều hướng: Việc → item(s) (cho phép nhiều item chính, mỗi cái 1 cách + tiêu chí phân biệt) / Bảng định vị / Ma trận chồng lấn (ô = chính-hỗ trợ-thay thế-không dùng + 1 dòng tiêu chí) / Workflow phối hợp / Danh sách item`, song ngữ.
+- Mỗi cặp item-domain PHẢI có `using-<item>.md`. Thiếu = thiếu sót (FAIL theo VERIFY D).
+- Mỗi việc có thể có NHIỀU item chính (khác v6 chỉ 1 chính), nhưng bắt buộc cột tiêu chí phân biệt đo được.
 
-### 7. Nhất quán index ↔ item
-- Một nguồn sự thật: lệnh, ngưỡng, steps chi tiết chỉ sống trong `item/README.md`; `domain/README.md` chỉ tóm 1 dòng + link, cấm copy nguyên đoạn.
-- Link 2 chiều bắt buộc: index có link tới từng item; cuối mỗi item có `Quay lại index + Xem thêm item liên quan`.
-- Tên việc/lệnh trong index phải khớp từng chữ với tiêu đề usecase trong item. Sửa 1 bên thì sửa bên kia trong cùng commit + ghi `CHANGELOG.md`.
-- Checklist trước khi xong việc: không item mồ côi, không link gãy, bảng chồng lấn khớp bảng usecase con, song ngữ VI/EN cùng nội dung.
+### 6b. Template using-doc (bắt buộc, `domains/<d>/using-<x>.md`)
+`Usecase trong domain này / Lệnh mẫu cụ thể / Lưu ý riêng cho domain / Điểm mạnh cốt lõi của item CHO domain này / Link về item gốc (đúng section)`, song ngữ tóm tắt (EN có thể ngắn hơn, tối thiểu bảng + link).
+- Chỉ viết phần RIÊNG cho domain. Mọi kiến thức gốc (cài đặt, cơ chế, giá) LINK về `../../items/<x>/README.md#section`, không copy. Trùng lặp nguyên đoạn = FAIL.
 
-### 8. Phương pháp duy trì nhất quán
-- Sửa nội dung item: giữ template, ghi `CHANGELOG.md`.
-- Thêm domain/item: copy `templates/item-template.md`, cập nhật index của domain + root nếu cần.
-- Thêm domain mới: copy `templates/domain-index-template.md`.
-- Mọi thay đổi phải qua `VERIFY.md` với vòng self-review lặp đến khi hết FAIL (mục E): 1 FAIL là không merge, WARN phải ghi lý do giữ lại.
-- Đổi cấu trúc (thêm tầng, đổi quy ước): phải bump `CHARTER.md` lên vN+1 và ghi `CHANGELOG.md`. Không tự ý đổi khung ở version hiện tại.
+### 7. Nhất quán + link 3 chiều
+- Một nguồn sự thật: lệnh, ngưỡng, steps chi tiết chỉ sống trong `items/<x>/README.md`; `domains/<d>/using-<x>.md` chỉ viết phần riêng + link; `domains/<d>/README.md` chỉ tóm 1 dòng + link.
+- Link 3 chiều bắt buộc: domain index → using-doc → item gốc (tới đúng section, vd `../../items/skillry/README.md#co-ban`), và item gốc mục `Được dùng ở đâu` link ngược lại từng using-doc.
+- Tên việc/lệnh khớp từng chữ giữa 3 tầng. Sửa 1 bên thì sửa các bên kia trong cùng commit + `CHANGELOG.md`.
+- Checklist: không item mồ côi, không link gãy, không trùng lặp, song ngữ VI/EN đồng nội dung.
+
+### 8. Phương pháp duy trì
+- Sửa item: giữ template, ghi `CHANGELOG.md`.
+- Thêm item mới: copy `templates/item-template.md`. Thêm domain mới: copy `templates/domain-index-template.md`. Thêm cặp item-domain: copy `templates/domain-using-template.md` + cập nhật index 2 đầu.
+- Mọi thay đổi qua `VERIFY.md` vòng self-review lặp đến hết FAIL (mục E): 1 FAIL là không merge.
+- Đổi cấu trúc: bump `CHARTER.md` lên vN+1 + ghi `CHANGELOG.md`.
 
 ---
 
 ## English
 
 ### 1. Purpose
-Collect hands-on AI experience by domain (first: UI) as usecase-first guides, reusable when starting new projects with AI agents.
+Collect hands-on AI experience by field as usecase-first guides, reusable when starting new projects with AI agents.
 
 ### 2. Scope
-- In: usecase guides, sample prompts, pitfalls, references to external tools/skills/repos.
+- In: usecase guides, sample prompts, pitfalls, references to external tools/skills/repos + usage reviews.
 - Out: vendored external code/tools; logs, tokens, customer data.
 
-### 3. Organization
+### 3. Organization (v7: split item store from domain guides)
 - Common layer (thin): root `README.md`, `AGENTS.md`, `CHARTER.md`, `CHANGELOG.md`.
-- Domain layer: sibling folders by field (`ui/`, later `hardware/`...). Each domain has an index `README.md` with a solution → item table.
-- Item layer: each tool/solution is one subfolder in a domain (1 tool = 1 item) with a detailed `README.md`. The tool's sub-usecases live inside that file as tables, never as separate items. No deeper nesting unless CHARTER is version-bumped.
+- `items/` layer: 1 item = 1 folder, DOMAIN-NEUTRAL knowledge of one tool/solution. `items/<x>/README.md` holds: what it is, who builds it, install on every OS, core mechanism, differentiation vs viral opponents, price/license, shared pitfalls, usecase-coverage map (strong ★ / medium / unsupported + replacement), usage references (deep reviews + weighted averages), where-used backlinks.
+- `domains/` layer: 1 domain = 1 field folder (`domains/ui/`, `domains/media/`...). Each domain has an index `README.md` (usecase → item(s), MULTIPLE items may serve one usecase in different ways with a distinguishing rule) + one `using-<item>.md` per item-domain pair (usecases in this domain, concrete commands, domain-specific notes, core strengths FOR this domain, links to the exact item sections).
+- No other levels without a CHARTER bump.
 
 ### 4. Naming
-- Lowercase kebab-case English folder names.
-- Item name = solution name, e.g. `hallmark`, `relay-logs`. Never name after a single sub-usecase.
-- The usecase → command table lives inside the item's `README.md`.
+- Lowercase kebab-case English for item/domain folders.
+- Item name = solution name (`hallmark`, `reactbits`, `skillry`).
+- Domain-usage file: `domains/<d>/using-<item>.md`.
 
 ### 5. Item template (required)
-Each sub-usecase is its own block with all 6 fields: `Usecase name / When to use - concrete condition / When to skip / Copy-paste command / Numeric bar to hit / Real input-output example + own pitfalls`. File frame: `When to use / When to skip / Install / How the item works / Differentiating positioning / Sub-usecases (one 6-field block each) / Shared steps / Sample prompts / Pitfalls / References / Back to index`, bilingual VI first EN second.
-- Vague verbs (`optimize`, `modernize`, `enhance`) are banned unless paired with a runnable command + measurable bar.
-- Each sub-usecase must have at least 1 runnable copy-paste command + 1 real input-output example.
-- Pitfalls must cite a concrete gate/error (e.g. Hallmark Floor 46a/54/70), never generic `watch performance`.
+`When to use / When to skip / Install / How it works (3 parts) / Differentiation / Coverage map (★ strongest first + medium + unsupported) / Sub-usecases (one 6-field block each) / Shared steps / Prompts / Pitfalls / Usage references (deep + weighted averages) / References / Where used (domain links) / Back to index`, bilingual VI first EN second.
+- Vague verbs banned without runnable command + measurable bar.
+- Each sub-usecase: 1 runnable command + 1 real input-output example.
+- Pitfalls cite concrete gates/errors.
+- Coverage map: scan the WHOLE catalog/features, no cherry-picking. Strongest usecase gets ★, goes first, full prompt example. Weak ones get 1 line + replacement.
+- Usage references (required, see VERIFY F6): decisive deep reviews (source + date + what decision it flips/confirms) + weighted averages (score + review/install counts + measurement date). Anonymous/unsourced reviews excluded. Deep-vs-crowd conflicts record both + verdict.
 
 ### 5b. How the item works (required, verified)
-- Each item must have a `How the item works` section with 3 parts: `Backing organization` (who builds it, canonical repo/registry, license, update cadence, with links + numbers) / `Core operating method` (core mechanism, e.g. Hallmark = gates + scaffold + sweep; React Bits = copy owned source + variant; UI prompt library = reuse existing video + apply style instead of drawing models/animations) / `Per-usecase operating differences` (how each sub-usecase runs differently: which input, which script/command, what output).
-- One generic description for all usecases is banned. Every operating claim must carry a source (doc file/line link or an executed command).
-- The agent must self-verify: open the repo/docs/registry + at least 1 source file (`SKILL.md`, `package.json`, install script, install/MCP page) before writing, never copy marketing copy.
+- 3 parts: `Backing organization` / `Core method` / `Per-usecase differences`.
+- Every claim sourced (doc file/line link or executed command). No marketing copy.
 
-### 5a. Differentiating positioning in item (required)
-- Each item must have a `Differentiating positioning` section, compared directly against 1-2 same-segment, viral, widely-used systems (with stars/installs as evidence). Example: anti-AI-slop skill vs another viral anti-AI-slop skill; harness vs another viral harness; animated bricks vs another viral animated lib.
-- The comparison table holds only decision-impacting criteria: matching usecase, required stack, price/license, output quality, learn-install cost, maintenance. Each row ends with `When to pick it / when to drop it`.
-- Appreciation-only wording (`also good`, `popular`, `powerful`) is banned. Each difference must carry a threshold or example that flips the choice, and state clearly `when it fits`.
-- Compared systems must be proven viral (name + numbers), never anonymous systems.
+### 5a. Differentiation (required)
+- Direct comparison vs 1-2 same-segment viral systems with stars/installs. Decision-only criteria. Each row ends `When to pick / drop`. No appreciation wording.
 
-### 6. Domain index template (required in each domain README)
-`1-line domain purpose / Routing table: Job - Primary item - Supporting item - Starter command / Positioning table: Item - Typical purposes - 1-sentence operating summary - Strengths - Weaknesses - Use as primary when - Avoid when - Replaced by - Why pick A over B in this case / Overlap matrix: rows are jobs, cells are primary-support-replaceable-do-not-use plus 1-line distinguishing selection rule / Sample combined workflow / Item list`, bilingual VI first EN second.
-- Every item must appear at least once in the index; each job has exactly 1 primary item.
-- Every overlap must be stated; never 2 primaries for 1 job without a distinguishing rule. The `Why pick A over B` column is required, 1 sentence tied to a decision criterion (stack/price/output/a11y/perf), no appreciation wording.
+### 6. Domain index template (required)
+`1-line purpose / Routing: job → item(s) (multiple primaries allowed, each with a distinguishing rule) / Positioning / Overlap matrix / Combined workflow / Item list`, bilingual.
+- Every item-domain pair MUST have `using-<item>.md`. Missing = FAIL per VERIFY D.
+- One job may have MULTIPLE primaries (changed from v6 single-primary), but the distinguishing rule column is mandatory.
 
-### 7. Index ↔ item consistency
-- Single source of truth: commands, bars, detailed steps live only in `item/README.md`; `domain/README.md` holds a 1-line summary + link, never a full copy.
-- Mandatory 2-way links: index links to every item; each item ends with `Back to index + Related items`.
-- Job/command names in the index must match sub-usecase titles in items word-for-word. Change one side and the other in the same commit + `CHANGELOG.md` entry.
-- Pre-done checklist: no orphan items, no broken links, overlap matrix matches sub-usecase blocks, VI/EN in sync.
+### 6b. Using-doc template (required, `domains/<d>/using-<x>.md`)
+`Usecases in this domain / Concrete commands / Domain-specific notes / Core strengths FOR this domain / Links to item origin (exact sections)`, bilingual summary (EN may be shorter, at minimum tables + links).
+- Domain-only content. All origin knowledge LINKS to `../../items/<x>/README.md#section`, never copied. Duplicated paragraphs = FAIL.
+
+### 7. Consistency + 3-way links
+- Single source of truth: commands, bars, detailed steps live only in `items/<x>/README.md`; `domains/<d>/using-<x>.md` holds domain-only deltas + links; `domains/<d>/README.md` holds 1-line summaries + links.
+- Mandatory 3-way links: domain index → using-doc → item origin (exact section, e.g. `../../items/skillry/README.md#co-ban`), and the item's `Where used` section links back to each using-doc.
+- Job/command names match word-for-word across all 3 layers. Change one side and the others in the same commit + `CHANGELOG.md`.
+- Pre-done checklist: no orphans, no broken links, no duplication, VI/EN in sync.
 
 ### 8. Consistency method
-- Edit item content: keep the template, add `CHANGELOG.md` entry.
-- Add domain/item: copy `templates/item-template.md`, update domain index (+ root if needed).
-- Add a new domain: copy `templates/domain-index-template.md`.
-- Every change must pass `VERIFY.md` with an iterative self-review loop until zero FAIL (section E): 1 FAIL blocks merge, WARN must record why it stays.
-- Change structure (new levels, new conventions): bump `CHARTER.md` to vN+1 with a `CHANGELOG.md` entry. No ad-hoc skeleton changes at the current version.
+- Edit item: keep template, add `CHANGELOG.md` entry.
+- New item: copy `templates/item-template.md`. New domain: copy `templates/domain-index-template.md`. New item-domain pair: copy `templates/domain-using-template.md` + update both indexes.
+- Every change passes `VERIFY.md` iterative self-review until zero FAIL (section E): 1 FAIL blocks merge.
+- Structural change: bump `CHARTER.md` to vN+1 with a `CHANGELOG.md` entry.

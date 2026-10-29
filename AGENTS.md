@@ -5,18 +5,17 @@
 Repo này là tra cứu theo usecase. `CHARTER.md` là luật, `VERIFY.md` là checklist chấm đạt/rớt, `templates/` là mẫu điền.
 
 ### Tra cứu (dùng cho dự án khác)
-1. Đọc `CHARTER.md` (hiện tại: v6).
-2. Đọc root `README.md` để chọn domain.
-3. Đọc `domain/README.md` (bảng điều hướng + định vị + chồng lấn) để chọn đúng 1 item chính.
-4. Vào `item/README.md`: đọc `Cách item hoạt động` trước để hiểu cơ chế, rồi đọc usecase con đúng việc, làm theo lệnh + ngưỡng trong đó.
+1. Đọc `CHARTER.md` (hiện tại: v7).
+2. Đọc root `README.md` để chọn domain (`domains/<d>/`).
+3. Đọc `domains/<d>/README.md` (điều hướng + định vị + chồng lấn, cho phép nhiều item chính 1 việc) để chọn item + cách dùng.
+4. Đọc `domains/<d>/using-<x>.md` để lấy lệnh mẫu + lưu ý RIÊNG cho domain, rồi theo link về `items/<x>/README.md` (nguồn sự thật duy nhất) để đọc cơ chế + ngưỡng chi tiết, làm theo lệnh trong đó.
 
-### Tạo mới (thêm domain/item)
-1. Copy mẫu: item → `templates/item-template.md`, domain mới → `templates/domain-index-template.md`. Không tự chế khung.
-2. Thẩm tra nguồn trước khi viết: mở repo/docs/registry chính + ít nhất 1 file nguồn (`SKILL.md`, `package.json`, script install, trang install/MCP). Mỗi khẳng định vận hành/lệnh/ngưỡng phải có nguồn.
-3. Viết đủ khung v6: `Cách item hoạt động` (3 phần) + `Định vị khác biệt` (so hệ viral cùng phân khúc) + usecase con 6 field + link 2 chiều + song ngữ.
-4. Cập nhật index domain trong cùng commit (điều hướng + định vị + chồng lấn + vận hành tóm tắt).
-5. Self-review lặp đến khi đạt theo `VERIFY.md` mục E: lượt 1 người không biết gì (bắt thiếu sót input/lệnh/output, thuật ngữ chưa giải thích, ví dụ `<...>` trống), lượt 2 từng usecase (cơ chế khác nhau ở đâu, lệnh chạy thật không, ngưỡng đo được không), lượt 3 quyết định so sánh (1 case cụ thể có chọn được trong 3 phút vs hệ viral không). Sửa hết FAIL rồi chạy lại từ lượt 1. 1 FAIL là không merge; WARN phải ghi lý do.
-6. Ghi `CHANGELOG.md` (kèm case đã thử + quyết định ở lượt 3).
+### Tạo mới (thêm item / thêm cặp item-domain)
+- Thêm item mới: copy `templates/item-template.md` thành `items/<x>/README.md`. Thẩm tra nguồn (repo/docs/registry + ít nhất 1 file nguồn). Viết đủ khung v7: `Cách item hoạt động` + `Định vị khác biệt` + `Bản đồ phủ usecase (★)` + usecase 6 field + `Tham khảo sử dụng (review sâu + số có trọng số)` + `Được dùng ở đâu` + song ngữ.
+- Thêm cặp item-domain mới (item đã có, dùng cho domain mới): copy `templates/domain-using-template.md` thành `domains/<d>/using-<x>.md`. Chỉ viết phần RIÊNG domain + link về đúng section item gốc, cấm copy nguyên đoạn. Cập nhật `domains/<d>/README.md` + mục `Được dùng ở đâu` trong item gốc trong cùng commit.
+- Thêm domain mới: copy `templates/domain-index-template.md`. Mỗi cặp trong domain mới đều cần using-doc.
+- Self-review lặp đến khi đạt theo `VERIFY.md` mục E + F6: 1 FAIL là không merge; WARN phải ghi lý do.
+- Ghi `CHANGELOG.md` (kèm case đã thử + quyết định ở lượt 3).
 
 Không commit log, token, PII.
 
@@ -25,18 +24,17 @@ Không commit log, token, PII.
 Usability-first lookup repo. `CHARTER.md` is the law, `VERIFY.md` is the pass/fail checklist, `templates/` holds fill-in blanks.
 
 ### Lookup (for other projects)
-1. Read `CHARTER.md` (current: v6).
-2. Read root `README.md` to pick a domain.
-3. Read `domain/README.md` (routing + positioning + overlap) to pick exactly 1 primary item.
-4. Open `item/README.md`: read `How the item works` first, then the matching sub-usecase, follow its command + bar.
+1. Read `CHARTER.md` (current: v7).
+2. Read root `README.md` to pick a domain (`domains/<d>/`).
+3. Read `domains/<d>/README.md` (routing + positioning + overlap, multiple primaries allowed) to pick the item + way.
+4. Read `domains/<d>/using-<x>.md` for domain-specific commands + notes, then follow links to `items/<x>/README.md` (single source of truth) for mechanism + bars, and follow its commands.
 
-### Authoring (add domain/item)
-1. Copy blanks: item → `templates/item-template.md`, new domain → `templates/domain-index-template.md`. No ad-hoc skeleton.
-2. Verify sources before writing: open the canonical repo/docs/registry + at least 1 source file (`SKILL.md`, `package.json`, install script, install/MCP page). Every operating/command/bar claim needs a source.
-3. Fill the full v6 frame: `How the item works` (3 parts) + `Differentiating positioning` (vs viral same-segment systems) + 6-field sub-usecases + 2-way links + bilingual.
-4. Update the domain index in the same commit (routing + positioning + overlap + operating summary).
-5. Iterative self-review per `VERIFY.md` section E: pass 1 total beginner (missing input/command/output, unexplained terms, empty `<...>` examples), pass 2 per-usecase mechanism (what differs, truly runnable, measurable bar), pass 3 comparison decision (one concrete case decidable in 3 minutes vs viral systems). Fix all FAILs then restart at pass 1. 1 FAIL blocks merge; WARNs need a recorded reason.
-6. Add a `CHANGELOG.md` entry (with the tried case + decision from pass 3).
+### Authoring (add item / add item-domain pair)
+- New item: copy `templates/item-template.md` to `items/<x>/README.md`. Verify sources first. Fill the full v7 frame: `How it works` + `Differentiation` + `Coverage map (★)` + 6-field sub-usecases + `Usage references (deep + weighted)` + `Where used` + bilingual.
+- New item-domain pair (existing item, new domain use): copy `templates/domain-using-template.md` to `domains/<d>/using-<x>.md`. Domain-only deltas + links to exact item sections, never copied paragraphs. Update `domains/<d>/README.md` + the item's `Where used` in the same commit.
+- New domain: copy `templates/domain-index-template.md`. Every pair in it needs a using-doc.
+- Iterative self-review per `VERIFY.md` sections E + F6: 1 FAIL blocks merge; WARNs need a recorded reason.
+- Add a `CHANGELOG.md` entry (with the tried case + decision from pass 3).
 
 Never commit logs, tokens, or PII.
 

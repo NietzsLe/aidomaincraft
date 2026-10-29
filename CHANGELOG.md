@@ -1,5 +1,16 @@
 # CHANGELOG.md — aidomaincraft
 
+## v7 — 2026-10-29 (tái cấu trúc items/domains + nâng chuẩn thẩm tra F6)
+- Đổi cấu trúc: `ui/hallmark|reactbits|skillry/` → `items/hallmark|reactbits|skillry/` (kho trung lập domain) + `domains/ui/` (index + `using-hallmark.md`, `using-reactbits.md`, `using-skillry.md` phần web) + `domains/media/` (index + `using-skillry.md` phần video/deck/OG). Xóa `ui/`. Link 3 chiều bắt buộc: index → using-doc → item gốc (đúng section) + ngược lại.
+- `CHARTER.md` v6 → v7: tầng items/ + domains/ + using-doc, luật 1 nguồn sự thật (gốc sống ở item, domain chỉ viết phần riêng + link, trùng lặp = FAIL), 1 việc có thể NHIỀU item chính (kèm tiêu chí phân biệt).
+- `VERIFY.md`: A (khung v7 + using-doc bắt buộc), C (nhiều chính + bản đồ phủ quét hết catalog, ★ đầu), D (đồng bộ 3 chiều + chống trùng lặp + mọi khẳng định kỹ thuật link về item), F6 mới (phủ đủ usecase + tham khảo sử dụng: review sâu có trọng lượng + số trung bình có trọng số + ngày đo, mâu thuẫn ghi cả hai + phán quyết).
+- `templates/`: `item-template.md` lên v7 (bản đồ phủ + tham khảo sử dụng + được dùng ở đâu), `domain-index-template.md` lên v7 (nhiều chính), mới `domain-using-template.md`.
+- `AGENTS.md` + root `README.md`: tra cứu 4 bước mới (chọn domain → using-doc → item gốc), 2 luồng tạo mới (item mới vs cặp item-domain).
+- Bổ sung ngược cho 3 item hiện có (VERIFY F6): Hallmark (~40.8K★/2.1K forks 29/10, SkillForge 4.7/5-121, Tessl 68, PluginBench 70; review sâu andrew.ooo 18/07, rohitraj 18/07, heatdrop 18/08, HN ~07/2026; VN chưa xác minh); React Bits (50,552★/2,510 forks live 29/10, PkgPulse 25/03 #2 Rising Stars, 21st.dev 21/08, Annnimate compare, Motion interview 08/01; VN chưa xác minh); Skillry (TrustMRR 29/10 $13,090 total/$4,111 MRR/417 subs, top installs 200-518, review AI IDE List 30/09 + Toolin 07/10 + SkillGild 25/10, Terms non-refundable + Linux không CLI; VN chưa có nguồn).
+- Self-review v7 vòng 1: A đạt (đủ khung v7 + using-doc 4 file), B đạt (nguồn repo/docs/API + review có ngày), C đạt (nhiều chính có tiêu chí, bản đồ phủ đủ, ★ đầu), D đạt (file link sống 0 gãy; anchor section gần đúng — WARN giữ lại vì slug tiếng Việt, sẽ chuẩn hóa khi có tool check anchor), E lượt 1-3 đạt (case `landing SaaS cần gates → Hallmark` + `1 hero text React → React Bits` + `deck budget 0đ → free pptx` đều chọn được <3 phút).
+- Added v7 EN mirrors for all of the above.
+- Gap log (F5): thẩm tra 2026-10-28 nông — liệt kê mà không trả lời quyết định (đã sửa bằng F); review đối lập thiếu vai luân phiên (đã sửa bằng Lượt 4+); tái cấu trúc lần này thiếu anchor check tự động (ghi nhận, cần script check anchor tiếng Việt).
+
 ## v6 — 2026-10-29 (thêm item skillry, qua review đối lập 2 lượt)
 - Thêm `ui/skillry/` (chợ skill trình bày 617 món): Hồ sơ quyết định đủ (việc dùng/không dùng 3+3, free 40/617, giá $9.99/$79/$169, ma sát CLI, đối thủ viral có số), 4 usecase 6 field, Các bước chung, check `skillry --help` thật + phát hiện Linux lỗi secure storage.
 - Vòng 1 (Kẻ hoài nghi): FAIL A/B/C/D (thiếu Các bước chung, chưa chạy CLI, thiếu số skills.sh, placeholder lệnh, thiếu CHANGELOG) → đã sửa hết: thêm mục, chạy CLI, đối chiếu 35.4k★/32.3k★, lệnh mẫu `bs-mint-noir-saas-site` free, entry này.

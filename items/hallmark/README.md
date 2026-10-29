@@ -28,6 +28,13 @@
 - So với lib component viral (shadcn/ui — copy-paste component đẹp): shadcn cho bricks, không cho taste + gates + review. Quyết định chọn Hallmark khi cần system đồng nhất nhiều page (tokens 1 nơi, `design.md` lock, log rotation chống lặp shape). Chỉ cần 1-2 component lẻ → shadcn/React Bits nhanh hơn.
 - Khi nào dùng sẽ phù hợp: landing/app-screen phải đạt chuẩn merge, có dev server để render check, chấp nhận trả giá pre-flight + sweep để đổi lấy không còn mùi AI-slop.
 
+### Bản đồ phủ usecase (quét hết catalog v2.0.0 — ★ mạnh nhất đầu)
+- ★ Build landing/marketing mới (subscribe/book/visit/attend/buy/try/signup/hire/join/listen — 10 job anatomy): pass gates + hero-first + shape khác per brief. Dùng khi cần page-shape khác nhau, không phải đổi màu template.
+- ★ Redesign full/restyle/polish giữ content + wiring (`--before/--kept/compare.html`): dùng khi giữ brand/IA cũ.
+- ★ Audit (chỉ báo cáo tier + file:line, không sửa): dùng khi review trang cũ hoặc output Skillry-web.
+- Trung bình: component 1 element 8 states; app-screen (dashboard/admin/settings, density 32-40px, 4 states data); custom (bỏ theme, load `direction.md`); fast (`--fast` bỏ tier Finish); khóa system (`design.md`); xuất tokens (Tailwind/DTCG/shadcn map); lint trang bất kỳ (`sloplint`).
+- KHÔNG hỗ trợ → thay thế: dashboard/editor phức tạp cần system khóa sẵn → dùng `DESIGN.md` tokens; React bricks animated → `../reactbits/`; video/deck/OG → `../skillry/`; logic thuần → sửa tay.
+
 ### Bảng usecase con → lệnh dùng
 | Việc | Lệnh |
 |---|---|
@@ -75,14 +82,26 @@
 - Waiver sai: waive Floor, 1 waiver cho nhiều gate, lý do chung chung <24 ký tự hoặc copy lặp. Đúng: `/* Hallmark · waive 47b · one frame, real terminal capture · ... */` + guard kiểm được.
 - Redesign: xóa `id/name/key/type/href/data-testid`/handler/route mà không có file-plan user duyệt; không chạy `--kept` nên mất link/field; không chụp `--before` nên không có `compare.html`; polish/redesign lẫn depth.
 
+### Tham khảo sử dụng (quyết định được + số có trọng số, chốt 29/10/2026)
+- Nhận xét sâu: [andrew.ooo 18/07/2026, cập nhật số 28/10](https://andrew.ooo/posts/hallmark-nutlope-anti-ai-slop-design-skill-review/) *"If Taste Skill fixed the pixel-level AI tells... Hallmark is going after the deeper problem: AI-generated sites all have the same skeleton."* → xác nhận chọn Hallmark khi cần page-shape khác per brief; không cho dashboard/app UI (*"It won't help ship dashboard/editor/app UI... For that specific job, it's the best thing"*). So trực tiếp Hallmark 12.5K★ vs Taste 7.9K★ vs Impeccable 47.8K★ vs Stitch 7.6K★ tại thời điểm review.
+- Nhận xét sâu: [rohitraj.tech 18/07/2026](https://rohitraj.tech/notes/anti-ai-slop-design-skill-hallmark-guide-2026) *"Hallmark raises the floor... It does not raise the ceiling. That is still on you."* → dùng nhanh zero-setup; >vài screens cần consistency thì `DESIGN.md` tokens tốt hơn.
+- Nhận xét sâu (phê bình): [heatdrop editorial 18/08/2026](https://heatdrop.ai/editorial/Nutlope/hallmark/2026-08-18) *"It is, in effect, a QA engineer for taste."* nhưng gates opaque, prompt-layer không enforce như linter, taste hẹp editorial/quirky. [HN ~07/2026, 7 points/9 comments](https://news.ycombinator.com/item?id=49058547): không phủ nhận gates/audit nhưng nghi ngờ "hết slop" — vẫn nhận ra mùi Hallmark.
+- Số trung bình có trọng số: GitHub ~40.8K★ / ~2.1K forks (29/10/2026, +1.6-2.1K/ngày, 5 ngày trending liên tiếp) — đối chiếu 11.1K (17/07) → 12.4K (18/07) → 25.4K (17/08) → 39.5K (28/10); >10K users sau ~6 tuần (AI Engineer talk 21/08/2026); SkillForge mirror 4.7/5 (121 ratings, 29/10/2026); Tessl Quality 68 / Best-practices 86%; PluginBench audit 70. Trọng số: GitHub stars + install thực (>1K/24h đầu, >10K/6 tuần) đáng tin hơn rating mirror 121 mẫu.
+- Tiếng Việt: truy vấn `Hallmark Nutlope đánh giá` không trả về review Việt độc lập → `chưa xác minh`.
+- Mâu thuẫn: review sâu khen structural variety vs HN chê vẫn nhận ra mùi Hallmark → phán quyết: Hallmark giảm lặp shape (log rotation + hard-fail) nhưng không hết fingerprint; chấp nhận "Hallmark look" nếu cần gates.
+
 ### Tham khảo
 - Repo: https://github.com/Nutlope/hallmark
 - Đọc theo thứ tự: `skills/hallmark/SKILL.md` (Floor + Flow 0-7) → `references/anatomy.md` (10 job) → `references/flow.md` (component/app-screen/fast/signal 8-9/harness + OpenCode) → `references/redesign.md` (full/restyle/polish/audit) → `references/gates.md` (Floor/Reflex/Finish + 6 reviews) → `references/layout.md` (canvas/sizes/hero/compositions) → `references/imagery.md` (capture/photos/slots) → `references/craft.md` (type/colour/motion/copy) → `references/patterns.md` (code mẫu control/slot/form/reveal/stats/loop/skip).
 - Scripts: `theme.mjs deal/draw/scaffold/log/photos`, `sloplint.mjs --render/--stage hero/--scope/--genre/--url/--before/--kept`, `capture.mjs --routes/--sizes/--selector/--cdp`, `install.mjs`, `install-hook.mjs` (Claude Code only).
 
+### Được dùng ở đâu
+- Dùng CHO UI: xem `../../domains/ui/using-hallmark.md` (build/redesign/audit có gates) — index `../../domains/ui/README.md`.
+- Liên quan: output Skillry-web muốn đạt chuẩn thì sweep lại bằng Hallmark (xem `../../domains/ui/using-skillry.md`).
+
 ### Quay lại index
-- Về `../README.md` để so sánh định vị với `reactbits/`.
-- Xem thêm item liên quan: `../reactbits/` khi cần 1 hiệu ứng/component React có sẵn rồi sweep lại bằng Hallmark.
+- Về `../../domains/ui/README.md` để so sánh định vị với `reactbits/` + `skillry` (web).
+- Xem thêm item liên quan: `../reactbits/` (bricks hiệu ứng) + `../skillry/` (output trình bày).
 
 ---
 
@@ -113,6 +132,11 @@
 - Vs viral UI generators (v0 by Vercel, Lovable — fast drafts, millions of users): Hallmark 39.5k★ is slower at first draft (pre-flight + theme deal + hero-first + sweep), but pick Hallmark when output must pass machine gates (contrast 4.5:1, focus-visible 3:1, 1280x800 fold, ~80-word/900px budget, no invented metrics). Need a fast draft without gates → use a fast generator, not Hallmark.
 - Vs viral component libs (shadcn/ui — copy-paste components): shadcn gives bricks, not taste + gates + review. Pick Hallmark when a unified multi-page system is needed (single tokens source, `design.md` lock, log rotation against shape repetition). One or two lone components → shadcn/React Bits is faster.
 - When it fits: landing/app-screen must meet merge bar, dev server available for render checks, willing to pay pre-flight + sweep cost to remove AI-slop.
+
+### Coverage map (scan the whole v2.0.0 catalog — ★ strongest first)
+- ★ New landing/marketing build (10 anatomy jobs), ★ full/restyle/polish redesign keeping content + wiring, ★ audit (report only).
+- Medium: one-element 8-state component; app-screen; custom; fast; system lock (`design.md`); token export; lint any page.
+- NOT supported → replacement: locked design-system tokens → `DESIGN.md`; React animated bricks → `../reactbits/`; video/deck/OG → `../skillry/`; logic-only → hand edit.
 
 ### Sub-usecase → command table
 | Job | Command |
@@ -163,9 +187,18 @@
 
 ### References
 - Repo: https://github.com/Nutlope/hallmark
-- Read in order: `SKILL.md` → `anatomy.md` (10 jobs) → `flow.md` (component/app-screen/fast/signal 8-9/OpenCode harness) → `redesign.md` (full/restyle/polish/audit) → `gates.md` → `layout.md` → `imagery.md` → `craft.md` → `patterns.md` (control/slot/form/reveal/stats/loop/skip snippets).
+- Read in order: `SKILL.md` → `anatomy.md` (10 jobs) → `flow.md` (component/app-screen/fast/signal 8-9/OpenCode harness) → `redesign.md` → `gates.md` → `layout.md` → `imagery.md` → `craft.md` → `patterns.md`.
 - Scripts: `theme.mjs deal/draw/scaffold/log/photos`, `sloplint.mjs --render/--stage hero/--scope/--genre/--url/--before/--kept`, `capture.mjs --routes/--sizes/--selector/--cdp`, `install.mjs`, `install-hook.mjs` (Claude Code only).
 
+### Usage references (decisive + weighted, pinned 29/10/2026)
+- Deep: [andrew.ooo 18/07/2026](https://andrew.ooo/posts/hallmark-nutlope-anti-ai-slop-design-skill-review/) *"going after the deeper problem: same skeleton"* → pick Hallmark for different section rhythms per brief; not for dashboard/app UI. Direct table Hallmark 12.5K vs Taste 7.9K vs Impeccable 47.8K vs Stitch 7.6K.
+- Deep (critical): [heatdrop 18/08/2026](https://heatdrop.ai/editorial/Nutlope/hallmark/2026-08-18) *"a QA engineer for taste"* but opaque gates, no linter enforcement; [HN ~07/2026](https://news.ycombinator.com/item?id=49058547): gates/audit useful but "Hallmark look" remains.
+- Weighted: ~40.8K★/~2.1K forks (29/10/2026, +1.6-2.1K/day); >10K users/6 weeks; SkillForge 4.7/5 (121 ratings); Tessl 68 / 86%; PluginBench 70. GitHub + real installs outweigh the 121-sample mirror.
+- Vietnamese: no independent VI review → `unverified`.
+
+### Where used
+- Used FOR UI: see `../../domains/ui/using-hallmark.md` — index `../../domains/ui/README.md`.
+
 ### Back to index
-- Back to `../README.md` to compare positioning with `reactbits/`.
-- Related item: `../reactbits/` when a ready React effect/component is needed, then re-sweep with Hallmark.
+- Back to `../../domains/ui/README.md` to compare with `reactbits/` + `skillry` (web).
+- Related items: `../reactbits/` (effect bricks) + `../skillry/` (presentable outputs).

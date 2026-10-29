@@ -1,10 +1,11 @@
-# VERIFY.md — checklist thẩm tra (FAIL = không merge)
+# VERIFY.md — checklist thẩm tra v7 (FAIL = không merge)
 
 ## Tiếng Việt
 
 ### A. Tồn tại (thiếu là FAIL)
-- [ ] Item đủ khung v6: Dùng khi / Bỏ qua khi / Cài đặt / Cách item hoạt động (3 phần) / Định vị khác biệt / Usecase con 6 field / Bước chung / Prompt mẫu / Pitfalls / Tham khảo / Quay lại index.
-- [ ] Index domain đủ: mục đích 1 dòng / điều hướng / định vị (có Vận hành tóm tắt + Vì sao chọn A thay vì B) / chồng lấn / workflow phối hợp / danh sách item.
+- [ ] Item đủ khung v7: Dùng khi / Bỏ qua khi / Cài đặt / Cách item hoạt động (3 phần) / Định vị khác biệt / Bản đồ phủ usecase (★ + trung bình + không hỗ trợ) / Usecase con 6 field / Bước chung / Prompt mẫu / Pitfalls / Tham khảo sử dụng (review sâu + số trung bình có trọng số) / Tham khảo / Được dùng ở đâu (link domain) / Quay lại index.
+- [ ] Index domain đủ: mục đích 1 dòng / điều hướng (cho phép NHIỀU item chính 1 việc + tiêu chí phân biệt) / định vị / chồng lấn / workflow / danh sách item.
+- [ ] Mỗi cặp item-domain có `domains/<d>/using-<x>.md` đủ khung: usecase trong domain / lệnh mẫu / lưu ý riêng / điểm mạnh CHO domain / link về item gốc đúng section.
 - [ ] Song ngữ VI trước EN sau, đủ cả 2.
 
 ### B. Chính xác có nguồn (thiếu nguồn là FAIL)
@@ -16,14 +17,17 @@
 ### C. Quyết định (chung chung là FAIL)
 - [ ] Mỗi điểm khác biệt kèm ngưỡng/ví dụ đổi lựa chọn + `khi nào dùng sẽ phù hợp`.
 - [ ] So sánh đúng hệ viral cùng phân khúc (nêu tên + số liệu), cấm hệ vô danh.
-- [ ] Ma trận chồng lấn mỗi việc đúng 1 `chính`, có tiêu chí phân biệt đo được.
+- [ ] Ma trận chồng lấn: mỗi việc có thể NHIỀU `chính` (khác v6), nhưng bắt buộc có tiêu chí phân biệt đo được cho từng cặp chính-chính. Cấm 2 chính mà không có tiêu chí phân biệt.
+- [ ] Bản đồ phủ usecase: quét HẾT catalog/tính năng, không chọn lọc. Usecase mạnh nhất gắn ★ đặt đầu. Usecase yếu chỉ ghi 1 dòng + thay thế.
 - [ ] Pitfalls gắn gate/lỗi cụ thể, cấm `chú ý hiệu năng`.
 
-### D. Đồng bộ (lệch là FAIL)
-- [ ] Tên việc/lệnh index khớp từng chữ usecase item.
-- [ ] Link 2 chiều sống: index → item, item → index + item liên quan.
-- [ ] Không item mồ côi, không link gãy, VI/EN cùng nội dung.
-- [ ] Sửa index + item trong cùng commit + `CHANGELOG.md`.
+### D. Đồng bộ 3 chiều (lệch là FAIL)
+- [ ] Tên việc/lệnh khớp từng chữ giữa 3 tầng: index domain ↔ using-doc ↔ item.
+- [ ] Link 3 chiều sống: index → using-doc → item gốc (đúng section, vd `../../items/skillry/README.md#...`), và item mục `Được dùng ở đâu` link ngược lại từng using-doc.
+- [ ] Không trùng lặp: using-doc chỉ viết phần RIÊNG domain + link, cấm copy nguyên đoạn cài đặt/cơ chế/giá từ item. Trùng lặp = FAIL.
+- [ ] Mỗi khẳng định kỹ thuật trong using-doc phải link về đúng section item gốc.
+- [ ] Không item/cặp mồ côi (item không using-doc, using-doc không index), không link gãy, VI/EN cùng nội dung.
+- [ ] Sửa 3 tầng trong cùng commit + `CHANGELOG.md`.
 
 ### Thang điểm
 - FAIL: 1 ô FAIL là không merge.
@@ -87,13 +91,22 @@ Mục này dạy *cách hỏi*, không chỉ *mục cần có*. Áp dụng nguy�
 
 **F5. Vòng lặp tự hoàn thiện:** mỗi lần phát hiện thẩm tra nông lọt lưới, ghi gap 1 dòng vào `CHANGELOG.md` + bổ sung câu hỏi hoặc ví dụ tương ứng vào mục F này. Checklist tự dày lên, không phụ thuộc người nhắc.
 
+**F6. Phủ đủ usecase + tham khảo sử dụng có trọng số (bắt buộc từ v7):**
+- Phủ đủ: liệt kê TOÀN BỘ usecase có thể (quét hết catalog/tính năng), mỗi usecase gắn mức: mạnh ★ / trung bình / không hỗ trợ (+ thay thế). Mạnh nhất ★ đặt đầu + prompt mẫu đầy đủ. FAIL nếu bỏ sót usecase có trong catalog mà không ghi lý do.
+- Tham khảo sử dụng (mục bắt buộc trong item):
+  1. *Nhận xét sâu có trọng lượng:* trích review độc lập quyết định được (nguồn URL + ngày + 1-2 câu đắt + kết luận lật/xác nhận quyết định nào). Review ẩn danh/không nguồn = loại.
+  2. *Số trung bình có trọng số:* điểm trung bình + SỐ LƯỢNG reviews/installs làm trọng số tin cậy (vd 4.2★/120 reviews đáng tin hơn 5.0★/3; installs 538.9K vs 40 là trọng số trực tiếp). Mọi số phải chốt NGÀY đo (số trôi theo thời gian).
+  3. Mâu thuẫn review sâu vs số đông thì ghi cả hai + phán quyết 1 câu.
+- Áp dụng ngược cho item cũ khi di chuyển sang cấu trúc mới.
+
 ---
 
 ## English
 
 ### A. Existence (missing = FAIL)
-- [ ] Item has the full v6 frame: When/skip / Install / How it works (3 parts) / Differentiation / 6-field sub-usecases / Shared steps / Prompts / Pitfalls / References / Back to index.
-- [ ] Domain index has: 1-line purpose / routing / positioning (with operating summary + why-A-over-B) / overlap / combined workflow / item list.
+- [ ] Item has the full v7 frame: When/skip / Install / How it works (3 parts) / Differentiation / Coverage map (★ + medium + unsupported) / 6-field sub-usecases / Shared steps / Prompts / Pitfalls / Usage references (deep + weighted averages) / References / Where used (domain links) / Back to index.
+- [ ] Domain index has: 1-line purpose / routing (MULTIPLE primaries per job allowed + distinguishing rule) / positioning / overlap / combined workflow / item list.
+- [ ] Every item-domain pair has `domains/<d>/using-<x>.md` with: usecases in this domain / concrete commands / domain-specific notes / core strengths FOR this domain / links to exact item sections.
 - [ ] Bilingual VI first EN second, both present.
 
 ### B. Sourced accuracy (unsourced = FAIL)
@@ -105,14 +118,17 @@ Mục này dạy *cách hỏi*, không chỉ *mục cần có*. Áp dụng nguy�
 ### C. Decision impact (generic = FAIL)
 - [ ] Every difference carries a threshold/example that flips the choice + `when it fits`.
 - [ ] Compared against viral same-segment systems (name + numbers), never anonymous ones.
-- [ ] Overlap matrix has exactly 1 `primary` per job with a measurable rule.
+- [ ] Overlap matrix: one job may have MULTIPLE `primary` (changed from v6), but each primary-primary pair needs a measurable distinguishing rule. Two primaries without a rule = FAIL.
+- [ ] Coverage map: scan the WHOLE catalog/features, no cherry-picking. Strongest usecase gets ★ first. Weak ones get 1 line + replacement.
 - [ ] Pitfalls cite concrete gates/errors, never `watch performance`.
 
-### D. Sync (mismatch = FAIL)
-- [ ] Index job/command names match item sub-usecase titles word-for-word.
-- [ ] Live 2-way links: index → item, item → index + related items.
-- [ ] No orphans, no broken links, VI/EN in sync.
-- [ ] Index + item changed in the same commit + `CHANGELOG.md`.
+### D. 3-way sync (mismatch = FAIL)
+- [ ] Job/command names match word-for-word across all 3 layers: domain index ↔ using-doc ↔ item.
+- [ ] Live 3-way links: index → using-doc → item origin (exact section, e.g. `../../items/skillry/README.md#...`), and the item's `Where used` links back to each using-doc.
+- [ ] No duplication: using-doc holds domain-only deltas + links, never copied install/mechanism/price paragraphs. Duplication = FAIL.
+- [ ] Every technical claim in a using-doc links to the exact item section.
+- [ ] No orphan items/pairs (item without using-doc, using-doc without index), no broken links, VI/EN in sync.
+- [ ] All 3 layers changed in the same commit + `CHANGELOG.md`.
 
 ### E. Iterative self-review loop until pass (required)
 Loop the 3 passes below, fix all FAILs, then restart at pass 1. Stop only after a full loop with zero FAIL.
@@ -171,3 +187,11 @@ This section teaches *how to ask*, not just *what to include*. Apply verbatim to
 **F4. Rejection test:** play devil's advocate — name 3 jobs that remain unclear after reading the docs; if any exist, the docs FAIL, rewrite until answerable.
 
 **F5. Self-improvement loop:** every time a shallow audit slips through, log the gap in one `CHANGELOG.md` line + add the corresponding question or example to this section F. The checklist thickens itself, no reminders needed.
+
+**F6. Full usecase coverage + weighted usage references (required since v7):**
+- Coverage: list ALL possible usecases (scan the whole catalog/features), each tagged strong ★ / medium / unsupported (+ replacement). Strongest ★ goes first with a full prompt example. FAIL on omitting a catalog usecase without a reason.
+- Usage references (required item section):
+  1. *Weighty deep reviews:* decisive independent reviews (source URL + date + 1-2 best quotes + which decision it flips/confirms). Anonymous/unsourced = excluded.
+  2. *Weighted averages:* average score + review/install COUNTS as trust weight (e.g. 4.2★/120 reviews beats 5.0★/3; 538.9K vs 40 installs is a direct weight). Every number pins its MEASUREMENT DATE.
+  3. Deep-vs-crowd conflicts record both + a 1-sentence verdict.
+- Apply retroactively to old items when migrating to the new structure.

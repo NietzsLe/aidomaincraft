@@ -1,5 +1,13 @@
 # CHANGELOG.md — aidomaincraft
 
+## v7.2 — 2026-10-29 (thêm item awesome-opus5-5-videos, qua review đối lập 2 vai)
+- Thêm `items/awesome-opus5-5-videos/` (703 prompt video Opus 5.5 MIT 0đ: motion 369/remake 229 ★, explainer 116/68, 3D 117/56, game 101/65; median prompt 221, max 15,583; 616 authors; remake 418/703): Cài đặt clone + copy prompt, Cách hoạt động 3 phần, Định vị vs Skillry video + engine mở, Bản đồ phủ ★, Hồ sơ quyết định, 4 usecase 6 field + điều kiện môi trường (Opus access check, WebGL chrome://gpu, X/Skillry mạng), Các bước chung, Prompt mẫu, Pitfalls, Tham khảo sử dụng (GitHub API 12,417★/1,313 forks/46 watchers/7 issues 29/10) + Tham khảo, Được dùng ở đâu, song ngữ VI/EN.
+- Thêm `domains/media/using-awesome-opus5-5-videos.md` + cập nhật `domains/media/README.md` VI+EN (tách hàng Launch đóng gói vs Học prompt gốc, ma trận 4 cột, định vị 2 item, workflow phối hợp, using-doc list).
+- Vòng Skeptic (FAIL A/B/C/D: EN thiếu hàng awesome, số đối thủ thiếu nguồn/ngày, 2 chính 1 việc Launch, VI/EN lệch + link chưa đủ) → đã sửa hết: EN đủ routing/positioning/matrix 4 cột, nguồn/ngày cho 359/200-518/HyperFrames 538.9K/pptx 244.5K + Skillry Premium + Opus giá chưa xác minh, tách ma trận Launch đóng gói vs Học prompt, 0 broken links.
+- Vòng Operator (CONDITIONAL PASS): clone/count/filter/prompt-block chạy thật khớp 100% (703/703, categories/tags/remake/median/max khớp); GitHub API drift +2★/+1 fork chấp nhận được; FAIL nhỏ thiếu `cd` sau clone + thiếu lệnh check Opus/WebGL → đã sửa: mọi clone kèm `&& cd awesome-opus5-5-videos`, thêm check model picker Opus 5.5 + `chrome://gpu` WebGL2 + curl API mẫu.
+- Test 3 phút: case motion copy ror-fly-880547 → awesome chính; case cần taste đóng gói cài 1 lệnh → Skillry chính; case deck 0đ → free pptx official.
+- Gap log (F5): highlight README (58/16/14/12) dễ nhầm tổng catalog (369/117/116/101) — đã ghi Pitfalls + F6 giữ `chưa xác minh` review độc lập.
+
 ## v7.1 — 2026-10-29 (bổ sung danh sách 40 free Skillry, wording mềm)
 - `items/skillry/README.md`: thêm danh sách 40 slug Free tại thời điểm đo 2026-10-29 theo 4 nhóm Video/Web/Slides/Image-OG (10 mỗi nhóm) + gợi ý thử 0đ (`bs-mint-noir-saas-site`, `bs-paper-cutout-story-video`, `bs-audio-report-deck`, `bs-github-style-og`), VI+EN. Wording mềm: catalog trôi, kiểm tra lại filter Free + nhãn từng skill, không mặc định chỉ có từng này.
 - `domains/media/using-skillry.md` + `domains/ui/using-skillry.md`: trỏ về danh sách Free gốc (không copy), gợi ý slug 0đ theo domain.

@@ -1,5 +1,10 @@
 # CHANGELOG.md — aidomaincraft
 
+## v6 — 2026-10-29 (bổ sung)
+- Gap log (F5): thẩm tra Skillry ngày 2026-10-28 bị nông — liệt kê mà không trả lời quyết định (thiếu map việc phủ/không phủ, thiếu số free/total + giá, thiếu luật chọn chợ, thiếu ma sát cài đặt, thiếu bằng chứng installs). Sửa bằng cách thêm mục F vào `VERIFY.md` + ô Hồ sơ quyết định vào `templates/item-template.md`.
+- Gap log (F5): Skillry audit on 2026-10-28 was shallow — listed facts without answering decisions (no covered/not-covered job map, no free/total numbers + price, no marketplace-choice rule, no install friction, no install-count evidence). Fixed by adding section F to `VERIFY.md` + Decision dossier block to `templates/item-template.md`.
+- Review đối lập không giới hạn: VERIFY mục E thêm Lượt 4+ — mỗi lượt 1 persona khác lượt trước (kẻ hoài nghi / người vận hành / người mới / người giữ ngân sách / phe đối thủ), 3 việc bắt buộc (câu hỏi đối lập mới + kiểm tra bổ sung + phán quyết), 4 điều kiện dừng. Unbounded adversarial review: rotating personas, additional-check proposals, 4 stop conditions.
+
 ## v6 — 2026-10-28
 - Nâng `CHARTER.md` lên v6: mọi thay đổi phải qua vòng self-review lặp đến khi hết FAIL (`VERIFY.md` mục E).
 - `VERIFY.md` thêm mục E: lượt 1 người không biết gì (bắt thiếu input/lệnh/output, thuật ngữ chưa giải thích, ví dụ `<...>` trống), lượt 2 từng usecase (cơ chế khác nhau ở đâu, lệnh chạy thật không, ngưỡng đo được không), lượt 3 quyết định so sánh (1 case cụ thể chọn được trong 3 phút vs hệ viral không + ghi case vào CHANGELOG/handoff).

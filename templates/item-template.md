@@ -25,6 +25,15 @@
 - So với [tên hệ viral thứ 2 + số liệu]: [tương tự].
 - Đạt: `Chọn Hallmark thay vì v0 khi phải pass gates contrast 4.5:1/fold 1280x800`. Không đạt: `Hallmark cũng tốt, nổi tiếng`.
 
+### Hồ sơ quyết định (bắt buộc — trả lời đủ, cấm chung chung)
+- Việc DÙNG (3+, cụ thể): 1. [...] 2. [...] 3. [...]
+- Việc KHÔNG DÙNG (3+, mỗi việc kèm hệ thay thế): 1. [...] → dùng [...] thay. 2. [...] 3. [...]
+- Free / tổng + giá: [... free / ... tổng, giá ...]. Nguồn số: [...]
+- Ma sát cài đặt: [... bước từ 0 đến lệnh đầu chạy được; đã chạy thử đến bước ..., output ...]. Rào cản: [auth/login/Node/tiền/quyền ...].
+- Đối thủ viral cùng phân khúc: [tên + stars/installs] vs [tên + stars/installs].
+- Chọn nó thay vì đối thủ khi: [tiêu chí đo được, ví dụ đổi lựa chọn].
+- TUYỆT ĐỐI không dùng khi: [...]
+
 ### Usecase con 1: [tên khớp từng chữ với index]
 - Khi dùng: [...]
 - Khi bỏ qua: [...]
@@ -70,6 +79,15 @@
 ### Differentiating positioning
 - Vs [viral same-segment name + numbers]: [difference + threshold/example + when to pick/drop].
 - Good: `Pick X over Y when ... 4.5:1 ...`. Bad: `X is also good and popular`.
+
+### Decision dossier (required — answer fully, no generic wording)
+- Jobs SERVED (3+, concrete): 1. [...] 2. [...] 3. [...]
+- Jobs NOT served (3+, each with its replacement): 1. [...] → use [...] instead. 2. [...] 3. [...]
+- Free / total + price: [... free / ... total, price ...]. Number sources: [...]
+- Install friction: [... steps from zero to first runnable command; ran up to step ..., output ...]. Barriers: [auth/login/Node/money/rights ...].
+- Viral same-segment opponents: [name + stars/installs] vs [name + stars/installs].
+- Pick it over opponents when: [measurable criterion, choice-flipping example].
+- NEVER use when: [...]
 
 ### Sub-usecase 1: [title word-for-word matching the index]
 - When to use: [...]

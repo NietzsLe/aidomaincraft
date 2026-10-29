@@ -1,5 +1,10 @@
 # CHANGELOG.md — aidomaincraft
 
+## v7.1 — 2026-10-29 (bổ sung danh sách 40 free Skillry, wording mềm)
+- `items/skillry/README.md`: thêm danh sách 40 slug Free tại thời điểm đo 2026-10-29 theo 4 nhóm Video/Web/Slides/Image-OG (10 mỗi nhóm) + gợi ý thử 0đ (`bs-mint-noir-saas-site`, `bs-paper-cutout-story-video`, `bs-audio-report-deck`, `bs-github-style-og`), VI+EN. Wording mềm: catalog trôi, kiểm tra lại filter Free + nhãn từng skill, không mặc định chỉ có từng này.
+- `domains/media/using-skillry.md` + `domains/ui/using-skillry.md`: trỏ về danh sách Free gốc (không copy), gợi ý slug 0đ theo domain.
+- Nguồn: `skillry.dev/skills?free=true` (40/617 tại thời điểm đo). VERIFY D: 0 broken file links.
+
 ## v7 — 2026-10-29 (tái cấu trúc items/domains + nâng chuẩn thẩm tra F6)
 - Đổi cấu trúc: `ui/hallmark|reactbits|skillry/` → `items/hallmark|reactbits|skillry/` (kho trung lập domain) + `domains/ui/` (index + `using-hallmark.md`, `using-reactbits.md`, `using-skillry.md` phần web) + `domains/media/` (index + `using-skillry.md` phần video/deck/OG). Xóa `ui/`. Link 3 chiều bắt buộc: index → using-doc → item gốc (đúng section) + ngược lại.
 - `CHARTER.md` v6 → v7: tầng items/ + domains/ + using-doc, luật 1 nguồn sự thật (gốc sống ở item, domain chỉ viết phần riêng + link, trùng lặp = FAIL), 1 việc có thể NHIỀU item chính (kèm tiêu chí phân biệt).

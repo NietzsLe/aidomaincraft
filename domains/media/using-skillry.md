@@ -10,9 +10,9 @@
 - ★ OG image / avatar / minh họa (Notion-style OG, GrokBot avatar): xem [Usecase con 4](../../items/skillry/README.md#usecase-con-4-og-image--avatar--minh-hoa).
 
 ### Lệnh mẫu cụ thể (cho media)
-- Video (macOS CLI): `npx --yes skillry-cli@latest install bs-manus2-0-style-launch-video --agent opencode`. Linux: paste-prompt/ZIP (CLI lỗi secure storage).
-- Deck: `Read https://skillry.dev/skills/bs-field-notes-deck/install.md and follow the instructions to install the skill.` — kiểm tra trang skill ghi export HTML/PPTX gì; narration cần HeyGen/ElevenLabs (tự lo tài khoản/trả thêm).
-- OG: `Read https://skillry.dev/skills/bs-notion-style-og/install.md and follow the instructions to install the skill.` — ảnh qua GPT Image. Xem [Cài đặt](../../items/skillry/README.md#cai-dat-da-chay-skillry-help--status-chua-login--cli-tren-linux-loi-secure-storage).
+- Video (macOS CLI): `npx --yes skillry-cli@latest install bs-manus2-0-style-launch-video --agent opencode`. Linux: paste-prompt/ZIP (CLI lỗi secure storage). Muốn thử 0đ: dùng các slug Free trong [Hồ sơ quyết định](../../items/skillry/README.md#ho-so-quyet-dinh) (vd `bs-paper-cutout-story-video`, `bs-launchmotion-cta-brush-wipe-sunset`), đừng mặc định chỉ có từng này — đối chiếu nhãn Free/Premium + ngày đo.
+- Deck: `Read https://skillry.dev/skills/bs-field-notes-deck/install.md and follow the instructions to install the skill.` — thử 0đ: `bs-audio-report-deck`, `bs-mint-marker-deck` trong danh sách Free gốc. Kiểm tra trang skill ghi export HTML/PPTX gì; narration cần HeyGen/ElevenLabs (tự lo tài khoản/trả thêm).
+- OG: `Read https://skillry.dev/skills/bs-notion-style-og/install.md and follow the instructions to install the skill.` — thử 0đ: các slug OG Free trong danh sách gốc (vd `bs-github-style-og`, `bs-headspace-style-og`). Ảnh qua GPT Image. Xem [Cài đặt](../../items/skillry/README.md#cai-dat-da-chay-skillry-help--status-chua-login--cli-tren-linux-loi-secure-storage).
 
 ### Lưu ý riêng cho media
 - Giá Skillry CHƯA gồm phí model ngoài (GPT Image/HeyGen/ElevenLabs tự trả — kiểm tra trước khi budget). Chính sách non-refundable, giới hạn 50 downloads/ngày, Lifetime gắn với vận hành service (Terms 17/10/2026). Xem [Hồ sơ quyết định](../../items/skillry/README.md#ho-so-quyet-dinh).
@@ -37,7 +37,7 @@ Video/slides/image part of Skillry FOR media. Origin at `../../items/skillry/REA
 - ★ Launch video, ★ slide deck + narrated report, ★ OG image/avatar: see origin Sub-usecases 1/3/4.
 
 ### Concrete commands (for media)
-- Video (macOS CLI) or paste-prompt/ZIP on Linux; deck/OG via paste-prompt `Read https://skillry.dev/skills/<slug>/install.md ...`. Narration needs HeyGen/ElevenLabs accounts.
+- Video (macOS CLI) or paste-prompt/ZIP on Linux; 0-cost try from the Free list in origin [Decision dossier](../../items/skillry/README.md#decision-dossier). Deck/OG via paste-prompt `Read https://skillry.dev/skills/<slug>/install.md ...` (0-cost: `bs-audio-report-deck`, `bs-github-style-og`). Narration needs HeyGen/ElevenLabs accounts.
 
 ### Domain-specific notes
 - Price excludes external model fees; non-refundable; 50 downloads/day; Linux has no CLI. Install counts are low (1–45) — free opponents win on capability by 1000×.

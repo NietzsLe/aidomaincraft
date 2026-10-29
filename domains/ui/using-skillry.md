@@ -9,7 +9,7 @@
 - Không phủ: system pass gates → dùng Hallmark (`using-hallmark.md`); bricks React → React Bits (`using-reactbits.md`).
 
 ### Lệnh mẫu cụ thể (cho UI)
-- Paste-prompt (khuyến nghị, mọi OS): `Read https://skillry.dev/skills/bs-mint-noir-saas-site/install.md and follow the instructions to install the skill.` — expect `● Loading skill bs-mint-noir-saas-site`. Xem [Cài đặt](../../items/skillry/README.md#cai-dat-da-chay-skillry-help--status-chua-login--cli-tren-linux-loi-secure-storage).
+- Paste-prompt (khuyến nghị, mọi OS): `Read https://skillry.dev/skills/bs-mint-noir-saas-site/install.md and follow the instructions to install the skill.` — expect `● Loading skill bs-mint-noir-saas-site`. Các slug web Free khác xem [Hồ sơ quyết định](../../items/skillry/README.md#ho-so-quyet-dinh) (vd `bs-ember-ebike-store`, `bs-tracklane-devtool-landing`) — catalog trôi, đối chiếu nhãn Free/Premium trước khi dùng. Xem [Cài đặt](../../items/skillry/README.md#cai-dat-da-chay-skillry-help--status-chua-login--cli-tren-linux-loi-secure-storage).
 - CLI macOS/Windows: `npx --yes skillry-cli@latest install bs-mint-noir-saas-site --agent opencode`. ZIP: `mkdir -p ~/.agents/skills` + unzip sao cho có `~/.agents/skills/<slug>/SKILL.md` + restart OpenCode.
 - Prompt mẫu quán cà phê A trong [Prompt mẫu](../../items/skillry/README.md#prompt-mau).
 

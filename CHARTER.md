@@ -1,4 +1,4 @@
-# CHARTER.md — aidomaincraft — v7
+# CHARTER.md — aidomaincraft — v8
 
 ## Tiếng Việt
 
@@ -9,11 +9,12 @@ Tổng hợp kinh nghiệm dùng AI theo lĩnh vực, dưới dạng chỉ dẫn
 - Có: chỉ dẫn usecase, prompt mẫu, pitfalls, tham chiếu tới tool/skill/repo ngoài + đánh giá sử dụng.
 - Không: copy nguyên code/tool ngoài vào đây; lưu log, token, dữ liệu khách hàng.
 
-### 3. Tổ chức (v7: tách kho item khỏi hướng dẫn domain)
+### 3. Tổ chức (v8: thêm tầng tooling cài đặt, kiến thức giữ nguyên v7)
 - Tầng chung (mỏng): root `README.md`, `AGENTS.md`, `CHARTER.md`, `CHANGELOG.md`.
 - Tầng `items/`: 1 item = 1 thư mục, kiến thức TRUNG LẬP domain của 1 công cụ/giải pháp. `items/<x>/README.md` chứa: là gì, ai làm, cài đặt mọi OS, cơ chế core, định vị vs đối thủ viral, giá/license, pitfalls chung, bản đồ phủ usecase (mạnh ★ / trung bình / không hỗ trợ + thay thế), tham khảo sử dụng (review sâu + số trung bình có trọng số), được dùng ở domain nào (link ngược).
 - Tầng `domains/`: 1 domain = 1 thư mục lĩnh vực (`domains/ui/`, `domains/media/`...). Mỗi domain có `README.md` làm index chọn item theo usecase (cho phép NHIỀU item cùng phục vụ 1 usecase, mỗi cái 1 cách, kèm tiêu chí phân biệt) + 1 file `using-<item>.md` cho MỖI cặp item-domain (usecase trong domain này, lệnh mẫu cụ thể, lưu ý riêng, điểm mạnh cốt lõi của item CHO domain đó, link về đúng section item gốc).
-- Không tạo tầng khác trừ khi bump CHARTER.
+- Tầng tooling (không phải kiến thức, không tính là tầng nội dung): `scripts/install.sh` + `scripts/uninstall.sh` + `scripts/aidomaincraft_setup.py`, `templates/agents-block.md` + `templates/claude-block.md` + `templates/VERSIONS`, `INSTALL.md` + `UNINSTALL.md`, `tests/test.sh`. Mặc định cài reference-only (chỉ chèn block vào `AGENTS.md`/`CLAUDE.md` của đích); `--vendor` mới copy snapshot vào `.aidomaincraft/` (git-ignored).
+- Không tạo tầng kiến thức khác trừ khi bump CHARTER.
 
 ### 4. Quy ước đặt tên
 - Thư mục items/domains viết thường, kebab-case, tiếng Anh.
@@ -53,6 +54,7 @@ Tổng hợp kinh nghiệm dùng AI theo lĩnh vực, dưới dạng chỉ dẫn
 ### 8. Phương pháp duy trì
 - Sửa item: giữ template, ghi `CHANGELOG.md`.
 - Thêm item mới: copy `templates/item-template.md`. Thêm domain mới: copy `templates/domain-index-template.md`. Thêm cặp item-domain: copy `templates/domain-using-template.md` + cập nhật index 2 đầu.
+- Sửa block cài đặt: sửa `templates/agents-block.md` / `templates/claude-block.md`, chạy `python3 scripts/aidomaincraft_setup.py bump-blocks --to vN` (đồng bộ stamp + `templates/VERSIONS`), chạy `./tests/test.sh`, ghi `CHANGELOG.md`.
 - Mọi thay đổi qua `VERIFY.md` vòng self-review lặp đến hết FAIL (mục E): 1 FAIL là không merge.
 - Đổi cấu trúc: bump `CHARTER.md` lên vN+1 + ghi `CHANGELOG.md`.
 
@@ -67,11 +69,12 @@ Collect hands-on AI experience by field as usecase-first guides, reusable when s
 - In: usecase guides, sample prompts, pitfalls, references to external tools/skills/repos + usage reviews.
 - Out: vendored external code/tools; logs, tokens, customer data.
 
-### 3. Organization (v7: split item store from domain guides)
+### 3. Organization (v8: installer tooling added, knowledge stays v7)
 - Common layer (thin): root `README.md`, `AGENTS.md`, `CHARTER.md`, `CHANGELOG.md`.
 - `items/` layer: 1 item = 1 folder, DOMAIN-NEUTRAL knowledge of one tool/solution. `items/<x>/README.md` holds: what it is, who builds it, install on every OS, core mechanism, differentiation vs viral opponents, price/license, shared pitfalls, usecase-coverage map (strong ★ / medium / unsupported + replacement), usage references (deep reviews + weighted averages), where-used backlinks.
 - `domains/` layer: 1 domain = 1 field folder (`domains/ui/`, `domains/media/`...). Each domain has an index `README.md` (usecase → item(s), MULTIPLE items may serve one usecase in different ways with a distinguishing rule) + one `using-<item>.md` per item-domain pair (usecases in this domain, concrete commands, domain-specific notes, core strengths FOR this domain, links to the exact item sections).
-- No other levels without a CHARTER bump.
+- Tooling layer (not knowledge): `scripts/install.sh` + `scripts/uninstall.sh` + `scripts/aidomaincraft_setup.py`, `templates/agents-block.md` + `templates/claude-block.md` + `templates/VERSIONS`, `INSTALL.md` + `UNINSTALL.md`, `tests/test.sh`. Default install is reference-only (blocks in target `AGENTS.md`/`CLAUDE.md`); `--vendor` copies a git-ignored `.aidomaincraft/` snapshot.
+- No other knowledge levels without a CHARTER bump.
 
 ### 4. Naming
 - Lowercase kebab-case English for item/domain folders.
@@ -111,5 +114,6 @@ Collect hands-on AI experience by field as usecase-first guides, reusable when s
 ### 8. Consistency method
 - Edit item: keep template, add `CHANGELOG.md` entry.
 - New item: copy `templates/item-template.md`. New domain: copy `templates/domain-index-template.md`. New item-domain pair: copy `templates/domain-using-template.md` + update both indexes.
+- Edit install blocks: edit `templates/agents-block.md` / `templates/claude-block.md`, run `python3 scripts/aidomaincraft_setup.py bump-blocks --to vN` (syncs stamps + `templates/VERSIONS`), run `./tests/test.sh`, add a `CHANGELOG.md` entry.
 - Every change passes `VERIFY.md` iterative self-review until zero FAIL (section E): 1 FAIL blocks merge.
 - Structural change: bump `CHARTER.md` to vN+1 with a `CHANGELOG.md` entry.

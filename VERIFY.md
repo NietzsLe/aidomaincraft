@@ -1,4 +1,4 @@
-# VERIFY.md — checklist thẩm tra v7 (FAIL = không merge)
+# VERIFY.md — checklist thẩm tra v8 (FAIL = không merge)
 
 ## Tiếng Việt
 
@@ -99,6 +99,14 @@ Mục này dạy *cách hỏi*, không chỉ *mục cần có*. Áp dụng nguy�
   3. Mâu thuẫn review sâu vs số đông thì ghi cả hai + phán quyết 1 câu.
 - Áp dụng ngược cho item cũ khi di chuyển sang cấu trúc mới.
 
+### G. Installer cài đặt vào repo/thư mục khác (thiếu là FAIL)
+- [ ] `templates/agents-block.md` + `templates/claude-block.md` có marker `<!-- BEGIN/END aidomaincraft -->` + stamp `vN` khớp `templates/VERSIONS`; block ghi nguồn + ref + 4 bước tra cứu + dòng tự check version đầu session, không copy lệnh/ngưỡng từ item.
+- [ ] `scripts/install.sh` / `uninstall.sh` / `aidomaincraft_setup.py` chạy được với `--target` là repo hoặc thư mục thường; `--dry-run` không ghi file; cài lại idempotent (`unchanged already vN`); marker lệch (`BEGIN != END`) từ chối.
+- [ ] `doctor` OK trên cả 2 mode (reference-only + `--vendor`); `doctor` + `check-update` báo outdated kèm đúng 1 lệnh upgrade; `uninstall` xóa hết block, snapshot mặc định move sang `.aidomaincraft.removed-*` (`--purge` mới xóa hẳn).
+- [ ] `version` in đủ 3 trục (installer + template block vN + CHARTER nguồn + block đã cài + manifest); `check-update` exit 1 khi có bản mới + in `UPDATE AVAILABLE`; `upgrade` 1 lệnh lên bản mới (kèm refresh snapshot vendor khi có).
+- [ ] Block v4+: tuân thủ tuyệt đối 5 lớp (`must-read/env-gate/must-follow/must-verify/must-not`) + hard list 4 items + delegation + adapt-and-approve (bảng A/B/C + cổng duyệt + ranh giới đỏ `must-not` không bao giờ offer).
+- [ ] `./tests/test.sh` xanh trước khi merge (gồm case block cũ vN-1 → `check-update`/`doctor` báo + `upgrade` hết; case block đủ trigger + ask-first + 5 lớp + hard list + approval).
+
 ---
 
 ## English
@@ -195,3 +203,11 @@ This section teaches *how to ask*, not just *what to include*. Apply verbatim to
   2. *Weighted averages:* average score + review/install COUNTS as trust weight (e.g. 4.2★/120 reviews beats 5.0★/3; 538.9K vs 40 installs is a direct weight). Every number pins its MEASUREMENT DATE.
   3. Deep-vs-crowd conflicts record both + a 1-sentence verdict.
 - Apply retroactively to old items when migrating to the new structure.
+
+### G. Installer into another repo/directory (missing = FAIL)
+- [ ] `templates/agents-block.md` + `templates/claude-block.md` carry `<!-- BEGIN/END aidomaincraft -->` + stamp `vN` matching `templates/VERSIONS`; blocks state source + ref + 4-step lookup + once-per-session version check, never copied item commands/bars.
+- [ ] `scripts/install.sh` / `uninstall.sh` / `aidomaincraft_setup.py` run with `--target` as repo or plain directory; `--dry-run` writes nothing; reinstall is idempotent (`unchanged already vN`); unbalanced markers refuse.
+- [ ] `doctor` OK in both modes (reference-only + `--vendor`); `doctor` + `check-update` report outdated with exactly one upgrade command; `uninstall` removes all blocks, snapshot moved to `.aidomaincraft.removed-*` by default (`--purge` deletes).
+- [ ] `version` prints all 3 axes (installer + template block vN + source CHARTER + installed blocks + manifest); `check-update` exits 1 on update + prints `UPDATE AVAILABLE`; `upgrade` is one command (refreshes vendor snapshot when present).
+- [ ] Block v4+: absolute 5-class compliance (`must-read/env-gate/must-follow/must-verify/must-not`) + hard list for 4 items + delegation + adapt-and-approve (A/B/C table + approval gate + `must-not` red line never offered).
+- [ ] `./tests/test.sh` green before merge (incl. stale-block vN-1 → `check-update`/`doctor` flag + `upgrade` clears; block has triggers + ask-first + 5 classes + hard list + approval).

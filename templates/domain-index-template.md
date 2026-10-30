@@ -1,4 +1,4 @@
-# templates/domain-index-template.md — mẫu điền index domain (CHARTER v7)
+# templates/domain-index-template.md — mẫu điền index domain (CHARTER v8, khung index giữ nguyên v7)
 
 > Copy khi tạo domain mới. Điền `[...]`, xóa dòng `>` khi xong. Chi tiết sống trong item, index chỉ tóm + link. Cho phép NHIỀU item chính 1 việc (kèm tiêu chí phân biệt).
 

@@ -1,4 +1,4 @@
-# templates/item-template.md — mẫu điền item (CHARTER v7)
+# templates/item-template.md — mẫu điền item (CHARTER v8, khung item giữ nguyên v7)
 
 > Copy file này thành `items/<solution>/README.md`, điền vào chỗ `[...]`, xóa dòng hướng dẫn `>` khi xong. Giữ song ngữ VI trước EN sau. Chi tiết gốc sống ở đây; domain chỉ link về, không copy.
 

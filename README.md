@@ -4,11 +4,12 @@
 
 **Mục đích:** repo tra cứu theo usecase khi làm dự án cùng AI agent. Mở dự án mới → đọc bảng dưới → vào đúng `domains/<d>/` → đọc `using-<item>.md` → theo link về `items/<x>/` làm theo `README.md` trong đó.
 
-**Nguyên tắc (v7):**
+**Nguyên tắc (v8):**
 - `items/` = kho item trung lập domain (1 tool = 1 item, vd `items/hallmark/`). Chi tiết gốc sống ở đây.
 - `domains/` = hướng dẫn theo lĩnh vực (vd `domains/ui/`, `domains/media/`). Mỗi cặp item-domain có `using-<item>.md` viết phần RIÊNG cho domain + link về item gốc. Một việc có thể có NHIỀU item chính (mỗi cái 1 cách).
 - Link 3 chiều bắt buộc: domain index → using-doc → item gốc (đúng section), và ngược lại.
-- Luật cấu trúc và version nằm ở `CHARTER.md` (hiện tại v7). Agent và người đều phải tuân thủ.
+- Luật cấu trúc và version nằm ở `CHARTER.md` (hiện tại v8). Agent và người đều phải tuân thủ.
+- Cài sang repo/thư mục khác: `./scripts/install.sh --target /path/to/project --dry-run` rồi `--backup` (xem `INSTALL.md`; gỡ: `UNINSTALL.md`). Mặc định reference-only, agent tự clone nguồn khi cần.
 
 **Bảng chọn:**
 
@@ -27,11 +28,12 @@
 
 **Purpose:** usecase-first lookup repo for building projects with AI agents. New project → check the table → open the matching `domains/<d>/` → read `using-<item>.md` → follow links to `items/<x>/` and follow its `README.md`.
 
-**Rules (v7):**
+**Rules (v8):**
 - `items/` = domain-neutral item store (1 tool = 1 item, e.g. `items/hallmark/`). Origin details live here.
 - `domains/` = field guides (e.g. `domains/ui/`, `domains/media/`). Each item-domain pair has `using-<item>.md` with domain-only deltas + links to the item origin. One job may have MULTIPLE primary items (each a different way).
 - Mandatory 3-way links: domain index → using-doc → item origin (exact section), and back.
-- Structure and versioning rules live in `CHARTER.md` (current v7).
+- Structure and versioning rules live in `CHARTER.md` (current v8).
+- Install into another repo/dir: `./scripts/install.sh --target /path/to/project --dry-run` then `--backup` (see `INSTALL.md`; remove: `UNINSTALL.md`). Reference-only by default.
 
 **Routing:**
 

@@ -22,6 +22,9 @@
 - Bricks sở hữu source + demo xem trước + variant khớp stack + MCP lắp nhanh — chọn thay vì Motion/GSAP thuần khi cần component chạy ngay. Xem [Định vị](../../items/reactbits/README.md#dinh-vi-khac-biet).
 - Được `PkgPulse 25/03/2026` xác nhận `#2 JS Rising Stars 2025 (+32.8K/năm, 37.1K)` + `Annnimate` thừa nhận *"free, community-backed catalog... easy yes for React-only"* — xem [Tham khảo sử dụng](../../items/reactbits/README.md#tham-khao-su-dung).
 
+### Phân công CHO UI này
+- Agent chính chọn variant + cài 1 component + gắn layout; verify render thật (LCP/reduced-motion/mobile) giao claude; verify deps + gates không vỡ. Chi tiết: [Phân công gốc](../../items/reactbits/README.md#phan-cong-ai-lam-gi).
+
 ### Link về item gốc (3 chiều)
 - Gốc: `../../items/reactbits/README.md` (Cài đặt / Cách hoạt động / Định vị / Bảng usecase / Prompt / Pitfalls / Tham khảo sử dụng).
 - Index domain: `./README.md`.
@@ -44,6 +47,9 @@ UI-only deltas for React Bits. Origin at `../../items/reactbits/README.md`.
 
 ### Core strengths FOR UI
 - Owned-source bricks + live demos + stack-matching variants + MCP install — over raw Motion/GSAP when a ready component decides.
+
+### Work split FOR this UI
+- Main agent picks the variant + installs one component + fits the layout; real-render verification (LCP/reduced-motion/mobile) goes to claude; verify deps + gates hold. Details: [origin Work split](../../items/reactbits/README.md#work-split).
 
 ### Links to origin (3-way)
 - Origin: `../../items/reactbits/README.md`. Index: `./README.md`. Backlisted at origin `#where-used`.

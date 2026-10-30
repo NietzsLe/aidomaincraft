@@ -5,7 +5,7 @@
 Repo này là tra cứu theo usecase. `CHARTER.md` là luật, `VERIFY.md` là checklist chấm đạt/rớt, `templates/` là mẫu điền.
 
 ### Tra cứu (dùng cho dự án khác)
-1. Đọc `CHARTER.md` (hiện tại: v8).
+1. Đọc `CHARTER.md` (hiện tại: v9).
 2. Đọc root `README.md` để chọn domain (`domains/<d>/`).
 3. Đọc `domains/<d>/README.md` (điều hướng + định vị + chồng lấn, cho phép nhiều item chính 1 việc) để chọn item + cách dùng.
 4. Đọc `domains/<d>/using-<x>.md` để lấy lệnh mẫu + lưu ý RIÊNG cho domain, rồi theo link về `items/<x>/README.md` (nguồn sự thật duy nhất) để đọc cơ chế + ngưỡng chi tiết, làm theo lệnh trong đó.

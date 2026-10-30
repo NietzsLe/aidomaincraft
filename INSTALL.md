@@ -153,6 +153,11 @@ Every installed block carries the same compliance protocol for all items:
   browser/image instead of `claude --chrome` / `codex`).
 - Hard constraints per item (hallmark / reactbits / skillry /
   awesome-opus5-5-videos / delegation) with links to the exact source sections.
+- Core-fidelity: after using an item, state the reused artifact (prompt slug /
+  variant / skill slug + label / passed gates) — unable means the system was
+  not really used. Handoff format for every delegate call: inputs + exact
+  command + expected output + verify method. Item cores live in each item's
+  `Invariant core / Customizable surface / Work split` sections.
 - Adapt-and-approve: the agent detects environment + user conditions, proposes
   an A/B/C options table (default = standard flow), and runs only the option
   the user picks — recorded as a waiver. `must-not` is never offered.

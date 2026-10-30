@@ -1,6 +1,6 @@
-# templates/domain-using-template.md — mẫu điền using-doc (CHARTER v7)
+# templates/domain-using-template.md — mẫu điền using-doc (CHARTER v9)
 
-> Copy file này thành `domains/<domain>/using-<item>.md`, điền `[...]`, xóa dòng `>` khi xong. Chỉ viết phần RIÊNG cho domain; mọi kiến thức gốc LINK về `items/<item>/README.md#section`, không copy nguyên đoạn. Trùng lặp = FAIL (VERIFY D).
+> Copy file này thành `domains/<domain>/using-<item>.md`, điền `[...]`, xóa dòng `>` khi xong. Chỉ viết phần RIÊNG cho domain; mọi kiến thức gốc LINK về `items/<item>/README.md#section`, không copy nguyên đoạn. Trùng lặp = FAIL (VERIFY D). Thêm đúng 1 dòng phân công CHO domain + link về mục Phân công gốc.
 
 ## Tiếng Việt
 
@@ -16,6 +16,9 @@
 
 ### Điểm mạnh cốt lõi của item CHO domain này
 - [1-3 điểm mạnh riêng cho domain, kèm ngưỡng/ví dụ đo được. Cấm mô tả thưởng thức.]
+
+### Phân công CHO domain này (1 dòng + link, không copy)
+- [Agent chính làm gì Ở domain này → giao cho claude bước nào → verify gì. Link về `../../items/<item>/README.md#phan-cong-ai-lam-gi` (mục Phân công gốc).]
 
 ### Link về item gốc (3 chiều — bắt buộc)
 - Gốc: `../../items/<item>/README.md` (các section: [Cài đặt / Cách hoạt động / Định vị / ...]).
@@ -38,6 +41,9 @@
 
 ### Core strengths FOR this domain
 - [1-3 domain-specific strengths with measurable bars/examples. No appreciation wording.]
+
+### Work split FOR this domain (1 line + link, never copied)
+- [What the main agent does IN this domain (user picks the artifact before any delegate) → which step goes to claude → what to verify. Link to `../../items/<item>/README.md#work-split` (origin Work split section).]
 
 ### Links to item origin (3-way — required)
 - Origin: `../../items/<item>/README.md` (sections: [Install / How it works / Positioning / ...]).

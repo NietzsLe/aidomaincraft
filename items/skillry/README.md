@@ -27,6 +27,20 @@
 - Phương thức hoạt động chung: mỗi skill = thư mục `SKILL.md` + templates/scripts, do team Skillry thiết kế và test kèm preview kết quả thật; agent đọc `description` để trigger, chạy workflow trong skill để ra output (video MP4, trang HTML, deck PPTX, ảnh OG).
 - Khác biệt vận hành theo usecase: video (render qua pipeline HyperFrames/Remotion/Seedance) khác image (gọi GPT Image) khác slides (xuất HTML/PPTX, có narration HeyGen/ElevenLabs) khác web (HTML tĩnh). Cài đặt giống nhau (CLI/ZIP/prompt), khác ở engine chạy ra output.
 
+### Cốt lõi bất biến
+- Lấy slug đúng từ nút install của trang skill, không gõ tay (xem [Usecase con 1](#usecase-con-1-launch-video)).
+- Route theo OS: Linux cấm CLI (paste-prompt/ZIP + restart); CLI chỉ macOS/Windows + Node 22+ (xem [Cài đặt](#cai-dat-da-chay-skillry-help--status-chua-login--cli-tren-linux-loi-secure-storage)).
+- Kiểm tra nhãn Free/Premium + installs/views trước khi lên kế hoạch; free VẪN cần tài khoản; giá Skillry chưa gồm phí model ngoài (xem [Hồ sơ quyết định](#ho-so-quyet-dinh)).
+- Sau khi dùng phải nêu slug + Free/Premium + installs đã đối chiếu; không nêu được = chưa thực sự dùng hệ.
+
+### Phần tùy chỉnh
+- Chọn taste nào trong shortlist (so preview/installs/giá rồi user chọn), tham số output theo workflow từng skill. Cổng duyệt: nêu chọn gì + vì sao + tốn gì (sub/phí ngoài).
+
+### Phân công ai làm gì
+- Agent chính: tìm/so skill, trình shortlist để user chọn (xem [Phần tùy chỉnh](#phan-tuy-chinh)), chỉ chạy skill đã duyệt, cài đúng route OS, chạy workflow skill, kiểm tra output (định dạng/tỉ lệ/license).
+- Giao cho claude các bước cần browser/account ngoài: mở trang skill lấy install prompt/ZIP, đối chiếu preview — kèm slug + yêu cầu cụ thể; cấm agent tự bịa preview/installs.
+- Agent verify: `ls ~/.agents/skills/<slug>/SKILL.md` tồn tại + output đúng định dạng đã chốt.
+
 ### Định vị khác biệt (đã đối chiếu skills.sh leaderboard ngày 2026-10-29)
 - Skillry KHÔNG thắng ở capability: engine video (HyperFrames/Remotion), deck (PptxGenJS), OG (Satori/Playwright) đều có bản free mở, installs lớn hơn Skillry hàng nghìn lần. Skillry thắng ở taste đóng gói sẵn + curation + workflow hướng dẫn + preview trước khi cài.
 - Bảng đối thủ free đã xác minh (lệnh cài + installs):
@@ -172,6 +186,20 @@
 - Backing organization: Skillry team, site `skillry.dev`, paid skill marketplace (not an open registry). 617 skills at audit time (Video 359 / Web 115 / Image 82 / Slides 61, 40 Free). Price: $9.99/month or $169 lifetime; single free skills exist.
 - Core operating method: each skill = `SKILL.md` folder + templates/scripts, designed and tested by Skillry with real-result previews; agent matches `description` to trigger, runs the skill workflow to output (MP4 video, HTML page, PPTX deck, OG image).
 - Per-usecase operating differences: video (renders via HyperFrames/Remotion/Seedance pipelines) vs image (GPT Image calls) vs slides (HTML/PPTX export, HeyGen/ElevenLabs narration) vs web (static HTML). Install routes identical (CLI/ZIP/prompt); the run engines differ per output.
+
+### Invariant core
+- Take the exact slug from the skill page install button, never hand-type (see Sub-usecase 1).
+- OS route rule: Linux never uses the CLI (paste-prompt/ZIP + restart); CLI is macOS/Windows + Node 22+ only (see Install).
+- Check the Free/Premium label + installs/views before planning; free skills STILL need an account; Skillry price excludes external model fees (see Decision dossier).
+- After use, state the slug + Free/Premium + cross-checked installs; unable = the system was not really used.
+
+### Customizable surface
+- Which taste from the shortlist (compare preview/installs/price, then the user picks), output parameters per each skill's workflow. Approval gate: state what is picked + why + what it costs (sub/external fees).
+
+### Work split
+- Main agent: find/compare skills, present a shortlist for the user to pick (see [Customizable surface](#customizable-surface)), run only the approved skill, install via the right OS route, run the skill workflow, verify output (format/ratio/license).
+- Hand browser/account-dependent steps to claude: opening the skill page for the install prompt/ZIP, checking previews — with slug + concrete asks; the agent never invents previews/installs.
+- Agent verifies: `ls ~/.agents/skills/<slug>/SKILL.md` exists + output matches the agreed format.
 
 ### Differentiating positioning (cross-checked vs skills.sh leaderboard 2026-10-29)
 - Skillry does NOT win on capability: video engines (HyperFrames/Remotion), decks (PptxGenJS), OG (Satori/Playwright) all have free open versions with thousands of times more installs. Skillry wins on packaged taste + curation + guided workflow + preview before installing.

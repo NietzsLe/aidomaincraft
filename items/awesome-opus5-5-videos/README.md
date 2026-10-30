@@ -24,6 +24,19 @@
 - Phương thức chung: mỗi entry = prompt markdown + record JSON (slug, author, post_url, category, tech_tags, prompt, poster_url, skillry_url, added, has_remake). 418/703 (~59.5%) có remake live trên `skillry.dev/ai-videos/opus-5-5`. Không có engine render riêng, agent tự viết code animation.
 - Khác biệt vận hành theo usecase: motion (Canvas/SVG/GSAP, copy là chạy) khác 3D (Three.js/GLSL/WebGL, cần GPU + device mạnh) khác explainer (script + timing lời thoại) khác interactive/game (thêm playable/physics, cần test input).
 
+### Cốt lõi bất biến
+- Luôn xuất phát từ 1 prompt có sẵn trong repo: lọc `data/videos.json` theo category/tech_tags/has_remake → chọn → copy nguyên văn khối prompt (xem [Usecase con 1](#usecase-con-1-motion-graphics--manh-nhat) + [Các bước chung](#cac-buoc-chung)). Viết prompt mới hoàn toàn rồi báo "đã dùng awesome-list" = FAIL khai báo sai.
+- Chỉ tùy chỉnh có chọn lọc: bỏ key/path nội bộ, chỉnh timing/subject/style theo task (xem [Pitfalls](#pitfalls)).
+- Sau khi dùng phải nêu slug prompt đã tái dùng; không nêu được = chưa thực sự dùng hệ.
+
+### Phần tùy chỉnh
+- Subject, timing, style, tech target (Canvas/Three.js...), độ dài output. Cổng duyệt 2 tầng (thiếu 1 là FAIL): (1) chọn prompt nào — trình 2-3 ứng viên kèm lý do qua question tool, user pick 1 mới được delegate (cấm tự chốt rồi làm); (2) nêu giữ nguyên phần nào của prompt gốc + đổi phần nào, user ok mới render. Cấm đưa key người khác / số liệu bịa vào tùy chỉnh.
+
+### Phân công ai làm gì
+- Agent chính: clone + lọc + trình 2-3 prompt ứng viên kèm lý do qua question tool, chờ user pick 1 (cấm tự chốt rồi delegate) + gom ràng buộc (Opus 5.5 access, WebGL, mạng X/Skillry).
+- Giao nguyên cục render cho claude: prompt gốc + constraint + output mong đợi (HTML bao lâu, tech gì) + cách verify (đủ giây, console sạch). Agent chính cấm tự viết code animation.
+- Agent verify output: mở browser test đủ trang/giây, đối chiếu gốc/remake nếu có.
+
 ### Định vị khác biệt
 - So với Skillry video skills (chợ trả phí, 359 video skills, installs 200-518, preview + workflow đóng gói): awesome-list miễn phí, prompt gốc đầy đủ, gốc/remake side-by-side để học. Quyết định: cần học prompt thật 0đ → awesome-list; cần taste đóng gói + hướng dẫn + preview cài 1 lệnh → Skillry (`../skillry/`).
 - So với engine mở (HyperFrames/Remotion trực tiếp, repo hàng chục K★): engine cho pipeline deterministic, awesome-list cho ý tưởng prompt viral đã có người thử. Quyết định: cần sản xuất hàng loạt ổn định → engine trực tiếp; cần 1 ý tưởng viral để thử nhanh → copy 1 prompt ở đây.
@@ -85,13 +98,14 @@
 ### Các bước chung
 1. Chốt nhu cầu (motion/explainer/3D/game) → lọc `data/videos.json` theo `category`/`tech_tags`/`has_remake`.
 2. Mở `prompts/<slug>.md` + X gốc + Skillry remake (nếu có) để hiểu kỳ vọng.
-3. Copy prompt → paste vào agent Opus 5.5, nêu rõ output HTML + thời lượng + tech (Canvas/Three.js...).
-4. Render + mở browser test (đủ trang, đủ giây, không lỗi console/WebGL).
-5. Cần chuẩn riêng thì sweep lại (UI → Hallmark); cần đóng gói thành skill thì chuyển sang Skillry workflow.
+3. Trình shortlist 2-3 prompt kèm lý do qua question tool, chờ user pick 1 (cấm tự chốt rồi delegate).
+4. Copy prompt đã duyệt → paste vào agent Opus 5.5, nêu rõ output HTML + thời lượng + tech (Canvas/Three.js...).
+5. Render + mở browser test (đủ trang, đủ giây, không lỗi console/WebGL).
+6. Cần chuẩn riêng thì sweep lại (UI → Hallmark); cần đóng gói thành skill thì chuyển sang Skillry workflow.
 
 ### Prompt mẫu
 - "Dùng prompt `prompts/ror-fly-880547.md` (recipe cocktail 30s, Canvas) build lại bằng Opus 5.5 thành 1 file HTML mở được ngay, đủ nguyên liệu + số đo theo từng bước."
-- "Lọc `data/videos.json` lấy 3 prompt motion có `has_remake=true` + tag canvas/svg, so gốc X vs remake Skillry, rồi chọn 1 để render lại."
+- "Lọc `data/videos.json` lấy 3 prompt motion có `has_remake=true` + tag canvas/svg, so gốc X vs remake Skillry, trình tôi shortlist để tôi chọn 1 rồi mới render lại."
 - Ví dụ điền sẵn: "Copy prompt motion Canvas `anabology-491441` (bỏ phần API key nội bộ), build music video lyrics hiển thị to/nhỏ xen kẽ, background bớt busy chỗ lyrics lớn."
 
 ### Pitfalls
@@ -142,6 +156,19 @@
 - Backing organization: `yihui-dev` (same author as Skillry `yihui_indie`), repo `github.com/yihui-dev/awesome-opus5-5-videos` (12,417★ / 1,313 forks / 46 watchers / 7 issues, created 27/09/2026, pushed 13/10/2026 — API 29/10/2026), MIT.
 - Core method: each entry = prompt markdown + JSON record (slug, author, post_url, category, tech_tags, prompt, poster, skillry_url, added, has_remake). 418/703 (~59.5%) have a live Skillry remake. No own render engine.
 - Per-usecase differences: motion (Canvas/SVG/GSAP, copy-runs) vs 3D (Three.js/GLSL/WebGL, needs GPU) vs explainer (script + voice timing) vs interactive (playable/physics, needs input testing).
+
+### Invariant core
+- Always start from one existing prompt in the repo: filter `data/videos.json` by category/tech_tags/has_remake → pick → copy the prompt block verbatim (see Sub-usecase 1 + Shared steps). Authoring a brand-new prompt while claiming awesome-list use = false-claim FAIL.
+- Selectively customize only: drop internal keys/paths, adjust timing/subject/style to the task (see Pitfalls).
+- After use, state the reused prompt slug; unable = the system was not really used.
+
+### Customizable surface
+- Subject, timing, style, tech target (Canvas/Three.js...), output length. Two-level approval gate (missing either = FAIL): (1) which prompt — present 2-3 candidates with reasons via the question tool, delegate only after the user picks one (never self-pick then proceed); (2) state what stays from the original prompt + what changes; render only after user ok. Never bring others' keys / invented numbers into customization.
+
+### Work split
+- Main agent: clone + filter + present 2-3 candidate prompts with reasons via the question tool, wait for the user to pick one (never self-pick then delegate) + gather constraints (Opus 5.5 access, WebGL, X/Skillry network).
+- Hand the whole render to claude: original prompt + constraints + expected output (HTML length, tech) + verify method (full seconds, clean console). The main agent never writes animation code itself.
+- Agent verifies output: browser-test full pages/seconds, compare against original/remake when available.
 
 ### Differentiating positioning
 - Vs Skillry video skills (paid marketplace, 359 video skills, packaged taste + guided workflow): awesome-list is free, full original prompts, original/remake side-by-side for learning. Pick awesome-list for free prompt study; Skillry for packaged taste + 1-command install.
@@ -202,13 +229,14 @@
 ### Shared steps
 1. Fix need (motion/explainer/3D/game) → filter `data/videos.json` by `category`/`tech_tags`/`has_remake`.
 2. Open `prompts/<slug>.md` + X original + Skillry remake (if any).
-3. Copy prompt → paste into Opus 5.5 agent with explicit HTML + duration + tech ask.
-4. Render + browser-test (full pages/seconds, clean console/WebGL).
-5. Need a custom standard → re-sweep (UI → Hallmark); need a packaged skill → Skillry workflow.
+3. Present a 2-3 prompt shortlist with reasons via the question tool, wait for the user to pick one (never self-pick then delegate).
+4. Copy the approved prompt → paste into Opus 5.5 agent with explicit HTML + duration + tech ask.
+5. Render + browser-test (full pages/seconds, clean console/WebGL).
+6. Need a custom standard → re-sweep (UI → Hallmark); need a packaged skill → Skillry workflow.
 
 ### Sample prompts
 - "Use prompt `prompts/ror-fly-880547.md` (30s cocktail recipe, Canvas) to rebuild a 1-file HTML version with full ingredients + measurements."
-- "Filter `data/videos.json` for 3 motion prompts with `has_remake=true` + canvas/svg, compare X original vs Skillry remake, pick 1 to re-render."
+- "Filter `data/videos.json` for 3 motion prompts with `has_remake=true` + canvas/svg, compare X original vs Skillry remake, present the shortlist for me to pick 1 before re-rendering."
 - Filled example: "Copy the Canvas motion prompt `anabology-491441` (drop internal API keys), build lyric motion graphics with big/small lyric variance, calm background where lyrics are big."
 
 ### Pitfalls

@@ -22,6 +22,9 @@
 - Gates máy quét được (contrast 4.5:1, focus-visible 3:1, fold 1280x800, word budget ~80/900px) — quyết định chọn Hallmark thay vì generator nhanh khi gates quyết định. Xem [Định vị](../../items/hallmark/README.md#dinh-vi-khac-biet).
 - 10 job anatomy + hero-first + review fresh-context: page khác brief ra shape khác nhau, không phải đổi màu template. Được review sâu `andrew.ooo 18/07/2026` xác nhận: *"Two Hallmark pages for different briefs should have different section rhythms"* — xem [Tham khảo sử dụng](../../items/hallmark/README.md#tham-khao-su-dung).
 
+### Phân công CHO UI này
+- Agent chính dựng page + sweep tĩnh; bước render thật (`capture.mjs`, `sloplint --render`, review render) giao nguyên cục cho claude; verify gates trước khi báo xong. Chi tiết: [Phân công gốc](../../items/hallmark/README.md#phan-cong-ai-lam-gi).
+
 ### Link về item gốc (3 chiều)
 - Gốc: `../../items/hallmark/README.md` (Cài đặt / Cách hoạt động / Định vị / Bảng usecase / Prompt mẫu / Pitfalls / Tham khảo sử dụng).
 - Index domain: `./README.md` (hàng Hallmark ở điều hướng + định vị + chồng lấn).
@@ -44,6 +47,9 @@ UI-only deltas for Hallmark. Origin lives at `../../items/hallmark/README.md`; c
 
 ### Core strengths FOR UI
 - Machine gates (4.5:1, 3:1, 1280x800 fold, ~80-word/900px budget) + 10-job anatomy + hero-first + cold review.
+
+### Work split FOR this UI
+- Main agent builds the page + static sweep; real-render steps (`capture.mjs`, `sloplint --render`, render reviews) go to claude as a whole; verify gates before reporting done. Details: [origin Work split](../../items/hallmark/README.md#work-split).
 
 ### Links to origin (3-way)
 - Origin: `../../items/hallmark/README.md`. Index: `./README.md`. Backlisted at origin `#where-used`.

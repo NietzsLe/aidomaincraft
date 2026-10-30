@@ -1,4 +1,4 @@
-# templates/item-template.md — mẫu điền item (CHARTER v8, khung item giữ nguyên v7)
+# templates/item-template.md — mẫu điền item (CHARTER v9, khung item v7 + bộ 3 cốt lõi/tùy chỉnh/phân công)
 
 > Copy file này thành `items/<solution>/README.md`, điền vào chỗ `[...]`, xóa dòng hướng dẫn `>` khi xong. Giữ song ngữ VI trước EN sau. Chi tiết gốc sống ở đây; domain chỉ link về, không copy.
 
@@ -19,6 +19,15 @@
 - Tổ chức đứng sau: [ai làm | repo/registry link | license | nhịp update | số liệu stars/installs]
 - Phương thức hoạt động chung: [cơ chế cốt lõi 2-3 câu. Đạt: `Hallmark chạy gates + scaffold + sweep qua sloplint --render`. Không đạt: `công cụ AI mạnh`.]
 - Khác biệt vận hành theo usecase: [mỗi usecase con 1 dòng: input nào → script/lệnh nào → output gì]
+
+### Cốt lõi bất biến
+- [2-4 gạch: việc BẮT BUỘC tái dùng + artifact cụ thể. Đạt: `awesome-list: luôn xuất phát từ 1 prompt có sẵn (lọc → chọn → copy nguyên văn), cấm viết mới hoàn toàn`. Không đạt: `dùng prompt cho video`.]
+
+### Phần tùy chỉnh
+- [Tham số được đổi: subject/timing/style/route... + cổng duyệt. Cấm liệt kê `must-not` ở đây.]
+
+### Phân công ai làm gì
+- [Agent chính làm [...] → giao nguyên cục cho claude bằng lệnh delegate nào → agent verify gì. Handoff: đầu vào + lệnh delegate + output mong đợi + cách verify.]
 
 ### Định vị khác biệt
 - So với [tên hệ viral cùng phân khúc + số liệu]: [khác gì + ngưỡng/ví dụ + khi nào chọn nó / khi nào bỏ].
@@ -92,6 +101,15 @@
 - Backing organization: [...]
 - Core operating method: [Good: `...`. Bad: `powerful AI tool`.]
 - Per-usecase operating differences: [...]
+
+### Invariant core
+- [2-4 bullets: what MUST be reused + concrete artifact. Good: `awesome-list: always start from one existing prompt (filter → pick → copy verbatim), never author from scratch`. Bad: `use prompts for video`.]
+
+### Customizable surface
+- [Tunable parameters: subject/timing/style/route... + two-level approval gate: (1) which catalog artifact — shortlist 2-3 with reasons, user picks before any delegate; (2) what stays/changes. Waivers quote the user's explicit ok. Never list `must-not` here.]
+
+### Work split
+- [Main agent does [...] (present shortlist, wait for user pick — never self-pick then delegate) → hands the whole job to claude via which delegate command → agent verifies what. Handoff: inputs + delegate command + expected output + verify method.]
 
 ### Differentiating positioning
 - Vs [viral same-segment name + numbers]: [difference + threshold/example + when to pick/drop].

@@ -3,9 +3,9 @@
 ## Tiếng Việt
 
 ### A. Tồn tại (thiếu là FAIL)
-- [ ] Item đủ khung v7: Dùng khi / Bỏ qua khi / Cài đặt / Cách item hoạt động (3 phần) / Định vị khác biệt / Bản đồ phủ usecase (★ + trung bình + không hỗ trợ) / Usecase con 6 field / Bước chung / Prompt mẫu / Pitfalls / Tham khảo sử dụng (review sâu + số trung bình có trọng số) / Tham khảo / Được dùng ở đâu (link domain) / Quay lại index.
+- [ ] Item đủ khung v9: Dùng khi / Bỏ qua khi / Cài đặt / Cách item hoạt động (3 phần) / Cốt lõi bất biến / Phần tùy chỉnh / Phân công ai làm gì / Định vị khác biệt / Bản đồ phủ usecase (★ + trung bình + không hỗ trợ) / Usecase con 6 field / Bước chung / Prompt mẫu / Pitfalls / Tham khảo sử dụng (review sâu + số trung bình có trọng số) / Tham khảo / Được dùng ở đâu (link domain) / Quay lại index.
 - [ ] Index domain đủ: mục đích 1 dòng / điều hướng (cho phép NHIỀU item chính 1 việc + tiêu chí phân biệt) / định vị / chồng lấn / workflow / danh sách item.
-- [ ] Mỗi cặp item-domain có `domains/<d>/using-<x>.md` đủ khung: usecase trong domain / lệnh mẫu / lưu ý riêng / điểm mạnh CHO domain / link về item gốc đúng section.
+- [ ] Mỗi cặp item-domain có `domains/<d>/using-<x>.md` đủ khung: usecase trong domain / lệnh mẫu / lưu ý riêng / điểm mạnh CHO domain / phân công CHO domain / link về item gốc đúng section.
 - [ ] Song ngữ VI trước EN sau, đủ cả 2.
 
 ### B. Chính xác có nguồn (thiếu nguồn là FAIL)
@@ -41,22 +41,27 @@ Lượt 1 — Người không biết gì (bắt thiếu sót không rõ ràng):
 - [ ] Mỗi usecase con: input là gì, chạy lệnh/script nào, output ra file/giao diện nào? FAIL nếu thiếu 1 trong 3.
 - [ ] Thuật ngữ nào chưa giải thích lần đầu xuất hiện (Floor, sweep, scaffold, variant, MCP registry)? FAIL nếu dùng trước, giải thích sau.
 - [ ] Ví dụ có đủ cụ thể để làm theo từng bước không? FAIL nếu ví dụ dùng `<...>` mà không có 1 case điền sẵn.
+- [ ] Đọc có biết được "dùng hệ này nghĩa là tái dùng cái gì" không (cốt lõi bất biến + artifact cụ thể)? FAIL nếu chỉ hiểu chung chung mà không chỉ ra được artifact phải tái dùng.
+- [ ] Ví dụ có gắn nhãn minh họa (không phải mặc định) và bước chọn đứng trước ví dụ không? FAIL nếu ví dụ đọc như đề xuất mặc định duy nhất (neo bias).
 
 Lượt 2 — Thẩm tra từng usecase (cơ chế khác nhau):
 - [ ] Mỗi usecase con nêu rõ cơ chế khác usecase khác ở đâu (ví dụ Hallmark component bỏ deal theme + hero; React Bits tool web export asset thay vì CLI). FAIL nếu 2 usecase mô tả giống nhau.
 - [ ] Lệnh copy-paste chạy được thật trên stack đã nêu (variant, path, flag). FAIL nếu thiếu variant/flag bắt buộc.
 - [ ] Ngưỡng đo được (số px, %, số states, checklist gates). FAIL nếu ngưỡng kiểu `đảm bảo đẹp`.
 - [ ] Pitfalls gắn đúng usecase đó, không copy chung.
+- [ ] Mỗi usecase ghi rõ bước nào của ai (agent chính vs claude + lệnh delegate)? FAIL nếu phân công mơ hồ hoặc 2 usecase cùng phân công y hệt mà cơ chế khác nhau.
 
 Lượt 3 — Người cần quyết định so sánh (đủ để chọn vs hệ viral không):
 - [ ] Với 1 case cụ thể tự đặt (ví dụ `landing SaaS cần pass gates` / `1 hero text React`), chỉ đọc index + 2 item so sánh có chọn được không, mất bao lâu? FAIL nếu quá 3 phút vẫn phân vân.
 - [ ] Bảng định vị nêu rõ khi nào chọn A bỏ B bằng tiêu chí đo được (stack/giá/pass gates/LCP/a11y). FAIL nếu lý do kiểu `cũng tốt`.
 - [ ] Đối thủ so sánh là hệ viral thật (tên + số liệu), cùng phân khúc. FAIL nếu đối thủ vô danh hoặc khác phân khúc.
+- [ ] Với case "sao không viết mới hoàn toàn thay vì dùng hệ?", tài liệu có trả lời được bằng artifact cốt lõi + tiêu chí đo được không? FAIL nếu không phân biệt được dùng hệ vs tự làm.
 - [ ] Ghi lại case đã thử + quyết định + lý do 1 dòng vào `CHANGELOG.md` hoặc handoff review.
 
 **Lượt 4+ — Vòng review đối lập không giới hạn (lặp đến khi tài liệu cụ thể mới dừng):**
 - Mỗi lượt là 1 persona khác lượt trước (bốc từ bộ vai bên dưới, cấm 2 lượt liên tiếp cùng vai, cấm hỏi lại câu lượt trước đã trả lời đạt).
 - Mỗi lượt phải làm đủ 3 việc: (1) đặt câu hỏi đối lập mới — `khác gì hệ X trong việc A?`, `tại sao phải chọn hệ này trong khi đã có hệ B?`, `bẫy ở đâu (giá, lock-in, giới hạn free)?`, kèm yêu cầu chứng minh bằng số/lệnh/nguồn, không bằng tính từ; (2) đề xuất kiểm tra bổ sung cụ thể (lệnh phải chạy, docs phải mở, số phải đối chiếu); (3) phán quyết pass/fail từng mục.
+- Mỗi lượt Lượt 4+ phải chứa ít nhất 1 trong 2 câu bắt buộc: `mày tái dùng artifact nào của hệ X (slug/variant/skill/gates)?` (core-fidelity) và `bước này của ai — agent chính hay claude — lệnh delegate đâu?` (delegation-boundary). Thiếu cả 2 = lượt không hợp lệ.
 - Tác giả chạy kiểm tra bổ sung → sửa → lặp lượt mới với vai mới. Mỗi lượt ghi log: vai nào, hỏi gì, kết quả gì.
 - Bộ vai xoay vòng (không bao giờ dùng cùng vai 2 lượt liên tiếp): Kẻ hoài nghi (chỉ tin số, luôn hỏi “sao không B”) · Người vận hành khó tính (chỉ quan tâm cài/chạy được trong 10 phút không, thiếu bước nào) · Người mới hoàn toàn (không biết gì, bắt mọi chỗ phải đoán) · Người giữ ngân sách (chỉ hỏi tiền, free/lock-in/tổng sở hữu) · Phe đối thủ (bênh hệ B, bắt item phải thắng bằng tiêu chí đo được).
 - Điều kiện dừng (thiếu 1 là lặp tiếp): (1) hết FAIL theo A–F; (2) không còn câu “tại sao không B” nào chưa trả lời bằng số/lệnh/nguồn; (3) mỗi usecase con đã qua ít nhất 1 thử thách “chứng minh đi” và đứng vững; (4) bài kiểm tra 3 phút: người lạ đọc index + item là chọn được.
@@ -104,17 +109,18 @@ Mục này dạy *cách hỏi*, không chỉ *mục cần có*. Áp dụng nguy�
 - [ ] `scripts/install.sh` / `uninstall.sh` / `aidomaincraft_setup.py` chạy được với `--target` là repo hoặc thư mục thường; `--dry-run` không ghi file; cài lại idempotent (`unchanged already vN`); marker lệch (`BEGIN != END`) từ chối.
 - [ ] `doctor` OK trên cả 2 mode (reference-only + `--vendor`); `doctor` + `check-update` báo outdated kèm đúng 1 lệnh upgrade; `uninstall` xóa hết block, snapshot mặc định move sang `.aidomaincraft.removed-*` (`--purge` mới xóa hẳn).
 - [ ] `version` in đủ 3 trục (installer + template block vN + CHARTER nguồn + block đã cài + manifest); `check-update` exit 1 khi có bản mới + in `UPDATE AVAILABLE`; `upgrade` 1 lệnh lên bản mới (kèm refresh snapshot vendor khi có).
-- [ ] Block v4+: tuân thủ tuyệt đối 5 lớp (`must-read/env-gate/must-follow/must-verify/must-not`) + hard list 4 items + delegation + adapt-and-approve (bảng A/B/C + cổng duyệt + ranh giới đỏ `must-not` không bao giờ offer).
-- [ ] `./tests/test.sh` xanh trước khi merge (gồm case block cũ vN-1 → `check-update`/`doctor` báo + `upgrade` hết; case block đủ trigger + ask-first + 5 lớp + hard list + approval).
+- [ ] Block v5+: tuân thủ tuyệt đối 5 lớp (`must-read/env-gate/must-follow/must-verify/must-not`) + hard list 4 items + core-fidelity (sau khi dùng nêu artifact tái dùng) + handoff format + delegation + adapt-and-approve (bảng A/B/C + cổng duyệt + ranh giới đỏ `must-not` không bao giờ offer).
+- [ ] `./tests/test.sh` xanh trước khi merge (gồm case block cũ vN-1 → `check-update`/`doctor` báo + `upgrade` hết; case block đủ trigger + ask-first + 5 lớp + hard list + core-fidelity + approval).
+- [ ] Delegate tốn kém (render video, cài skill trả phí, browser/image ngoài) có log user pick artifact cụ thể (slug/variant/skill + giữ/đổi gì + tốn gì) TRƯỚC khi chạy; tự chốt rồi delegate = FAIL (duyệt hướng lớn không thay thế duyệt artifact).
 
 ---
 
 ## English
 
 ### A. Existence (missing = FAIL)
-- [ ] Item has the full v7 frame: When/skip / Install / How it works (3 parts) / Differentiation / Coverage map (★ + medium + unsupported) / 6-field sub-usecases / Shared steps / Prompts / Pitfalls / Usage references (deep + weighted averages) / References / Where used (domain links) / Back to index.
+- [ ] Item has the full v9 frame: When/skip / Install / How it works (3 parts) / Invariant core / Customizable surface / Work split / Differentiation / Coverage map (★ + medium + unsupported) / 6-field sub-usecases / Shared steps / Prompts / Pitfalls / Usage references (deep + weighted averages) / References / Where used (domain links) / Back to index.
 - [ ] Domain index has: 1-line purpose / routing (MULTIPLE primaries per job allowed + distinguishing rule) / positioning / overlap / combined workflow / item list.
-- [ ] Every item-domain pair has `domains/<d>/using-<x>.md` with: usecases in this domain / concrete commands / domain-specific notes / core strengths FOR this domain / links to exact item sections.
+- [ ] Every item-domain pair has `domains/<d>/using-<x>.md` with: usecases in this domain / concrete commands / domain-specific notes / core strengths FOR this domain / work split FOR this domain / links to exact item sections.
 - [ ] Bilingual VI first EN second, both present.
 
 ### B. Sourced accuracy (unsourced = FAIL)
@@ -146,22 +152,27 @@ Pass 1 — Total beginner (catch unclear omissions):
 - [ ] Each sub-usecase: what input, which command/script, what file/UI output? FAIL if any of the 3 is missing.
 - [ ] Every term explained on first use (Floor, sweep, scaffold, variant, MCP registry)? FAIL if used before explained.
 - [ ] Examples concrete enough to follow step by step? FAIL if the example uses `<...>` with no filled case.
+- [ ] Can a reader tell "using this system means reusing what" (invariant core + concrete artifact)? FAIL on generic understanding with no reusable artifact identified.
+- [ ] Are examples labeled illustrative (not defaults) with the selection step before the example? FAIL if an example reads as the single recommended default (anchor bias).
 
 Pass 2 — Per-usecase mechanism check:
 - [ ] Each sub-usecase states how its mechanism differs (e.g. Hallmark component skips theme deal + hero; React Bits web tools export assets instead of CLI). FAIL if 2 usecases read identically.
 - [ ] Copy-paste commands truly runnable on the stated stack (variant, path, flag). FAIL if a required variant/flag is missing.
 - [ ] Measurable bars (px, %, state counts, gate checklist). FAIL on bars like `ensure beauty`.
 - [ ] Pitfalls attached to that exact usecase, not shared generic copy.
+- [ ] Does each sub-usecase state whose step it is (main agent vs claude + delegate command)? FAIL on vague splits or two identical splits for different mechanisms.
 
 Pass 3 — Comparison decision check:
 - [ ] With one self-set concrete case (e.g. `SaaS landing must pass gates` / `one React hero text`), can a choice be made from the index + 2 items in under 3 minutes? FAIL if still undecided.
 - [ ] Positioning states when to pick A over B with measurable criteria (stack/price/gates/LCP/a11y). FAIL on reasons like `also good`.
 - [ ] Opponents are real viral same-segment systems (name + numbers). FAIL on anonymous or off-segment opponents.
+- [ ] Can the docs answer "why not author from scratch instead of using the system" with the core artifact + measurable criteria? FAIL if system use vs hand-making is indistinguishable.
 - [ ] Record the tried case + decision + 1-line reason in `CHANGELOG.md` or the review handoff.
 
 **Round 4+ — Unbounded adversarial review loop (repeat until the docs are concrete):**
 - Each round is a different persona from the previous round (draw from the deck below; never the same persona twice in a row, never re-ask a question a prior round already passed).
 - Each round must do all 3: (1) ask NEW adversarial questions — `how is this different from system X in job A?`, `why pick this when B exists?`, `where is the catch (price, lock-in, free limits)?` — demanding proof by numbers/commands/sources, never adjectives; (2) propose concrete additional checks (commands to run, docs to open, numbers to cross-check); (3) deliver pass/fail per item.
+- Each Round 4+ must contain at least 1 of 2 mandatory questions: `which artifact of system X did you reuse (slug/variant/skill/gates)?` (core-fidelity) and `whose step is this — main agent or claude — where is the delegate command?` (delegation-boundary). Missing both = invalid round.
 - Author runs the additional checks → fixes → next round with a new persona. Log every round: which persona, what was asked, what resulted.
 - Rotating persona deck (never same persona twice in a row): The Skeptic (trusts only numbers, always asks "why not B") · The Grumpy Operator (only cares: can I install/run this in 10 minutes, which step is missing) · The Total Beginner (knows nothing, flags every guessing point) · The Budget Holder (only asks money: free/lock-in/total cost) · The Opponent Camp (roots for system B, forces the item to win on measurable criteria).
 - Stop conditions (miss one and the loop continues): (1) zero FAIL under A–F; (2) no unanswered "why not B" question left without numbers/commands/sources; (3) every sub-usecase survived at least one "prove it" challenge; (4) the 3-minute test: a stranger reads the index + item and can decide.
@@ -209,5 +220,6 @@ This section teaches *how to ask*, not just *what to include*. Apply verbatim to
 - [ ] `scripts/install.sh` / `uninstall.sh` / `aidomaincraft_setup.py` run with `--target` as repo or plain directory; `--dry-run` writes nothing; reinstall is idempotent (`unchanged already vN`); unbalanced markers refuse.
 - [ ] `doctor` OK in both modes (reference-only + `--vendor`); `doctor` + `check-update` report outdated with exactly one upgrade command; `uninstall` removes all blocks, snapshot moved to `.aidomaincraft.removed-*` by default (`--purge` deletes).
 - [ ] `version` prints all 3 axes (installer + template block vN + source CHARTER + installed blocks + manifest); `check-update` exits 1 on update + prints `UPDATE AVAILABLE`; `upgrade` is one command (refreshes vendor snapshot when present).
-- [ ] Block v4+: absolute 5-class compliance (`must-read/env-gate/must-follow/must-verify/must-not`) + hard list for 4 items + delegation + adapt-and-approve (A/B/C table + approval gate + `must-not` red line never offered).
-- [ ] `./tests/test.sh` green before merge (incl. stale-block vN-1 → `check-update`/`doctor` flag + `upgrade` clears; block has triggers + ask-first + 5 classes + hard list + approval).
+- [ ] Block v5+: absolute 5-class compliance (`must-read/env-gate/must-follow/must-verify/must-not`) + hard list for 4 items + core-fidelity (state reused artifact after use) + handoff format + delegation + adapt-and-approve (A/B/C table + approval gate + `must-not` red line never offered).
+- [ ] `./tests/test.sh` green before merge (incl. stale-block vN-1 → `check-update`/`doctor` flag + `upgrade` clears; block has triggers + ask-first + 5 classes + hard list + core-fidelity + approval).
+- [ ] Costly delegates (video render, paid skill install, outside browser/image) log the user's pick of the concrete artifact (slug/variant/skill + what stays/changes + cost) BEFORE running; self-picking then delegating = FAIL (direction approval never substitutes artifact approval).

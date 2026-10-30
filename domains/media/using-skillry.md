@@ -21,6 +21,9 @@
 ### Điểm mạnh cốt lõi CHO media
 - Thắng ở taste đóng gói + curation + preview trước khi cài, thua về capability — trả phí hợp lý khi lặp lại nhiều output cùng taste. Break-even: 1 lần lẻ → free; <8 tháng → Monthly; ≥8 tháng → Yearly (79/9.99); >2 năm → Lifetime. Xem [Định vị](../../items/skillry/README.md#dinh-vi-khac-biet-da-doi-chieu-skillssh-leaderboard-ngay-2026-10-29) + [Tham khảo sử dụng](../../items/skillry/README.md#tham-khao-su-dung).
 
+### Phân công CHO media này
+- Agent chính tìm/so/cài skill (video/deck/OG) + chạy workflow; bước browser/account (trang skill, preview, narration ngoài) giao claude; verify output + license. Chi tiết: [Phân công gốc](../../items/skillry/README.md#phan-cong-ai-lam-gi).
+
 ### Link về item gốc (3 chiều)
 - Gốc: `../../items/skillry/README.md` (Usecase 1/3/4 / Cài đặt / Định vị / Hồ sơ quyết định / Tham khảo sử dụng).
 - Index domain: `./README.md`.
@@ -44,6 +47,9 @@ Video/slides/image part of Skillry FOR media. Origin at `../../items/skillry/REA
 
 ### Core strengths FOR media
 - Packaged taste + curation + previews — pay when repeating many outputs in one taste; break-even by months as in origin Positioning.
+
+### Work split FOR this media
+- Main agent finds/compares/installs the skill (video/deck/OG) + runs its workflow; browser/account steps (skill page, preview, external narration) go to claude; verify output + license. Details: [origin Work split](../../items/skillry/README.md#work-split).
 
 ### Links to origin (3-way)
 - Origin: `../../items/skillry/README.md`. Index: `./README.md`. Twin: `../ui/using-skillry.md`. Backlisted at origin `#where-used`.

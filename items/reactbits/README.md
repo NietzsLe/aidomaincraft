@@ -30,6 +30,19 @@ rồi `npx shadcn@latest mcp init --client claude` (đổi client: claude/cursor
 - Phương thức hoạt động chung: copy source sở hữu theo variant (`-JS-TW/-TS-CSS...`) qua CLI shadcn/jsrepo/copy tay, hoặc MCP registry `@react-bits`; tune live trong tool Studio/Lab rồi export. Không có gates/review/system như Hallmark.
 - Khác biệt vận hành theo usecase: text/background/component lắp 1 lệnh CLI/MCP theo tên; Center Stage/Shape Magic/Texture Lab/Sound Lab chạy trên web rồi export asset/video/GIF/`npx`, không qua CLI component.
 
+### Cốt lõi bất biến
+- Đúng đuôi variant khớp stack (`-TS-TW` vs `-JS-CSS`); chỉ cài đúng component cần qua 1 trong 3 đường (CLI shadcn/jsrepo/tay) + liệt kê dependencies (xem [Cài đặt](#cai-dat)).
+- Motion chỉ `transform/opacity`, loop >5s có pause, LCP <2MB, contrast 4.5:1, reduced-motion fallback; lắp xong sweep lại Hallmark (xem [Pitfalls](#pitfalls)).
+- Sau khi dùng phải nêu tên component + variant đã cài; không nêu được = chưa thực sự dùng hệ.
+
+### Phần tùy chỉnh
+- Chọn component nào, props, style tweak trong tokens hiện tại, số lượng effect (khuyến nghị 1-2, nhiều hơn thì hỏi user). Cổng duyệt: nêu đổi gì + giữ tokens gì.
+
+### Phân công ai làm gì
+- Agent chính: chốt nhu cầu + variant, cài đúng 1 component, gắn vào layout Hallmark, giữ tokens.
+- Giao cho claude verify render thật khi không có browser local: desktop/mobile, LCP, tắt JS, reduced-motion — kèm URL/component + ngưỡng cần đạt; cấm agent tự khẳng định motion đạt.
+- Agent verify: dependencies đã thêm + gates Hallmark không vỡ sau khi lắp.
+
 ### Định vị khác biệt
 - So với engine animation viral (Motion / Framer Motion, GSAP — hàng triệu users, API thuần): engine cho sức mạnh motion tự code, React Bits 50.5k★ cho component lắp sẵn + demo + variant. Quyết định chọn React Bits khi cần 1 hiệu ứng cụ thể chạy ngay (`SplitText-TS-TW`, background, carousel) qua 1 lệnh MCP/CLI; cần motion custom phức tạp, timeline, ScrollTrigger → dùng Motion/GSAP thuần, đừng bọc qua React Bits.
 - So với collection animated viral (Magic UI, Aceternity UI): cùng cho bricks copy-paste, khác ở React Bits có 4 biến thể rõ (`-JS-TW/-TS-CSS...`), registry MCP chuẩn (`@react-bits`), 5 tool Studio/Lab xuất asset/video/GIF. Quyết định chọn React Bits khi cần variant khớp stack + MCP + tool asset; chỉ cần 1 snippet Tailwind lẻ → Magic UI/Aceternity nhanh hơn.
@@ -127,6 +140,19 @@ then `npx shadcn@latest mcp init --client claude` (swap client per `get-started/
 - Backing organization: David Haz (DavidHDev), repo `github.com/DavidHDev/react-bits` (50.5k★), site `reactbits.dev`, MIT + Commons Clause.
 - Core operating method: copy owned source by variant via shadcn CLI/jsrepo/hand copy, or `@react-bits` MCP registry; tune live in Studio/Lab tools then export. No gates/review/system like Hallmark.
 - Per-usecase operating differences: text/background/component installs with 1 CLI/MCP command by name; Center Stage/Shape Magic/Texture Lab/Sound Lab run on the web then export assets/video/GIF/`npx`, not via the component CLI.
+
+### Invariant core
+- Exact variant suffix matching the stack (`-TS-TW` vs `-JS-CSS`); install exactly the needed component via one of 3 routes (shadcn CLI/jsrepo/hand) + list dependencies (see Install).
+- Motion `transform/opacity` only, >5s loops get pause, LCP <2MB, 4.5:1 contrast, reduced-motion fallback; re-sweep with Hallmark after installing (see Pitfalls).
+- After use, state the installed component + variant names; unable = the system was not really used.
+
+### Customizable surface
+- Which component, props, style tweaks within current tokens, effect count (1-2 recommended, more needs user ok). Approval gate: state what changes + which tokens stay.
+
+### Work split
+- Main agent: fix need + variant, install exactly one component, fit into the Hallmark layout, keep tokens.
+- Hand real-render verification to claude when there is no local browser: desktop/mobile, LCP, JS-off, reduced-motion — with URL/component + bars to meet; the agent never asserts motion quality itself.
+- Agent verifies: added dependencies + Hallmark gates still hold after install.
 
 ### Differentiating positioning
 - Vs viral animation engines (Motion / Framer Motion, GSAP — millions of users, raw APIs): engines give hand-coded motion power, React Bits 50.5k★ gives ready components + demos + variants. Pick React Bits when one concrete effect must run now (`SplitText-TS-TW`, background, carousel) via 1 MCP/CLI command; complex custom motion, timelines, ScrollTrigger → use raw Motion/GSAP, not wrapped via React Bits.

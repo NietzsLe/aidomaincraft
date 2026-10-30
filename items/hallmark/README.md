@@ -23,6 +23,20 @@
 - Phương thức hoạt động chung: gates máy (`sloplint.mjs`) + scaffold tokens (`theme.mjs scaffold`) + deal theme/draw shape + hero-first + fresh-context review + log rotation. Không phải generator vẽ tự do: mọi output phải pass Floor mới được ship.
 - Khác biệt vận hành theo usecase: build mới chạy đủ pre-flight/deal/draw/scaffold/hero/sweep; component bỏ deal theme + hero, bắt 8 states + preview, sweep `--scope component`; app-screen bỏ hero/shape/budget, scaffold `--scope app`, sweep `--scope app`; redesign chạy `--before/--kept/compare.html` giữ content + wiring; audit dừng ở báo cáo, không sửa file.
 
+### Cốt lõi bất biến
+- Mọi output phải pass gates máy: sửa hết FAIL, fix/waive hết REFLEX, Floor không bao giờ waive, không ship khi còn FAIL/REFLEX mở (xem [Pitfalls](#pitfalls-loi-hallmark-bat-nhieu-nhat)).
+- Build mới chạy đủ pre-flight → deal theme → hero-first (hero pass fold 1280x800 + word budget mới build sections) → sweep `sloplint --render` (xem [Bảng usecase](#bang-usecase-con-lenh-dung)).
+- Redesign giữ content + wiring (`--before/--kept/compare.html`); audit chỉ báo cáo, không sửa file.
+- Sau khi dùng phải nêu gates đã pass (Floor 0 FAIL + finish-review); không nêu được = chưa thực sự dùng hệ.
+
+### Phần tùy chỉnh
+- Theme/genre/tone/vibe, scope (`--fast` bỏ tier Finish kèm 1 dòng lý do — cấm bỏ Floor), depth redesign (full/restyle/polish), khóa system (`design.md`). Cổng duyệt: nêu đổi gì + giữ gì, user ok mới làm.
+
+### Phân công ai làm gì
+- Agent chính: pre-flight, hỏi 1 lần, deal theme, scaffold, viết page, đọc gates, ghi log + stamp.
+- Giao cho claude các bước cần browser thật: `capture.mjs` chụp sản phẩm + `sloplint --render` + hero/finish review render — giao nguyên cục kèm URL/routes + gates cần pass; cấm agent tự kết luận render khi không có Chrome.
+- Agent verify: trích kết quả sweep (FAIL/REFLEX/answered) + `compare.html` khi redesign.
+
 ### Định vị khác biệt
 - So với generator UI viral (v0 by Vercel, Lovable — draft nhanh, hàng triệu users): Hallmark 39.5k★ chậm hơn ở draft đầu vì phải pre-flight + deal theme + hero-first + sweep, nhưng quyết định chọn Hallmark khi output phải pass gates máy (contrast 4.5:1, focus-visible 3:1, fold 1280x800, word budget ~80/900px, cấm bịa metric). Cần draft nhanh không cần gates → dùng generator nhanh, đừng dùng Hallmark.
 - So với lib component viral (shadcn/ui — copy-paste component đẹp): shadcn cho bricks, không cho taste + gates + review. Quyết định chọn Hallmark khi cần system đồng nhất nhiều page (tokens 1 nơi, `design.md` lock, log rotation chống lặp shape). Chỉ cần 1-2 component lẻ → shadcn/React Bits nhanh hơn.
@@ -127,6 +141,20 @@
 - Backing organization: Together AI / Nutlope, repo `github.com/Nutlope/hallmark` (39.5k★), skill `skills/hallmark/SKILL.md` v2.0.0, MIT, updated with gates + themes.
 - Core operating method: machine gates (`sloplint.mjs`) + token scaffold (`theme.mjs scaffold`) + theme deal/shape draw + hero-first + fresh-context review + log rotation. Not free drawing: nothing ships with open FAIL.
 - Per-usecase operating differences: new build runs full pre-flight/deal/draw/scaffold/hero/sweep; component skips theme deal + hero, requires 8 states + preview, `--scope component` sweep; app-screen skips hero/shape/budget, `--scope app` scaffold + sweep; redesign runs `--before/--kept/compare.html` keeping content + wiring; audit stops at the report, changes nothing.
+
+### Invariant core
+- Every output must pass machine gates: fix all FAIL, fix/waive all REFLEX, Floor is never waived, never ship with open FAIL/REFLEX (see Pitfalls).
+- New builds run full pre-flight → theme deal → hero-first (hero passes the 1280x800 fold + word budget before building sections) → `sloplint --render` sweep (see sub-usecase table).
+- Redesign keeps content + wiring (`--before/--kept/compare.html`); audit reports only, changes nothing.
+- After use, state the passed gates (Floor 0 FAIL + finish review); unable = the system was not really used.
+
+### Customizable surface
+- Theme/genre/tone/vibe, scope (`--fast` drops the Finish tier with a 1-line reason — never Floor), redesign depth (full/restyle/polish), system lock (`design.md`). Approval gate: state what changes + what stays; proceed only after user ok.
+
+### Work split
+- Main agent: pre-flight, ask once, theme deal, scaffold, page writing, gate reading, log + stamp.
+- Hand browser-dependent steps to claude as a whole: `capture.mjs` product screenshots + `sloplint --render` + hero/finish render reviews — with URLs/routes + gates to pass; the agent never asserts render results without Chrome.
+- Agent verifies: quoted sweep results (FAIL/REFLEX/answered) + `compare.html` for redesigns.
 
 ### Differentiating positioning
 - Vs viral UI generators (v0 by Vercel, Lovable — fast drafts, millions of users): Hallmark 39.5k★ is slower at first draft (pre-flight + theme deal + hero-first + sweep), but pick Hallmark when output must pass machine gates (contrast 4.5:1, focus-visible 3:1, 1280x800 fold, ~80-word/900px budget, no invented metrics). Need a fast draft without gates → use a fast generator, not Hallmark.

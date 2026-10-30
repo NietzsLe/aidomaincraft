@@ -1,5 +1,5 @@
 <!-- BEGIN aidomaincraft -->
-<!-- aidomaincraft claude-block v4 -->
+<!-- aidomaincraft claude-block v5 -->
 ## Aidomaincraft — usecase lookup
 
 This project can use **aidomaincraft** (UI + media lookup). The full rules live
@@ -15,11 +15,14 @@ file is absent).
   `git clone --depth 1 --branch main https://github.com/NietzsLe/aidomaincraft.git ~/.cache/aidomaincraft`
   (fallback `/tmp/aidomaincraft`); offline → use local `.aidomaincraft/` if
   present, else say missing instead of guessing.
-- Agent-first versions (the user only talks, you run the commands):
-  session start on a UI/media task → run the same `doctor` + `check-update`
-  as the `AGENTS.md` block yourself and report one plain line; plain user
-  asks map to `version` / `check-update` / CHANGELOG summary / `upgrade`;
-  read-only runs freely, `upgrade` needs user ok first.
+- Agent-first versions (user only talks, you run the commands): session start
+  on a UI/media task → run the same `doctor` + `check-update` as `AGENTS.md`
+  yourself, report one plain line; plain asks map to `version` /
+  `check-update` / CHANGELOG summary / `upgrade` (needs user ok first).
+- Core-fidelity + handoff (same as `AGENTS.md`): after use, state the reused
+  artifact (slug/variant/skill/gates); handoff = inputs + delegate command +
+  expected output + verify method; only the item's customizable surface is
+  tunable, after user approval.
 - Absolute compliance (same 5 classes as `AGENTS.md`, details there):
   must-read constraints first; env-gate (declare, missing → stop + propose);
   must-follow all steps in order; must-verify (quote the result, open FAIL =

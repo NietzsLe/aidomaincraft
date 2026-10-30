@@ -1,5 +1,5 @@
 <!-- BEGIN aidomaincraft -->
-<!-- aidomaincraft agents-block v4 -->
+<!-- aidomaincraft agents-block v5 -->
 ## Aidomaincraft — usecase lookup
 
 This project can use **aidomaincraft** (usecase-first lookup for UI + media work).
@@ -30,8 +30,8 @@ Item details live in the source repo — never copy commands/bars into this proj
     `python3 ~/.cache/aidomaincraft/scripts/aidomaincraft_setup.py doctor --target .`
     and `.../aidomaincraft_setup.py check-update --target .` yourself
     (read-only, no need to ask; fallback `/tmp/aidomaincraft` when HOME is not
-    writable), then report in one plain line, e.g. "lookup blocks v4, up to
-    date" or "blocks v4 installed, v5 available — upgrade?".
+    writable), then report in one plain line, e.g. "lookup blocks v5, up to
+    date" or "blocks v5 installed, v6 available — upgrade?".
   - When the user asks in plain words, map and run (no need to explain flags):
     "which version / đang dùng bản nào" → `version --target .`;
     "any update / có bản mới không" → `check-update --target .` (+ `--remote`
@@ -42,9 +42,17 @@ Item details live in the source repo — never copy commands/bars into this proj
     when one exists).
   - Rules: read-only commands (`version`, `check-update`, `doctor`, reading
     CHANGELOG) run freely; write commands (`upgrade`, cloning the source) need
-    one line of notice + user ok first. Offline or no network → report
-    `unknown`, keep working from the local snapshot, never block the task.
-    Never hand-edit the block.
+    one line of notice + user ok first.
+- Core-fidelity (prove you really used the system): after using an item, state
+  the reused artifact (prompt slug / variant / skill slug + label / passed
+  gates). Unable = not actually using it — say so instead of claiming.
+  Item cores live in each item's `Invariant core / Customizable surface /
+  Work split` sections — read them before use; only the surface is tunable,
+  and only after user approval.
+- Handoff format (every delegate call): inputs + exact delegate command +
+  expected output + verify method. A claude-owned step done by yourself = FAIL.
+- Offline or no network → report `unknown`, keep working from the local
+  snapshot, never block the task. Never hand-edit the block.
 - Absolute compliance (applies to every item and every task):
   - must-read: before using an item, read its constraints first (`Dùng khi /
     Bỏ qua khi`, Pitfalls, `must-not` lines in its README).

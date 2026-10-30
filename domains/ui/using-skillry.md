@@ -20,6 +20,9 @@
 ### Điểm mạnh cốt lõi CHO UI
 - Taste landing đóng gói (Mint/Cadence/Harbor) + preview + installs trước khi cài — chọn thay vì tự ráp free khi cần đúng taste + quy trình hướng dẫn. Engine free (shadcn 271.1K, agent-skills 32.3k★) thắng về capability. Xem [Định vị](../../items/skillry/README.md#dinh-vi-khac-biet-da-doi-chieu-skillssh-leaderboard-ngay-2026-10-29).
 
+### Phân công CHO UI này
+- Agent chính tìm/so/cài skill web + chạy workflow; bước browser/account (mở trang skill, đối chiếu preview) giao claude; verify `SKILL.md` + output. Chi tiết: [Phân công gốc](../../items/skillry/README.md#phan-cong-ai-lam-gi).
+
 ### Link về item gốc (3 chiều)
 - Gốc: `../../items/skillry/README.md` (Usecase 2 / Cài đặt / Định vị / Prompt mẫu / Pitfalls / Tham khảo sử dụng).
 - Index domain: `./README.md` (hàng skillry-web).
@@ -43,6 +46,9 @@ Web part of Skillry FOR UI. Origin at `../../items/skillry/README.md`. Video/dec
 
 ### Core strengths FOR UI
 - Packaged landing taste + previews + guided workflow — over free assembly when the exact Mint/Cadence taste decides.
+
+### Work split FOR this UI
+- Main agent finds/compares/installs the web skill + runs its workflow; browser/account steps (skill page, preview check) go to claude; verify `SKILL.md` + output. Details: [origin Work split](../../items/skillry/README.md#work-split).
 
 ### Links to origin (3-way)
 - Origin: `../../items/skillry/README.md`. Index: `./README.md`. Twin: `../media/using-skillry.md`. Backlisted at origin `#where-used`.

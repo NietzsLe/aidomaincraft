@@ -249,6 +249,7 @@ grep -q 'BP_H' "$root/items/wireframe-docs/templates/player.template.html" && gr
 grep -q 'fr-fit' "$root/items/wireframe-docs/templates/viewer.html" && ok "grid gap wrapper" || bad "grid gap missing"
 grep -q '| Khổ |.*| Cao viewport |' "$root/items/wireframe-docs/convention/tree-format.md" && ok "convention heights" || bad "heights missing in convention"
 grep -q 'ov-info' "$root/items/wireframe-docs/templates/player.template.html" && ok "dialog icon button" || bad "dialog icon missing"
+grep -q 'inner.style.zoom' "$root/items/wireframe-docs/templates/player.template.html" && ok "zoom scroll" || bad "zoom missing"
 grep -q 'tabstrip' "$root/items/wireframe-docs/templates/viewer.html" && grep -q 'tabstrip' "$root/items/wireframe-docs/templates/player.template.html" && ok "tab strip chrome" || bad "tab strip missing"
 if grep -q 'ⓘ' "$root/items/wireframe-docs/templates/player.template.html" "$root/items/wireframe-docs/templates/review-snippet.html"; then bad "text-circle-i remains"; else ok "no text-circle-i"; fi
 grep -q 'position: sticky; bottom: 0' "$root/items/wireframe-docs/templates/player.template.html" && ok "sticky card close" || bad "close not sticky"

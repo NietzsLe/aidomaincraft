@@ -55,7 +55,8 @@ button:focus-visible, .card:focus-visible { outline: 2px solid var(--focus); out
 .card .info b { font-size: 14px; font-weight: 500; color: var(--ink); }
 .card .info div { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
 .framebox { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 0; overflow: hidden; position: relative; }
-.framebox .stage { transform-origin: top left; position: relative; }
+.framebox .stage { position: relative; }
+#stage-wrap, #page-wrap { overflow-y: auto; overflow-x: hidden; }
 .tabstrip { display: flex; align-items: center; gap: 8px; background: var(--paper-3); border-bottom: 1px solid var(--rule); height: 34px; padding: 0 12px; font-size: 12px; color: var(--ink-2); flex: none; }
 .dots { display: inline-flex; gap: 6px; }
 .dots i { width: 10px; height: 10px; border-radius: 50%; }
@@ -210,9 +211,13 @@ function fitBox(wrap, inner, w, h) {
   var avail = Math.max(300, wrap.clientWidth || document.documentElement.clientWidth - 48);
   var sc = Math.min(1, avail / w);
   inner.style.width = w + "px";
-  inner.style.height = h + "px";
-  inner.style.transform = "scale(" + sc + ")";
+  inner.style.minHeight = h + "px";
+  inner.style.height = "";
+  inner.style.transform = "";
+  inner.style.zoom = sc;
   wrap.style.height = (TAB_H + Math.floor(h * sc)) + "px";
+  wrap.scrollTop = 0;
+  wrap.scrollLeft = 0;
   return sc;
 }
 function show(view) {
@@ -290,13 +295,13 @@ function markAction(s, sc) {
   var t = findTarget(spec.label);
   if (!t) return;
   t.el.classList.add("wf-press");
-  var x = 0, y = 0, el = t.el, stage = $("stage");
-  while (el && el !== stage) { x += el.offsetLeft || 0; y += el.offsetTop || 0; el = el.offsetParent; }
+  var r = t.el.getBoundingClientRect();
+  var wr = $("stage-wrap").getBoundingClientRect();
   var tag = document.createElement("div");
   tag.className = "action-tag";
   tag.textContent = spec.text;
-  tag.style.left = Math.max(4, x * sc) + "px";
-  tag.style.top = (TAB_H + (y + (t.el.offsetHeight || 24)) * sc + 6) + "px";
+  tag.style.left = Math.max(4, (r.left - wr.left + $("stage-wrap").scrollLeft)) + "px";
+  tag.style.top = Math.max(4, (r.bottom - wr.top + $("stage-wrap").scrollTop + 4)) + "px";
   tag.title = "Đang tác động: " + spec.text.replace(/^▸ /, "");
   $("stage-wrap").appendChild(tag);
 }
@@ -378,11 +383,6 @@ function typeInto(label, text, done) {
   }
   box.style.display = "none";
   t.el.classList.add("wf-press");
-  var cur = t.kind === "input" ? t.el.value : t.el.textContent;
-  if (cur === text) {
-    setTimeout(function () { t.el.classList.remove("wf-press"); done(); }, 250);
-    return;
-  }
   var i = 0;
   if (t.kind === "input") { t.el.value = ""; t.el.focus(); }
   else { t.el.setAttribute("data-orig", t.el.textContent); t.el.textContent = ""; }
@@ -455,6 +455,7 @@ function closeStageOverlay() {
 function showOverlay(s, kind, label) {
   closeStageOverlay();
   document.querySelectorAll(".action-tag").forEach(function (t) { t.remove(); });
+  $("stage-wrap").scrollTop = 0;
   var stage = $("stage");
   var q = '[data-wf-component="' + label.replace(/"/g, "") + '"]';
   var src = stage.querySelector(q);

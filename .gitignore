@@ -1,3 +1,5 @@
 .relay/
 .test/
-.tmp/
+.aidomaincraft/
+
+__pycache__/

@@ -130,11 +130,20 @@ while IFS= read -r line; do
   esac
 done < "$reg"
 
-# 14. wireframe-docs drafts stay under ignored .tmp/wireframes (v10.3)
-grep -q '\.tmp/wireframes/' "$root/items/wireframe-docs/README.md" && ok "wireframe tmp path" || bad "wireframe tmp path missing"
+# 14. wireframe-docs drafts stay under ignored .aidomaincraft/.tmp dated folders (v10.6)
+grep -q '\.aidomaincraft/\.tmp/wireframes/' "$root/items/wireframe-docs/README.md" && ok "wireframe dated path" || bad "wireframe dated path missing"
+grep -q 'YYYY-MM-DD-HHmm' "$root/items/wireframe-docs/README.md" && ok "wireframe datetime folders" || bad "datetime folder rule missing"
 grep -q 'git check-ignore' "$root/items/wireframe-docs/README.md" && ok "wireframe gitignore check" || bad "wireframe gitignore check missing"
-grep -q '\.tmp/wireframes/' "$root/domains/ui/using-wireframe-docs.md" && ok "using tmp path" || bad "using tmp path missing"
-grep -qF '.tmp/' "$root/.gitignore" && ok "root gitignores tmp" || bad "root tmp not ignored"
+grep -q '\.aidomaincraft/\.tmp/wireframes/' "$root/domains/ui/using-wireframe-docs.md" && ok "using dated path" || bad "using dated path missing"
+grep -q 'templates/viewer\.html' "$root/items/wireframe-docs/README.md" && ok "viewer in item" || bad "viewer missing in item"
+[ -f "$root/items/wireframe-docs/templates/viewer.html" ] && ok "viewer file exists" || bad "viewer file missing"
+for w in 360 768 1366 1920; do
+  grep -q "$w" "$root/items/wireframe-docs/templates/viewer.html" && ok "viewer has $w" || bad "viewer missing $w"
+done
+for w in 320 390 412 430 800 834 1280 1440 1600 2560; do
+  grep -q "$w" "$root/items/wireframe-docs/convention/tree-format.md" && ok "variant $w documented" || bad "variant $w missing"
+done
+grep -qF '.aidomaincraft/' "$root/.gitignore" && ok "root gitignores aidomaincraft" || bad "root aidomaincraft not ignored"
 
 # 15. wireframe-docs pair model: no build.py, standalone check, verified pair (v10.4)
 [ ! -e "$root/items/wireframe-docs/scripts/build.py" ] && ok "no build.py" || bad "build.py still present"

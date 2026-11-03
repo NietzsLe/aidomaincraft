@@ -18,11 +18,12 @@
 
 ### Áp dụng (không cài từ ngoài)
 - Điều kiện: Python 3.8+ (thư viện chuẩn only, không dependency).
-- Vị trí output: mọi tree/HTML nháp viết vào `.tmp/wireframes/` của dự án đích, không viết ra root để tránh commit nhầm. Tạo thư mục + đảm bảo ignored trước khi viết: `mkdir -p .tmp/wireframes`, kiểm tra `.gitignore` đã có dòng `.tmp/` chưa (thiếu thì thêm), verify bằng `git check-ignore -v .tmp/wireframes/<file>`.
-- Viết tree: copy `examples/tree.md` vào `.tmp/wireframes/<tên-trang>-tree.md`, sửa theo `convention/tree-format.md` (3 loại dòng: `# Page:`, `## Section:`, `- \`Kiểu\` **Nhãn** — note/states/effect/span/hide; layout/layout-md/lg/xl cho section).
-- Kiểm tra tree: `python3 scripts/check.py .tmp/wireframes/<tên-trang>-tree.md` (exit 0 + dòng PASS mới đạt; khóa metadata lạ, layout/span/hide sai đều FAIL).
-- Soạn wireframe: viết tay `.tmp/wireframes/<tên-trang>-wireframe.html` theo tree (1 file, đúng 4 khung `sm/md/lg/xl` rộng 360/768/1366/1920, mọi block gắn `data-wf-*`), mở browser xem.
-- Kiểm tra cặp: `python3 scripts/verify-pair.py .tmp/wireframes/<tên-trang>-tree.md .tmp/wireframes/<tên-trang>-wireframe.html` (exit 0 + dòng PASS mới đạt; mọi lệch thiếu/thừa/sai states-effect đều FAIL để designer quyết).
+- Vị trí output: mọi tree/HTML nháp viết vào 1 thư mục bản `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>/` của dự án đích (giờ 24h local, slug thường-gạch-ngang-không-dấu, trùng phút thêm `-v2`), không viết ra root để tránh commit nhầm. Tạo thư mục + đảm bảo ignored trước khi viết: `mkdir -p .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>`, kiểm tra `.gitignore` đã có dòng `.aidomaincraft/` chưa (thiếu thì thêm; target vendor đã có sẵn), verify bằng `git check-ignore -v .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>/<file>`.
+- Viết tree: copy `examples/tree.md` vào `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>/<tên-trang>-tree.md`, sửa theo `convention/tree-format.md` (3 loại dòng: `# Page:`, `## Section:`, `- \`Kiểu\` **Nhãn** — note/states/effect/span/hide; layout/layout-md/lg/xl cho section).
+- Kiểm tra tree: `python3 scripts/check.py .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>/<tên-trang>-tree.md` (exit 0 + dòng PASS mới đạt; khóa metadata lạ, layout/span/hide sai đều FAIL).
+- Soạn wireframe: viết tay `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>/<tên-trang>-wireframe.html` theo tree (1 file, đúng 4 khung `sm/md/lg/xl` rộng 360/768/1366/1920, mọi block gắn `data-wf-*`), mở browser xem.
+- Kiểm tra cặp: `python3 scripts/verify-pair.py .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>/<tên-trang>-tree.md .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>/<tên-trang>-wireframe.html` (exit 0 + dòng PASS mới đạt; mọi lệch thiếu/thừa/sai states-effect đều FAIL để designer quyết).
+- Review nhanh: copy `templates/viewer.html` vào cùng thư mục bản, mở `viewer.html?file=<tên-trang>-wireframe.html` (chạy `file://`, không cần server) — bấm loại (`sm/md/lg/xl`) rồi biến thể, gập panel để xem, hoặc bật "Lưới 4 khung" so 1 màn hình (bấm khung để drill-down).
 - Kiểm tra đã chạy 03/11/2026 (v10.4): `check.py examples/tree.md` → `PASS: page 'Checkout mẫu' · 2 sections · 4 components`; `verify-pair.py examples/tree.md examples/tree.html` → `PASS: pair ... · 4 breakpoints ...`; 3 case cây lỗi (thiếu section, section rỗng, component trước section) + cặp lệch mẫu (thiếu frame, sai layout, sai states) đều exit 1 đúng.
 
 ### Cách item hoạt động
@@ -30,7 +31,8 @@
 - Khác biệt vận hành theo usecase: viết tree mới (soạn markdown theo convention, xem [Usecase con 1](#usecase-con-1-viet-treemd-moi)) khác validate tree (chạy `check.py`, xem [Usecase con 2](#usecase-con-2-validate-treemd)) khác soạn wireframe tay (viết HTML 4 khung theo tree, xem [Usecase con 3](#usecase-con-3-soan-wireframe-tay-4-kho)) khác kiểm tra cặp (chạy `verify-pair.py`, xem [Usecase con 4](#usecase-con-4-kiem-tra-cap-tree-wireframe)) khác agent đọc cặp để build (xem [Usecase con 5](#usecase-con-5-agent-doc-cap-de-build)).
 
 ### Cốt lõi bất biến
-- Tree và wireframe là 2 artifact riêng, luôn đi thành cặp `<slug>-tree.md` + `<slug>-wireframe.html`: tree định nghĩa phạm vi, wireframe thể hiện giao diện; cấm coi output máy là wireframe, cấm trình wireframe không có tree đối chiếu.
+- Tree và wireframe là 2 artifact riêng, luôn đi thành cặp trong 1 thư mục bản `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<slug>/`: `<slug>-tree.md` + `<slug>-wireframe.html`; tree định nghĩa phạm vi, wireframe thể hiện giao diện; cấm coi output máy là wireframe, cấm trình wireframe không có tree đối chiếu.
+- Bốn số rộng chuẩn (360/768/1366/1920) và danh sách biến thể từng khổ lấy từ `convention/tree-format.md` (nguồn sự thật); `templates/viewer.html` mirror đúng các số đó — lệch là FAIL review.
 - Mọi tree phải qua `check.py` PASS và mọi cặp phải qua `verify-pair.py` PASS trước khi trình review; không nêu được cả 2 dòng PASS = chưa thực sự dùng hệ.
 - Mọi wireframe là 1 file duy nhất chứa đúng 4 khung `sm/md/lg/xl` (360/768/1366/1920); thiếu khổ là FAIL.
 - Mọi lệch `verify-pair.py` báo ra (thiếu/thừa/sai states-effect) đều là FAIL, cấm agent tự sửa ngầm — chỉ designer quote câu ok tường minh mới được tiếp tục.
@@ -49,11 +51,12 @@
 - So với `../hallmark/` (39,5k★, sinh system + gates): khác tầng — hallmark sinh page chi tiết pass gates; wireframe-docs làm rõ cấu trúc khung + bố cục 4 khổ trước đó. Chọn wireframe-docs khi chưa chốt cấu trúc và bố cục; chọn hallmark khi cặp tree + wireframe đã chốt và cần chi tiết đạt chuẩn. 2 hệ nối tiếp nhau: cặp chốt → hallmark build.
 - Khung trung thực: thắng ở nhẹ (0đ, stdlib, offline) + agent-đọc-được + bắt lệch bằng máy; thua ở trực quan (không kéo-thả, không style đẹp) + không gates đo được + wireframe soạn tay tốn công hơn gen tự động.
 
-### Bản đồ phủ usecase (quét hết 4 tài nguyên v10.4 — ★ mạnh nhất đầu)
+### Bản đồ phủ usecase (quét hết 5 tài nguyên v10.6 — ★ mạnh nhất đầu)
 - ★ Viết `tree.md` mới theo convention: xem Usecase 1.
 - ★ Soạn `wireframe.html` tay 4 khổ theo tree: xem Usecase 3.
 - Validate `tree.md` bằng `check.py`: xem Usecase 2.
 - Kiểm tra cặp bằng `verify-pair.py` (báo lệch cho designer): xem Usecase 4.
+- Review nhanh nhiều khổ/biến thể bằng `viewer.html` (gập panel / lưới 4 khung): xem Usecase 6.
 - Trung bình: agent đọc cặp để build tiếp (parse tree + đối chiếu wireframe): xem Usecase 5.
 - KHÔNG hỗ trợ → thay thế: style đẹp/tokens/gates → `../hallmark/`; canvas kéo-thả → Figma/Excalidraw; hiệu ứng React → `../reactbits/`; sinh HTML tự động từ tree → không hỗ trợ (cấm gen, phải soạn tay).
 
@@ -70,9 +73,9 @@
 - Khi dùng: có brief cấu trúc (page/sections/components) cần đóng thành tree.
 - Khi bỏ qua: tree đã có chỉ cần check/soạn wireframe/kiểm tra cặp → Usecase 2/3/4; cặp đã chốt cần build chi tiết → hallmark.
 - Cơ chế khác các usecase khác ở đâu: duy nhất soạn markdown theo convention, chưa chạy script nào; các usecase khác chạy `check.py`/`verify-pair.py` hoặc soạn HTML/wireframe.
-- Lệnh copy-paste: `mkdir -p .tmp/wireframes && cp items/wireframe-docs/examples/tree.md .tmp/wireframes/my-page-tree.md` rồi sửa theo `convention/tree-format.md`.
+- Lệnh copy-paste: `mkdir -p .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page && cp items/wireframe-docs/examples/tree.md .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-tree.md` rồi sửa theo `convention/tree-format.md`.
 - Ngưỡng số cần đạt: đúng 1 `# Page:`, ≥1 section, mỗi section ≥1 component đúng cú pháp `- \`Kiểu\` **Nhãn**`; layout/span/hide (nếu có) thuộc danh sách cho phép.
-- Ví dụ input-output (minh họa): input "trang Pricing 3 gói" → output `.tmp/wireframes/pricing-tree.md` (`# Page: Pricing` + 2 sections + 5 components có states, section Gói `layout-md: grid-3`).
+- Ví dụ input-output (minh họa): input "trang Pricing 3 gói" → output `.aidomaincraft/.tmp/wireframes/2026-11-03-1430-pricing/pricing-tree.md` (`# Page: Pricing` + 2 sections + 5 components có states, section Gói `layout-md: grid-3`).
 - Pitfalls riêng: dùng heading lạ (`###`) cho section (parser bỏ qua → section mất — phải `## Section:`); quên backtick/bold ở component (dòng bị bỏ qua im lặng); sai chính tả khóa metadata (`layot-md:`) → `check.py` FAIL đúng dòng (không im lặng).
 - Phân công usecase này: agent chính soạn tree (shortlist cấu trúc, user pick mới chốt); chưa cần claude; verify bằng đọc lại + sang Usecase 2.
 
@@ -80,27 +83,27 @@
 - Khi dùng: tree đã soạn cần kiểm tra trước khi soạn wireframe.
 - Khi bỏ qua: chỉ đọc cặp đã PASS để build (tin cặp cũ vẫn khớp) → Usecase 5.
 - Cơ chế khác các usecase khác ở đâu: duy nhất chạy `check.py` lấy PASS/FAIL cho một mình tree, không đụng tới HTML.
-- Lệnh copy-paste: `python3 scripts/check.py .tmp/wireframes/my-page-tree.md` (chạy trong `items/wireframe-docs/`).
+- Lệnh copy-paste: `python3 scripts/check.py .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-tree.md` (chạy trong `items/wireframe-docs/`).
 - Ngưỡng số cần đạt: exit 0 + dòng `PASS: page '...' · N sections · M components`; exit 1 = FAIL, sửa theo error rồi chạy lại.
-- Ví dụ input-output (minh họa): input `.tmp/wireframes/my-page-tree.md` (copy từ `examples/tree.md`) → output `PASS: page 'Checkout mẫu' · 2 sections · 4 components · types: Button, Link, TextInput`.
-- Pitfalls riêng: tưởng cảnh báo là PASS (chỉ exit 0 mới đạt); check file sai đường dẫn (báo file not found — kiểm tra cwd); viết tree ngoài `.tmp/wireframes/` (rơi vào git — phải chuyển vào `.tmp/wireframes/`); khóa metadata lạ tưởng được bỏ qua (FAIL đúng dòng — sửa chính tả rồi chạy lại).
+- Ví dụ input-output (minh họa): input `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-tree.md` (copy từ `examples/tree.md`) → output `PASS: page 'Checkout mẫu' · 2 sections · 4 components · types: Button, Link, TextInput`.
+- Pitfalls riêng: tưởng cảnh báo là PASS (chỉ exit 0 mới đạt); check file sai đường dẫn (báo file not found — kiểm tra cwd); viết tree ngoài `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>` (rơi vào git — phải chuyển vào `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>`); khóa metadata lạ tưởng được bỏ qua (FAIL đúng dòng — sửa chính tả rồi chạy lại).
 - Phân công usecase này: agent chính chạy + trình dòng PASS; không cần claude; verify bằng exit code.
 
 ### Usecase con 3: soạn wireframe tay 4 khổ
 - Khi dùng: tree đã PASS cần thể hiện thành giao diện xem được.
 - Khi bỏ qua: chỉ cần agent đọc cặp đã chốt để build → Usecase 5 (không soạn mới).
 - Cơ chế khác các usecase khác ở đâu: duy nhất tạo file HTML mới bằng tay theo tree; các usecase khác soạn markdown, chạy script kiểm tra, hoặc đọc để build.
-- Lệnh copy-paste: copy `examples/tree.html` thành `.tmp/wireframes/my-page-wireframe.html` làm khung xương rồi sửa theo tree (không chạy script sinh nào — cấm gen).
+- Lệnh copy-paste: copy `examples/tree.html` thành `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-wireframe.html` làm khung xương rồi sửa theo tree (không chạy script sinh nào — cấm gen).
 - Ngưỡng số cần đạt: 1 file duy nhất, đúng 4 khung `sm/md/lg/xl` rộng 360/768/1366/1920; mỗi section/component của tree (trừ `hide`) xuất hiện đủ ở khung được phép; mọi block gắn đủ `data-wf-*` theo convention.
-- Ví dụ input-output (minh họa): input tree Checkout mẫu (2 sections, CTA `Button Đặt hàng`) → output `.tmp/wireframes/my-page-wireframe.html` 4 khung, khung `sm` vắng nút Quay lại giỏ (`hide: sm`), 3 khung còn lại đủ 4 component.
-- Pitfalls riêng: sinh HTML bằng script từ tree (FAIL cốt lõi — phải soạn tay); thiếu 1 khổ (thiếu frame là FAIL ở Usecase 4); quên `data-wf-*` ở block mới thêm (lệch thừa/thiếu ở Usecase 4); viết HTML ngoài `.tmp/wireframes/` (rơi vào git).
+- Ví dụ input-output (minh họa): input tree Checkout mẫu (2 sections, CTA `Button Đặt hàng`) → output `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-wireframe.html` 4 khung, khung `sm` vắng nút Quay lại giỏ (`hide: sm`), 3 khung còn lại đủ 4 component.
+- Pitfalls riêng: sinh HTML bằng script từ tree (FAIL cốt lõi — phải soạn tay); thiếu 1 khổ (thiếu frame là FAIL ở Usecase 4); quên `data-wf-*` ở block mới thêm (lệch thừa/thiếu ở Usecase 4); viết HTML ngoài `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>` (rơi vào git).
 - Phân công usecase này: agent chính soạn HTML + mở kiểm tra kỹ thuật (đủ khung, đúng số đo); giao claude nhận xét bố cục/độ lớn/vị trí/nhãn trên 4 khung (kèm cặp tree + HTML + brief); verify bằng mở browser + sang Usecase 4.
 
 ### Usecase con 4: kiểm tra cặp tree-wireframe
 - Khi dùng: cặp tree + wireframe đã soạn xong cần đối chiếu trước khi trình.
 - Khi bỏ qua: cặp cũ đã PASS và không đổi gì → Usecase 5.
 - Cơ chế khác các usecase khác ở đâu: duy nhất chạy `verify-pair.py` để bắt lệch 2 chiều; không soạn thêm, không sửa ngầm.
-- Lệnh copy-paste: `python3 scripts/verify-pair.py .tmp/wireframes/my-page-tree.md .tmp/wireframes/my-page-wireframe.html` (chạy trong `items/wireframe-docs/`).
+- Lệnh copy-paste: `python3 scripts/verify-pair.py .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-tree.md .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-wireframe.html` (chạy trong `items/wireframe-docs/`).
 - Ngưỡng số cần đạt: exit 0 + dòng `PASS: pair '...' · 4 breakpoints · N sections · M components`; exit 1 = FAIL kèm từng dòng lệch (thiếu frame/khung sai số đo/thiếu-thừa section-component/sai layout-states-effect).
 - Ví dụ input-output (minh họa): input cặp mẫu `examples/tree.md` + `examples/tree.html` → output `PASS: pair 'Checkout mẫu' · 4 breakpoints · 2 sections · 4 components`; input cặp lệch (khung `sm` vẽ thừa nút bị `hide: sm`) → output `FAIL: [sm] ... van xuat hien`, exit 1.
 - Pitfalls riêng: tưởng tree PASS là đủ (thiếu PASS cặp = chưa dùng hệ); tự sửa lệch ngầm cho xanh (FAIL quy trình — phải trình designer quyết, waiver quote câu ok tường minh).
@@ -110,24 +113,35 @@
 - Khi dùng: cặp đã chốt (2 dòng PASS), agent khác (hoặc lượt sau) build UI chi tiết từ cặp.
 - Khi bỏ qua: cặp chưa PASS cả 2 → quay về Usecase 1/3.
 - Cơ chế khác các usecase khác ở đâu: không chạy script nào — đọc `tree.md` lấy phạm vi (note/states/effect/hide) + đối chiếu `wireframe.html` lấy bố cục 4 khổ; cấm đọc HTML thay tree khi cần note đầy đủ và cấm đọc tree thay HTML khi cần bố cục.
-- Lệnh copy-paste: đọc cặp `.tmp/wireframes/my-page-tree.md` + `.tmp/wireframes/my-page-wireframe.html` (block nào thiếu `data-wf-*` thì agent cũng coi như thiếu thông tin).
+- Lệnh copy-paste: đọc cặp `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-tree.md` + `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-wireframe.html` (block nào thiếu `data-wf-*` thì agent cũng coi như thiếu thông tin).
 - Ngưỡng số cần đạt: nêu được page + đủ sections + components kèm states/effect/hide + bố cục từng khổ; không nêu được = cặp thiếu, quay về Usecase 1/3.
 - Ví dụ input-output (minh họa): input cặp Checkout mẫu → output "page Checkout mẫu, 2 sections, CTA `Button Đặt hàng` states default/hover/disabled effect hover-lift, khung sm vắng Quay lại giỏ, Thông tin grid-2 từ md" rồi sang hallmark build.
 - Pitfalls riêng: build từ tree mà bỏ wireframe (mất bố cục 4 khổ); build từ wireframe mà bỏ tree (mất note/states/effect đầy đủ); thông tin quan trọng để trong dòng tự do của tree hoặc block thiếu `data-wf-*` (máy + agent đều bỏ qua).
 - Phân công usecase này: agent chính đọc + tóm cặp (user xác nhận trước khi build); giao claude khi cần đối chiếu visual; verify bằng tóm tắt khớp cặp.
 
+### Usecase con 6: review nhanh bằng viewer
+- Khi dùng: cặp đã PASS cần xem nhanh nhiều khổ/biến thể trên máy tính, không resize Chrome.
+- Khi bỏ qua: cặp chưa PASS cả 2 → quay Usecase 1/3/4; chỉ cần đọc spec để build → Usecase 5.
+- Cơ chế khác các usecase khác ở đâu: duy nhất mở `viewer.html` bấm nút đổi rộng iframe (loại → biến thể, gập panel, lưới 4 khung); không soạn thêm, không chạy script kiểm tra.
+- Lệnh copy-paste: `cp items/wireframe-docs/templates/viewer.html .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/` rồi mở `viewer.html?file=my-page-wireframe.html` (chạy `file://`, không cần server).
+- Ngưỡng số cần đạt: 4 nút loại đúng số chuẩn + biến thể đúng danh sách convention + gập/mở panel được (✕/Esc/nút) + lưới hiện đủ 4 khung đúng rộng + bấm khung drill-down đúng khổ.
+- Ví dụ input-output (minh họa): input cặp checkout `2026-11-03-1430-checkout` → output bấm `lg` → `1440`, iframe rộng 1440px + nhãn `lg · 1440px`; bật lưới → 4 khung scale vừa màn hình; bấm khung `sm` → về xem đơn 360px.
+- Pitfalls riêng: mở viewer thiếu `?file=` (hiện trang hướng dẫn, không phải lỗi); sửa số trong viewer mà không sửa convention (drift — FAIL review); kỳ vọng viewer kiểm tra đúng/sai (viewer chỉ đổi rộng hiển thị, đúng/sai do `verify-pair.py`).
+- Phân công usecase này: agent chính copy viewer + mở đúng `?file=` + trình các chế độ; giao claude nhận xét visual ở khổ designer cần; verify bằng bấm đủ nút + nhãn px đúng.
+
 ### Các bước chung
 1. Shortlist cấu trúc (page/sections/components) qua question tool, user pick mới viết tree.
-2. Tạo `.tmp/wireframes/` + đảm bảo `.gitignore` đã có `.tmp/` (thiếu thì thêm, verify `git check-ignore -v`), rồi viết `tree.md` theo convention → `check.py` tới PASS → soạn `wireframe.html` 4 khung theo tree → `verify-pair.py` tới PASS.
-3. Trình cặp tree + wireframe + 2 dòng PASS; visual và mọi lệch giao designer quyết, claude chỉ nhận xét bố cục.
+2. Tạo thư mục bản `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>/` + đảm bảo `.gitignore` đã có `.aidomaincraft/` (thiếu thì thêm, verify `git check-ignore -v`), rồi viết `tree.md` theo convention → `check.py` tới PASS → soạn `wireframe.html` 4 khung theo tree → `verify-pair.py` tới PASS.
+3. Trình cặp tree + wireframe + 2 dòng PASS; visual và mọi lệch giao designer quyết, claude chỉ nhận xét bố cục. Review nhanh nhiều khổ: copy `templates/viewer.html` vào thư mục bản, mở `viewer.html?file=<tên-trang>-wireframe.html`.
 4. Chốt cặp rồi mới sang build chi tiết (hallmark) — tree đổi thì sửa wireframe cho khớp và chạy lại `verify-pair.py`, cấm sửa một bên rồi coi như khớp.
 
 ### Prompt mẫu
-- "Viết tree.md cho trang Pricing 3 gói theo wireframe-docs vào `.tmp/wireframes/pricing-tree.md` (2 sections, CTA có đủ states, section Gói layout-md grid-3), chạy check.py tới PASS."
-- "Soạn `.tmp/wireframes/pricing-wireframe.html` theo tree vừa chốt (4 khung sm/md/lg/xl, gắn đủ data-wf-*), rồi chạy verify-pair.py tới PASS."
+- "Viết tree.md cho trang Pricing 3 gói theo wireframe-docs vào `.aidomaincraft/.tmp/wireframes/2026-11-03-1430-pricing/pricing-tree.md` (2 sections, CTA có đủ states, section Gói layout-md grid-3), chạy check.py tới PASS."
+- "Soạn `.aidomaincraft/.tmp/wireframes/2026-11-03-1430-pricing/pricing-wireframe.html` theo tree vừa chốt (4 khung sm/md/lg/xl, gắn đủ data-wf-*), rồi chạy verify-pair.py tới PASS."
 - "Chạy verify-pair.py cho cặp pricing và trình nguyên danh sách lệch (nếu có) để designer quyết."
-- "Đọc cặp `.tmp/wireframes/pricing-tree.md` + `.tmp/wireframes/pricing-wireframe.html`, tóm cấu trúc (page/sections/CTA/states/bố cục từng khổ) để tao xác nhận trước khi build hallmark."
-- Ví dụ điền sẵn: "Viết tree cho trang Checkout vào `.tmp/wireframes/checkout-tree.md` (Thông tin + Hành động, CTA `Button Đặt hàng` states default/hover/disabled effect hover-lift, nút phụ hide ở sm), check PASS rồi soạn wireframe 4 khung."
+- "Đọc cặp `.aidomaincraft/.tmp/wireframes/2026-11-03-1430-pricing/pricing-tree.md` + `.aidomaincraft/.tmp/wireframes/2026-11-03-1430-pricing/pricing-wireframe.html`, tóm cấu trúc (page/sections/CTA/states/bố cục từng khổ) để tao xác nhận trước khi build hallmark."
+- "Mở viewer cho bản checkout `2026-11-03-1430-checkout`: copy `templates/viewer.html` vào thư mục bản, mở `viewer.html?file=checkout-wireframe.html`, bấm `lg` → `1440` rồi bật lưới 4 khung."
+- Ví dụ điền sẵn: "Viết tree cho trang Checkout vào `.aidomaincraft/.tmp/wireframes/2026-11-03-1430-checkout/checkout-tree.md` (Thông tin + Hành động, CTA `Button Đặt hàng` states default/hover/disabled effect hover-lift, nút phụ hide ở sm), check PASS rồi soạn wireframe 4 khung."
 
 ### Pitfalls
 - Sinh HTML tự động từ tree thay vì soạn tay (FAIL cốt lõi).
@@ -140,18 +154,22 @@
 - Quên `data-wf-*` ở block mới thêm (lệch thừa/thiếu ở `verify-pair.py`).
 - Thiếu 1 trong 4 khung hoặc sai số đo rộng (FAIL ở `verify-pair.py`).
 - Thông tin quan trọng để trong dòng tự do của tree hoặc block thiếu `data-wf-*` (máy + agent đều bỏ qua — phải đưa vào note:/states:/effect:/data-wf-*).
-- Viết tree/HTML ngoài `.tmp/wireframes/` hoặc quên kiểm tra `.gitignore` (file nháp rơi vào git — phải giữ trong `.tmp/` đã ignored, verify `git check-ignore -v`).
+- Viết tree/HTML ngoài thư mục bản `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<tên-trang>/` hoặc quên kiểm tra `.gitignore` (file nháp rơi vào git — phải giữ trong `.aidomaincraft/` đã ignored, verify `git check-ignore -v`).
+- Mở viewer thiếu `?file=` (hiện trang hướng dẫn, không phải lỗi — thêm `?file=<slug>-wireframe.html`).
+- Sửa số rộng trong `viewer.html` mà không sửa `convention/tree-format.md` (drift — FAIL review; convention là nguồn sự thật).
+- Kỳ vọng viewer kiểm tra đúng/sai (viewer chỉ đổi rộng hiển thị; đúng/sai do `verify-pair.py`).
 
 ### Tham khảo sử dụng (bằng chứng nội bộ — item nội tại)
-- Relay log session v10.4 (03/11/2026): `check.py` standalone PASS trên `examples/tree.md` (không còn import từ `build.py`) + `verify-pair.py` PASS cặp mẫu 4 khổ + 3 case cây lỗi và 3 case cặp lệch (thiếu frame, sai layout, sai states) đều exit 1 đúng → xác nhận tài nguyên chạy được.
-- `tests/test.sh` §13–§15: REGISTRY có dòng wireframe-docs + README có `Nguồn gốc`/`Áp dụng` + cấm tham chiếu `build.py` + cặp mẫu PASS + cặp lệch FAIL đúng.
+- Relay log session v10.6 (03/11/2026): output chuyển sang `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<slug>/` + `templates/viewer.html` mới (JS hợp lệ qua `node --check`, 4 số chuẩn + biến thể khớp convention) → xác nhận tài nguyên chạy/đúng.
+- `tests/test.sh` §13–§16: REGISTRY có dòng wireframe-docs + README có `Nguồn gốc`/`Áp dụng` + cấm tham chiếu `build.py` + cặp mẫu PASS + cặp lệch FAIL đúng + viewer tồn tại + số chuẩn khớp convention.
 - Nguồn ngoài: không có (item nội tại, chưa dùng ở dự án thật) — ghi nhận, bổ sung khi có case dùng thật.
 
 ### Tài nguyên trong item
 - `scripts/check.py` (validate tree.md, standalone, exit 0/1) + `scripts/verify-pair.py` (đối chiếu cặp tree ↔ wireframe, exit 0/1).
 - `convention/tree-format.md` (chuẩn cú pháp 3 loại dòng + metadata + chuẩn wireframe 4 khổ + quy tắc cặp đôi).
 - `examples/tree.md` + `examples/tree.html` (cặp mẫu soạn tay 4 khổ, đã verify PASS cả 2 script).
-- Khớp cột `tài nguyên` trong `items/REGISTRY.md`: `scripts/, convention/, examples/`.
+- `templates/viewer.html` (xem nhanh 2 tầng loại→biến thể, gập panel, lưới 4 khung; `?file=` + `file://`, JS thuần).
+- Khớp cột `tài nguyên` trong `items/REGISTRY.md`: `scripts/, convention/, examples/, templates/`.
 
 ### Tham khảo
 - Nội bộ: `convention/tree-format.md`, `examples/tree.md` + `examples/tree.html`, `scripts/verify-pair.py`, relay session v10.4.
@@ -184,11 +202,12 @@
 
 ### Apply (nothing installed from outside)
 - Prerequisite: Python 3.8+ (stdlib only, zero dependencies).
-- Output location: write every draft tree/HTML under the target project's `.tmp/wireframes/`, never at the repo root to avoid accidental commits. Create + ensure ignored first: `mkdir -p .tmp/wireframes`, check `.gitignore` already lists `.tmp/` (add it when missing), verify with `git check-ignore -v .tmp/wireframes/<file>`.
-- Write a tree: copy `examples/tree.md` to `.tmp/wireframes/<page>-tree.md`, follow `convention/tree-format.md` (3 line kinds + metadata: note/states/effect/span/hide; layout/layout-md/lg/xl per section).
-- Check the tree: `python3 scripts/check.py .tmp/wireframes/<page>-tree.md` (exit 0 + PASS line bar; unknown keys and bad layout/span/hide values FAIL).
-- Author the wireframe by hand: `.tmp/wireframes/<page>-wireframe.html` per the tree (one file, exactly 4 frames `sm/md/lg/xl` at 360/768/1366/1920, every block carrying `data-wf-*`), open in a browser.
-- Check the pair: `python3 scripts/verify-pair.py .tmp/wireframes/<page>-tree.md .tmp/wireframes/<page>-wireframe.html` (exit 0 + PASS line bar; every missing/extra/mismatched item FAILs for the designer to rule on).
+- Output location: write every draft tree/HTML under one version folder `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<page>/` of the target project (24h local time; lowercase-hyphen slug, no diacritics; same-minute clash gets `-v2`), never at the repo root to avoid accidental commits. Create + ensure ignored first: `mkdir -p .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<page>`, check `.gitignore` already lists `.aidomaincraft/` (add it when missing; vendor targets already have it), verify with `git check-ignore -v .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<page>/<file>`.
+- Write a tree: copy `examples/tree.md` to `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<page>/<page>-tree.md`, follow `convention/tree-format.md` (3 line kinds + metadata: note/states/effect/span/hide; layout/layout-md/lg/xl per section).
+- Check the tree: `python3 scripts/check.py .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<page>/<page>-tree.md` (exit 0 + PASS line bar; unknown keys and bad layout/span/hide values FAIL).
+- Author the wireframe by hand: `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<page>/<page>-wireframe.html` per the tree (one file, exactly 4 frames `sm/md/lg/xl` at 360/768/1366/1920, every block carrying `data-wf-*`), open in a browser.
+- Check the pair: `python3 scripts/verify-pair.py .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<page>/<page>-tree.md .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<page>/<page>-wireframe.html` (exit 0 + PASS line bar; every missing/extra/mismatched item FAILs for the designer to rule on).
+- Quick review: copy `templates/viewer.html` into the same version folder, open `viewer.html?file=<page>-wireframe.html` (`file://`, no server) — pick a type (`sm/md/lg/xl`) then a variant, collapse the panel to view, or switch on the "4-frame grid" to compare on one screen (click a frame to drill down).
 - Verified 03/11/2026 (v10.4): standalone `check.py` PASS on `examples/tree.md`; `verify-pair.py` PASS on the 4-frame example pair; 3 invalid trees + 3 drifting pairs exit 1 correctly.
 
 ### How the item works
@@ -196,7 +215,8 @@
 - Per-usecase differences: write a tree ([Sub-usecase 1](#sub-usecase-1-write-a-new-treemd)) vs validate the tree ([Sub-usecase 2](#sub-usecase-2-validate-treemd)) vs hand-author the wireframe ([Sub-usecase 3](#sub-usecase-3-hand-author-the-4-frame-wireframe)) vs check the pair ([Sub-usecase 4](#sub-usecase-4-verify-the-tree-wireframe-pair)) vs agent-read the pair to build ([Sub-usecase 5](#sub-usecase-5-agent-reads-the-pair-to-build)).
 
 ### Invariant core
-- Tree and wireframe are two separate artifacts, always presented as a `<slug>-tree.md` + `<slug>-wireframe.html` pair: the tree defines scope, the wireframe shows the interface. Machine output is never the wireframe; a wireframe without its tree is never a review.
+- Tree and wireframe are two separate artifacts, always presented as a pair inside one version folder `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<slug>/`: `<slug>-tree.md` + `<slug>-wireframe.html`: the tree defines scope, the wireframe shows the interface. Machine output is never the wireframe; a wireframe without its tree is never a review.
+- The 4 canonical widths (360/768/1366/1920) and per-type variant lists come from `convention/tree-format.md` (source of truth); `templates/viewer.html` mirrors exactly those numbers — drift is a review FAIL.
 - Every tree must `check.py`-PASS and every pair must `verify-pair.py`-PASS before review; missing either PASS line = not really used.
 - Every wireframe is one file with exactly the 4 frames `sm/md/lg/xl` (360/768/1366/1920); a missing frame is a FAIL.
 - Every drift `verify-pair.py` reports (missing/extra/wrong states-effect) is a FAIL, and agents never fix drifts silently — only an explicit quoted designer ok lets work continue.
@@ -215,11 +235,12 @@
 - Vs `../hallmark/` (39.5k stars, system + gates): different layer — hallmark generates gated detail; wireframe-docs settles structure + 4-breakpoint layout first. Structure/layout undecided → wireframe-docs; pair settled → hallmark. Chain: settled pair → hallmark build.
 - Honest frame: wins on weight ($0, stdlib, offline) + agent-readability + machine-caught drift; loses on visuals (no drag-drop, no beauty) + no measured gates + hand-authoring costs more than generation.
 
-### Coverage map (whole v10.4 catalog scanned — ★ strongest first)
+### Coverage map (whole v10.6 catalog scanned — ★ strongest first)
 - ★ Write a new `tree.md`: see Sub-usecase 1.
 - ★ Hand-author the 4-frame `wireframe.html` per the tree: see Sub-usecase 3.
 - Validate with `check.py`: see Sub-usecase 2.
 - Check the pair with `verify-pair.py` (drifts go to the designer): see Sub-usecase 4.
+- Quick-review many widths/variants with `viewer.html` (collapsible panel / 4-frame grid): see Sub-usecase 6.
 - Medium: agent reads the pair to build on: see Sub-usecase 5.
 - NOT supported → use instead: beauty/tokens/gates → `../hallmark/`; drag-drop canvas → Figma/Excalidraw; React effects → `../reactbits/`; auto-generating HTML from the tree → unsupported (hand-authoring required).
 
@@ -234,54 +255,65 @@
 
 ### Sub-usecase 1: write a new tree.md
 - When to use: a structure brief needs freezing into a tree. Skip: tree exists → 2/3/4; settled pair → hallmark.
-- Copy-paste: `mkdir -p .tmp/wireframes && cp items/wireframe-docs/examples/tree.md .tmp/wireframes/my-page-tree.md`, edit per `convention/tree-format.md`.
+- Copy-paste: `mkdir -p .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page && cp items/wireframe-docs/examples/tree.md .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-tree.md`, edit per `convention/tree-format.md`.
 - Numeric bar: exactly one `# Page:`, ≥1 section, each ≥1 component in ``- `Type` **Label**`` syntax; any layout/span/hide keys from the allowlist.
-- Input-output example (illustrative): "3-tier Pricing page" → `.tmp/wireframes/pricing-tree.md` (1 page + 2 sections + 5 stateful components, pricing section `layout-md: grid-3`).
+- Input-output example (illustrative): "3-tier Pricing page" → `.aidomaincraft/.tmp/wireframes/2026-11-03-1430-pricing/pricing-tree.md` (1 page + 2 sections + 5 stateful components, pricing section `layout-md: grid-3`).
 - Own pitfalls: `###` headings for sections (silently ignored — must be `## Section:`); misspelled metadata keys (`layot-md:`) → `check.py` FAILs on the exact line (never silent).
 - Work split: main agent drafts (user picks structure); verify by re-read → Sub-usecase 2.
 
 ### Sub-usecase 2: validate tree.md
-- Copy-paste: `python3 scripts/check.py .tmp/wireframes/my-page-tree.md` (inside `items/wireframe-docs/`).
+- Copy-paste: `python3 scripts/check.py .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-tree.md` (inside `items/wireframe-docs/`).
 - Numeric bar: exit 0 + `PASS: page '...' · N sections · M components`.
-- Example: `.tmp/wireframes/my-page-tree.md` (copied from `examples/tree.md`) → `PASS: page 'Checkout mẫu' · 2 sections · 4 components`.
-- Own pitfalls: mistaking warnings for PASS (only exit 0 counts); tree written outside `.tmp/wireframes/` (leaks into git); unknown metadata keys assumed ignored (they FAIL — fix the spelling).
+- Example: `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-tree.md` (copied from `examples/tree.md`) → `PASS: page 'Checkout mẫu' · 2 sections · 4 components`.
+- Own pitfalls: mistaking warnings for PASS (only exit 0 counts); tree written outside `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<page>` (leaks into git); unknown metadata keys assumed ignored (they FAIL — fix the spelling).
 - Work split: main agent runs + presents; no claude needed.
 
 ### Sub-usecase 3: hand-author the 4-frame wireframe
 - When to use: a PASSed tree needs a viewable interface. Skip: reading an already-settled pair to build → Sub-usecase 5 (no new authoring).
-- Copy-paste: copy `examples/tree.html` to `.tmp/wireframes/my-page-wireframe.html` as a skeleton, then hand-edit per the tree (no generating script — generation is banned).
+- Copy-paste: copy `examples/tree.html` to `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-wireframe.html` as a skeleton, then hand-edit per the tree (no generating script — generation is banned).
 - Numeric bar: one file, exactly 4 frames `sm/md/lg/xl` at 360/768/1366/1920; every tree section/component (minus `hide`) present in its allowed frames; every block carrying the right `data-wf-*`.
 - Example: Checkout tree (2 sections, CTA `Button Đặt hàng`) → 4-frame wireframe where the `sm` frame hides the back link (`hide: sm`) and the other frames show all 4 components.
-- Own pitfalls: generating HTML from the tree (core FAIL — hand-author it); a missing frame or wrong width (FAIL in Sub-usecase 4); a newly added block without `data-wf-*` (drift in Sub-usecase 4); wireframe outside `.tmp/wireframes/` (leaks into git).
+- Own pitfalls: generating HTML from the tree (core FAIL — hand-author it); a missing frame or wrong width (FAIL in Sub-usecase 4); a newly added block without `data-wf-*` (drift in Sub-usecase 4); wireframe outside `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<page>` (leaks into git).
 - Work split: main agent authors + technical check (frames, widths); claude judges layout/sizes/positions/labels on all 4 frames (pair + brief); verify by opening in a browser → Sub-usecase 4.
 
 ### Sub-usecase 4: verify the tree-wireframe pair
 - When to use: a finished pair needs diffing before review. Skip: unchanged already-PASSed pair → Sub-usecase 5.
-- Copy-paste: `python3 scripts/verify-pair.py .tmp/wireframes/my-page-tree.md .tmp/wireframes/my-page-wireframe.html` (inside `items/wireframe-docs/`).
+- Copy-paste: `python3 scripts/verify-pair.py .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-tree.md .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-wireframe.html` (inside `items/wireframe-docs/`).
 - Numeric bar: exit 0 + `PASS: pair '...' · 4 breakpoints · N sections · M components`; exit 1 lists each drift (missing frame/wrong width/missing-extra section-component/wrong layout-states-effect).
 - Example: `examples/tree.md` + `examples/tree.html` → `PASS: pair 'Checkout mẫu' · 4 breakpoints · 2 sections · 4 components`; a drifting pair (sm frame showing a `hide: sm` button) → `FAIL: [sm] ...` exit 1.
 - Own pitfalls: treating a tree PASS as enough (a missing pair PASS = not used); silently fixing drifts to green (process FAIL — present drifts to the designer, waivers quote the explicit ok).
 - Work split: main agent runs + presents the full drift list (or PASS); designer rules keep/fix; no claude needed.
 
 ### Sub-usecase 5: agent reads the pair to build
-- No scripts run — read `.tmp/wireframes/my-page-tree.md` for scope (notes/states/effects/hide) and cross-check `.tmp/wireframes/my-page-wireframe.html` for the 4-breakpoint layout; never read the HTML instead of the tree for full notes, never read the tree instead of the HTML for layout.
+- No scripts run — read `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-tree.md` for scope (notes/states/effects/hide) and cross-check `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/my-page-wireframe.html` for the 4-breakpoint layout; never read the HTML instead of the tree for full notes, never read the tree instead of the HTML for layout.
 - Numeric bar: state page + sections + components with states/effects/hide + per-breakpoint layout; otherwise back to Sub-usecase 1/3.
 - Example: the Checkout pair → "Checkout mẫu, 2 sections, CTA `Button Đặt hàng` default/hover/disabled effect hover-lift, sm frame without the back link, Thông tin grid-2 from md up" → hallmark build.
 - Own pitfalls: building from the tree alone (loses the 4-breakpoint layout); building from the wireframe alone (loses full notes/states/effects); key info in free prose or blocks without `data-wf-*` (invisible to machines + agents).
 - Work split: main agent reads + summarizes (user confirms before building).
 
+### Sub-usecase 6: quick review with the viewer
+- When to use: a PASSed pair needs fast multi-width/variant viewing on desktop, no Chrome resizing.
+- Skip: pair not yet double-PASSed → back to Sub-usecase 1/3/4; spec-only reading to build → Sub-usecase 5.
+- Mechanism vs the others: the only one that opens `viewer.html` and clicks to resize the iframe (type → variant, collapse panel, 4-frame grid); no authoring, no check scripts.
+- Copy-paste: `cp items/wireframe-docs/templates/viewer.html .aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-my-page/` then open `viewer.html?file=my-page-wireframe.html` (`file://`, no server).
+- Numeric bar: 4 type buttons at canonical widths + variants matching the convention list + panel collapses/reopens (✕/Esc/button) + grid shows all 4 frames at the right widths + clicking a frame drills to the right breakpoint.
+- Example (illustrative): the `2026-11-03-1430-checkout` pair → click `lg` → `1440`, 1440px-wide iframe + `lg · 1440px` label; grid on → 4 scaled frames on one screen; click the `sm` frame → single 360px view.
+- Own pitfalls: opening the viewer without `?file=` (shows the help page, not an error); editing widths in the viewer without editing the convention (drift — review FAIL); expecting the viewer to judge right/wrong (it only changes display width; `verify-pair.py` judges).
+- Work split: main agent copies the viewer + opens the right `?file=` + presents the modes; claude judges visuals at the needed breakpoint; verify by clicking every control + correct px labels.
+
 ### Shared steps
 1. Shortlist structure via question tool; write only after user picks.
-2. Create `.tmp/wireframes/` + ensure `.gitignore` lists `.tmp/` (add when missing, verify `git check-ignore -v`), then write per convention → `check.py` to PASS → hand-author the 4-frame wireframe per the tree → `verify-pair.py` to PASS.
-3. Present pair + both PASS lines; visuals and every drift go to the designer, claude only comments on layout.
+2. Create `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<page>/` + ensure `.gitignore` lists `.aidomaincraft/` (add when missing, verify `git check-ignore -v`), then write per convention → `check.py` to PASS → hand-author the 4-frame wireframe per the tree → `verify-pair.py` to PASS.
+3. Present pair + both PASS lines; visuals and every drift go to the designer, claude only comments on layout. Quick multi-width review: copy `templates/viewer.html` into the version folder, open `viewer.html?file=<page>-wireframe.html`.
 4. Settle the pair before detail builds; on tree change fix the wireframe to match and re-run `verify-pair.py`, never treat one side as matching.
 
 ### Sample prompts
-- "Write a tree.md for a 3-tier Pricing page per wireframe-docs into `.tmp/wireframes/pricing-tree.md`, check.py to PASS."
-- "Author `.tmp/wireframes/pricing-wireframe.html` per the settled tree (4 frames sm/md/lg/xl, full data-wf-*), then verify-pair.py to PASS."
+- "Write a tree.md for a 3-tier Pricing page per wireframe-docs into `.aidomaincraft/.tmp/wireframes/2026-11-03-1430-pricing/pricing-tree.md`, check.py to PASS."
+- "Author `.aidomaincraft/.tmp/wireframes/2026-11-03-1430-pricing/pricing-wireframe.html` per the settled tree (4 frames sm/md/lg/xl, full data-wf-*), then verify-pair.py to PASS."
 - "Run verify-pair.py on the pricing pair and present the full drift list (if any) for the designer to rule on."
-- "Read the pair `.tmp/wireframes/pricing-tree.md` + `.tmp/wireframes/pricing-wireframe.html`, summarize structure (page/sections/CTA/states/layout per breakpoint) for my confirmation before the hallmark build."
-- Filled example: "Write the tree for a Checkout page into `.tmp/wireframes/checkout-tree.md` (Thông tin + Hành động, CTA `Button Đặt hàng` states default/hover/disabled effect hover-lift, secondary button hidden on sm), check.py PASS, then hand-author the 4-frame wireframe."
+- "Read the pair `.aidomaincraft/.tmp/wireframes/2026-11-03-1430-pricing/pricing-tree.md` + `.aidomaincraft/.tmp/wireframes/2026-11-03-1430-pricing/pricing-wireframe.html`, summarize structure (page/sections/CTA/states/layout per breakpoint) for my confirmation before the hallmark build."
+- Filled example: "Write the tree for a Checkout page into `.aidomaincraft/.tmp/wireframes/2026-11-03-1430-checkout/checkout-tree.md` (Thông tin + Hành động, CTA `Button Đặt hàng` states default/hover/disabled effect hover-lift, secondary button hidden on sm), check.py PASS, then hand-author the 4-frame wireframe."
+- "Open the viewer for the `2026-11-03-1430-checkout` version: copy `templates/viewer.html` into the version folder, open `viewer.html?file=checkout-wireframe.html`, click `lg` → `1440`, then switch on the 4-frame grid."
 
 ### Pitfalls
 - Auto-generating HTML from the tree instead of hand-authoring (core FAIL).
@@ -294,18 +326,22 @@
 - New blocks without `data-wf-*` (drift in `verify-pair.py`).
 - Missing 1 of the 4 frames or wrong frame width (FAIL in `verify-pair.py`).
 - Key info in free prose or blocks without `data-wf-*` (invisible to parsers + agents).
-- Writing trees/HTML outside `.tmp/wireframes/` or skipping the `.gitignore` check (drafts leak into git — keep them under ignored `.tmp/`, verify `git check-ignore -v`).
+- Writing trees/HTML outside `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<page>/` or skipping the `.gitignore` check (drafts leak into git — keep them under ignored `.aidomaincraft/`, verify `git check-ignore -v`).
+- Opening the viewer without `?file=` (shows the help page, not an error — append `?file=<slug>-wireframe.html`).
+- Editing widths in `viewer.html` without editing the convention (drift — review FAIL; the convention is the source of truth).
+- Expecting the viewer to judge right/wrong (it only changes display width; `verify-pair.py` judges).
 
 ### Usage references (internal evidence — intrinsic item)
-- Relay session v10.4 (03/11/2026): standalone `check.py` PASS + `verify-pair.py` PASS on the 4-frame example pair + 3 invalid trees and 3 drifting pairs exit 1 correctly → resources run.
+- Relay session v10.6 (03/11/2026): output moved to `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<slug>/` + new `templates/viewer.html` (JS valid via `node --check`, canonical widths + variants match the convention) → resources run/correct.
+- `tests/test.sh` §13–§16 covers the REGISTRY row + `Nguồn gốc`/`Áp dụng` + no `build.py` references + the example pair PASS + a drifting pair FAIL + viewer presence + canonical widths matching the convention.
 - `tests/test.sh` §13–§15 covers the REGISTRY row + `Nguồn gốc`/`Áp dụng` + no `build.py` references + the example pair PASS + a drifting pair FAIL.
 - External sources: none yet (intrinsic item, no real-project use) — recorded, to add with first real case.
 
 ### In-item resources
-- `scripts/check.py` (tree validation, standalone, exit 0/1) + `scripts/verify-pair.py` (pair diff, exit 0/1). `convention/tree-format.md` (3 line kinds + metadata + 4-frame wireframe standard + pair rule). `examples/tree.md` + `examples/tree.html` (hand-authored 4-frame pair, both scripts PASS). Matches REGISTRY `tài nguyên`: `scripts/, convention/, examples/`.
+- `scripts/check.py` (tree validation, standalone, exit 0/1) + `scripts/verify-pair.py` (pair diff, exit 0/1). `convention/tree-format.md` (3 line kinds + metadata + 4-frame wireframe standard + pair rule + variant lists). `examples/tree.md` + `examples/tree.html` (hand-authored 4-frame pair, both scripts PASS). `templates/viewer.html` (2-level quick view, collapsible panel, 4-frame grid). Matches REGISTRY `tài nguyên`: `scripts/, convention/, examples/, templates/`.
 
 ### References
-- Internal: `convention/tree-format.md`, `examples/tree.md` + `examples/tree.html`, `scripts/verify-pair.py`, relay v10.4.
+- Internal: `convention/tree-format.md`, `examples/tree.md` + `examples/tree.html`, `scripts/verify-pair.py`, `templates/viewer.html`, relay v10.6.
 - Law: `../../CHARTER.md` §4b + §5d.
 
 ### Where used

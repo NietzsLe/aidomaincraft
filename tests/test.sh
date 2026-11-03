@@ -197,9 +197,11 @@ cp "$root/items/wireframe-docs/examples/tree.md" "$t10/suite/checkout/tree.md"
 cp "$root/items/wireframe-docs/examples/tree.html" "$t10/suite/checkout/tree.html"
 cp "$root/items/wireframe-docs/examples/data.json" "$t10/suite/checkout/data.json"
 printf '# Flow: Mua\n\n- Entry: checkout @ sm\n\n## Step 1: Nhap\n- Page: checkout | Action: `Button` **Đặt hàng** | Expect: ok\n- go: back\n' > "$t10/suite/flows/mua.md"
+printf '# Flow: Nhap\n\n- Entry: checkout @ sm\n\n## Step 1: Dien\n- Page: checkout | Expect: thay chu\n- Input: Email = Email\n- go: back\n' > "$t10/suite/flows/nhap.md"
 python3 "$root/items/wireframe-docs/scripts/check-flow.py" "$t10/suite" >/dev/null 2>&1 && ok "flow PASS" || bad "flow FAIL"
 python3 "$root/items/wireframe-docs/scripts/build-flow.py" "$t10/suite" >/dev/null 2>&1 && ok "player built" || bad "player build FAIL"
 [ -f "$t10/suite/player.html" ] && ok "player.html exists" || bad "player.html missing"
+grep -q '"inputs": \[\["Email", "Email"\]\]' "$t10/suite/player.html" && ok "input DSL embedded" || bad "input DSL missing"
 if command -v node >/dev/null 2>&1; then
   python3 -c "import re;s=open('$t10/suite/player.html',encoding='utf-8').read();m=re.search(r'<script>(.*)</script>',s,re.S);open('$t10/p.js','w',encoding='utf-8').write(m.group(1))" && node --check "$t10/p.js" >/dev/null 2>&1 && ok "player JS valid" || bad "player JS invalid"
 fi

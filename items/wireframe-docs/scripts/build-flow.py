@@ -143,7 +143,7 @@ def main(argv):
                 if m:
                     pages_needed.add(m.group(1))
     # 3. extract frames + metadata + data per page
-    frames, metas, datas, css_list, seen_css = {}, {}, {}, [], set()
+    frames, metas, datas, titles, css_list, seen_css = {}, {}, {}, {}, [], set()
     for page in sorted(pages_needed):
         tpath = page_tree_path(suite, page)
         try:
@@ -190,6 +190,7 @@ def main(argv):
                     "req": sorted(c.get("req", set())),
                 }
         metas[page] = pmap
+        titles[page] = tree.get("page") or page
         try:
             datas[page] = load_json(dpath).get("values", {})
         except (FileNotFoundError, ValueError) as e:
@@ -212,6 +213,9 @@ def main(argv):
     out = out.replace("/*__DATA_DATA__*/",
                       "window.__DATA__ = %s;" % json.dumps(datas,
                                                            ensure_ascii=False))
+    out = out.replace("/*__TITLE_DATA__*/",
+                      "window.__PAGE_TITLES__ = %s;" % json.dumps(titles,
+                                                                  ensure_ascii=False))
     out = out.replace("/*__WIREFRAME_CSS__*/", "\n".join(css_list))
     dest = os.path.join(suite, "player.html")
     with open(dest, "w", encoding="utf-8") as f:

@@ -6,67 +6,99 @@
 <!--
   Mẫu player do build-flow.py sinh ra player.html (không sửa tay file sinh).
   Chạy qua file:// — không fetch, không server. Dữ liệu nhúng ở FLOW_DATA.
+  Chế độ xem luôn thu vừa khung (frame ảo, caption ghi rộng thật + %).
+  Chips mô tả trong frame bị ẩn ở chế độ review; click vào component để
+  xem card thông tin (đọc từ META + DATA nhúng).
 -->
 <style>
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: sans-serif; background: #e4e4e7; color: #18181b; }
-  #topbar { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 2px solid #18181b; padding: 8px 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  #topbar button, .btn { border: 1px solid #18181b; background: #fff; padding: 6px 12px; font-size: 13px; cursor: pointer; }
-  #topbar button.on, .btn.on { background: #18181b; color: #fff; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: #fafafa; color: #18181b; }
+  #topbar { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid #e4e4e7; padding: 10px 20px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  #topbar .title { font-weight: 700; font-size: 14px; }
+  #topbar button, .btn { border: 1px solid #e4e4e7; background: #fff; border-radius: 8px; padding: 7px 13px; font-size: 13px; cursor: pointer; }
+  #topbar button:hover, .btn:hover { background: #f4f4f5; }
+  #topbar button.on, .btn.on { background: #18181b; color: #fff; border-color: #18181b; }
   #topbar button:disabled { opacity: .4; cursor: default; }
-  #crumb { font-size: 13px; color: #52525b; }
-  .view { padding: 16px; max-width: 1400px; margin: 0 auto; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
-  .card { background: #fff; border: 2px solid #18181b; cursor: pointer; }
-  .card:hover { background: #fafafa; }
-  .card .thumb { height: 200px; overflow: hidden; border-bottom: 1px solid #71717a; position: relative; }
-  .card .info { padding: 10px 12px; }
+  #topbar .seg { display: flex; border: 1px solid #e4e4e7; border-radius: 999px; overflow: hidden; background: #fafafa; }
+  #topbar .seg button { border: 0; border-radius: 0; background: transparent; padding: 6px 12px; font-size: 12px; color: #52525b; }
+  #topbar .seg button + button { border-left: 1px solid #e4e4e7; }
+  #topbar .seg button.on { background: #18181b; color: #fff; font-weight: 600; }
+  #crumb { font-size: 12px; color: #71717a; }
+  .view { padding: 24px; max-width: 1400px; margin: 0 auto; }
+  .view h2 { margin: 0 0 4px; font-size: 20px; }
+  .view .desc { font-size: 13px; color: #71717a; margin: 0 0 16px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .card { background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; cursor: pointer; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+  .card:hover { border-color: #a1a1aa; }
+  .card .thumb { height: 200px; overflow: hidden; border-bottom: 1px solid #f4f4f5; position: relative; background: #fff; }
+  .card .info { padding: 12px 14px; }
   .card .info b { font-size: 14px; }
-  .card .info div { font-size: 12px; color: #52525b; margin-top: 2px; }
-  #stage-wrap { background: #fff; border: 2px solid #18181b; overflow-x: auto; }
-  #stage { transform-origin: top left; }
-  #stepbar { background: #fff; border: 2px solid #18181b; border-top: 0; padding: 10px 12px; font-size: 13px; }
-  #stepbar .act { background: #18181b; color: #fff; padding: 2px 8px; }
-  #typing { font-family: monospace; background: #18181b; color: #4ade80; padding: 4px 8px; margin-top: 6px; display: none; }
-  #choices { margin-top: 8px; display: none; gap: 8px; }
-  .wf-press { outline: 3px solid #18181b !important; filter: brightness(0.92); transition: none !important; }
-  #overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; align-items: center; justify-content: center; z-index: 100; }
-  #overlay .box { background: #fff; border: 2px solid #18181b; max-width: 520px; padding: 16px 20px; }
-  #overlay .box h3 { margin: 0 0 8px; }
-  #overlay .box dl { font-size: 13px; margin: 8px 0; }
-  #overlay .box dt { font-weight: bold; }
-  #overlay .box dd { margin: 0 0 4px 12px; color: #3f3f46; }
-  #constraints { position: fixed; right: 12px; bottom: 12px; z-index: 60; max-width: 340px; background: #fff; border: 2px solid #18181b; padding: 10px 12px; font-size: 12px; display: none; max-height: 60vh; overflow: auto; }
+  .card .info div { font-size: 12px; color: #71717a; margin-top: 2px; }
+  .framebox { background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; overflow: hidden; position: relative; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+  .framebox .stage { transform-origin: top left; position: relative; }
+  .stage-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; z-index: 30; }
+  .stage-overlay .box { background: #fff; border-radius: 12px; width: min(480px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; padding: 20px 22px; box-shadow: 0 16px 48px rgba(0,0,0,.25); }
+  .stage-overlay .box h3 { margin: 0 0 8px; font-size: 16px; }
+  .stage-overlay .box dl { font-size: 13px; margin: 8px 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; }
+  .stage-overlay .box dt { color: #71717a; }
+  .stage-overlay .box dd { margin: 0; }
+  .cap { font-size: 12px; color: #71717a; margin: 10px 2px 0; }
+  #stepbar { background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; margin-top: 12px; padding: 12px 16px; font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+  #stepbar .act { background: #18181b; color: #fff; padding: 2px 10px; border-radius: 999px; font-size: 12px; }
+  #typing { font-family: monospace; background: #18181b; color: #4ade80; border-radius: 8px; padding: 6px 10px; margin-top: 8px; font-size: 12px; display: none; }
+  #choices { margin-top: 8px; display: none; gap: 8px; flex-wrap: wrap; }
+  .wf-press { outline: 3px solid #18181b !important; outline-offset: 2px; filter: brightness(0.94); transition: none !important; }
+  .wf-review .chip { display: none !important; }
+  .wf-review [data-wf-component] { cursor: pointer; }
+  .wf-review [data-wf-component]:hover { outline: 2px dashed #71717a; outline-offset: 2px; }
+  .action-tag { position: absolute; z-index: 20; background: #18181b; color: #fff; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; pointer-events: none; white-space: nowrap; }
+  #wf-card { position: fixed; top: 70px; right: 20px; z-index: 90; width: 320px; max-height: 75vh; overflow: auto; background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.18); padding: 16px 18px; font-size: 13px; }
+  #wf-card h4 { margin: 0 0 2px; font-size: 15px; }
+  #wf-card .sub { color: #71717a; font-size: 12px; margin-bottom: 10px; }
+  #wf-card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; }
+  #wf-card dt { color: #71717a; white-space: nowrap; }
+  #wf-card dd { margin: 0; word-break: break-word; }
+  #wf-card button { margin-top: 12px; width: 100%; padding: 8px; border: 1px solid #e4e4e7; border-radius: 8px; background: #fafafa; cursor: pointer; font-size: 13px; }
+  #constraints { position: fixed; right: 20px; bottom: 20px; z-index: 60; max-width: 340px; background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; padding: 12px 14px; font-size: 12px; display: none; max-height: 60vh; overflow: auto; box-shadow: 0 12px 32px rgba(0,0,0,.15); }
   #constraints h4 { margin: 0 0 6px; }
-  #constraints code { background: #f4f4f5; padding: 0 4px; }
-  #endcard { text-align: center; padding: 40px 20px; background: #fff; border: 2px solid #18181b; }
+  #constraints code { background: #f4f4f5; padding: 0 4px; border-radius: 4px; }
+  #endcard { text-align: center; padding: 48px 20px; background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; margin-top: 16px; }
   .hidden { display: none !important; }
 </style>
 <style>/*__WIREFRAME_CSS__*/</style>
 </head>
 <body>
 <div id="topbar">
+  <span class="title">Wireframe player</span>
   <button id="btn-list" title="Danh sách flow">☰ Flows</button>
+  <button id="btn-pages" title="Xem mọi trang, không theo flow">▦ Pages</button>
   <span id="crumb"></span>
   <span style="flex:1"></span>
-  <span id="bps"></span>
+  <span class="seg" id="bps"></span>
   <button id="btn-prev" title="Step trước">‹ Prev</button>
   <button id="btn-auto" title="Tự chạy">▶ Auto</button>
   <button id="btn-next" title="Step tiếp">Next ›</button>
   <button id="btn-info" title="Ràng buộc step hiện tại">ⓘ Ràng buộc</button>
 </div>
 
-<div id="view-list" class="view"><h2>Flows</h2><div class="cards" id="flow-cards"></div></div>
-<div id="view-detail" class="view hidden"><h2 id="detail-title"></h2><div class="cards" id="step-cards"></div></div>
+<div id="view-list" class="view"><h2>Flows</h2><p class="desc">Chọn flow để xem từng step rồi play như video. Khung xem luôn thu vừa màn hình; caption ghi rộng thật.</p><div class="cards" id="flow-cards"></div></div>
+<div id="view-detail" class="view hidden"><h2 id="detail-title"></h2><p class="desc">Bấm step để play từ đó. Thumbnail là toàn trang thu nhỏ.</p><div class="cards" id="step-cards"></div></div>
 <div id="view-play" class="view hidden">
-  <div id="stage-wrap"><div id="stage"></div></div>
+  <div class="framebox" id="stage-wrap"><div class="stage wf-review" id="stage"></div></div>
+  <div class="cap" id="play-cap"></div>
   <div id="stepbar"></div>
   <div id="typing"></div>
   <div id="choices" style="display:none"></div>
 </div>
-<div id="endcard" class="hidden"><h2 id="end-title">Kết thúc flow</h2><p id="end-desc"></p><button class="btn" id="btn-back-list">‹ Về danh sách</button></div>
+<div id="view-pages" class="view hidden"><h2>Pages</h2><p class="desc">Mọi trang trong suite — xem độc lập, không theo flow. Bấm card để xem toàn trang; click vào component để xem card thông tin.</p><div class="cards" id="page-cards"></div></div>
+<div id="view-pagedetail" class="view hidden">
+  <h2 id="page-title"></h2>
+  <div class="framebox" id="page-wrap"><div class="stage wf-review" id="page-stage"></div></div>
+  <div class="cap" id="page-cap"></div>
+</div>
+<div id="view-end-holder" class="view hidden"><div id="endcard" class="hidden"><h2 id="end-title">Kết thúc flow</h2><p id="end-desc"></p><button class="btn" id="btn-back-list">‹ Về danh sách</button></div></div>
 
-<div id="overlay"><div class="box" id="overlay-box"></div></div>
+<div id="wf-card" class="hidden"><h4 id="wf-card-title"></h4><div class="sub">Click component để xem · không chiếm layout wireframe</div><dl id="wf-card-body"></dl><button id="wf-card-close">Đóng (Esc)</button></div>
 <div id="constraints"><h4>Ràng buộc step hiện tại</h4><div id="constraints-body"></div></div>
 
 <script>
@@ -75,12 +107,16 @@
 /*__FRAMES_DATA__*/
 /*__META_DATA__*/
 /*__DATA_DATA__*/
+/*__TITLE_DATA__*/
 var FLOWS = window.__FLOWS__ || [];
 var FRAMES = window.__FRAMES__ || {};   // page -> {bp: html}
 var META = window.__META__ || {};       // page -> {label: {type,note,states,effect,behavior,reduced,visible_on,req}}
 var DATA = window.__DATA__ || {};       // page -> {label: value|[values]}
+var TITLES = window.__PAGE_TITLES__ || {}; // page -> "# Page:" display name
+function pageTitle(p) { return TITLES[p] || p; }
 var BPS = ["sm", "md", "lg", "xl"];
-var state = { view: "list", flow: -1, step: 0, bp: "sm", auto: false, timer: null, history: [] };
+var BP_PX = { sm: 360, md: 768, lg: 1366, xl: 1920 };
+var state = { view: "list", flow: -1, step: 0, bp: "sm", auto: false, timer: null, history: [], page: null };
 var KEY_DEFS = {
   "states": "Các trạng thái component tồn tại (vd default, hover, focus, disabled).",
   "effect": "Hiệu ứng khi chuyển state (catalog animations.md hoặc custom + ref).",
@@ -100,11 +136,20 @@ function frameHtml(page, bp) {
 }
 function thumb(html, w, h) {
   var sc = Math.min(1, 300 / w);
-  return '<div style="width:300px;height:' + h + 'px;overflow:hidden;position:relative;background:#fff">'
+  return '<div class="wf-review" style="width:300px;height:' + h + 'px;overflow:hidden;position:relative;background:#fff">'
     + '<div style="transform:scale(' + sc + ');transform-origin:top left;width:' + w + 'px">' + html + "</div></div>";
 }
+function fitBox(wrap, inner, w, h) {
+  var avail = Math.max(300, wrap.clientWidth || document.documentElement.clientWidth - 48);
+  var sc = Math.min(1, avail / w);
+  inner.style.width = w + "px";
+  inner.style.height = h + "px";
+  inner.style.transform = "scale(" + sc + ")";
+  wrap.style.height = Math.floor(h * sc) + "px";
+  return sc;
+}
 function show(view) {
-  ["view-list", "view-detail", "view-play"].forEach(function (v) { $(v).classList.add("hidden"); });
+  ["view-list", "view-detail", "view-play", "view-pages", "view-pagedetail", "view-end-holder"].forEach(function (v) { $(v).classList.add("hidden"); });
   $(view).classList.remove("hidden");
   $("endcard").classList.add("hidden");
   state.view = view.replace("view-", "");
@@ -118,11 +163,11 @@ function renderList() {
     d.className = "card";
     d.innerHTML = thumb(frameHtml(first.page || "", "sm"), 360, 200)
       + '<div class="info"><b>' + esc(f.name) + '</b><div>' + f.steps.length + ' steps · entry: '
-      + esc(first.page || "?") + '</div><div>' + esc(f.desc || "") + "</div></div>";
+      + esc(pageTitle(first.page || "?")) + '</div><div>' + esc(f.desc || "") + "</div></div>";
     d.onclick = function () { openFlow(i); };
     c.appendChild(d);
   });
-  $("crumb").textContent = FLOWS.length + " flow(s)";
+  $("crumb").textContent = FLOWS.length + " flow(s) · " + Object.keys(FRAMES).length + " page(s)";
 }
 function openFlow(i) {
   state.flow = i; state.step = 0; state.history = [];
@@ -132,9 +177,9 @@ function openFlow(i) {
   f.steps.forEach(function (s, idx) {
     var d = document.createElement("div");
     d.className = "card";
-    d.innerHTML = thumb(frameHtml(s.page, state.bp), 360, 200)
+    d.innerHTML = thumb(frameHtml(s.page, state.bp), BP_PX[state.bp] || 360, 200)
       + '<div class="info"><b>Step ' + (idx + 1) + ': ' + esc(s.title) + '</b><div>Page: '
-      + esc(s.page || "?") + (s.action ? " · " + esc(s.action[0] + " " + s.action[1]) : "")
+      + esc(pageTitle(s.page || "?")) + (s.action ? " · " + esc(s.action[0] + " " + s.action[1]) : "")
       + "</div><div>" + esc(s.expect || "") + "</div></div>";
     d.onclick = function () { playStep(idx); };
     c.appendChild(d);
@@ -143,16 +188,43 @@ function openFlow(i) {
   $("crumb").textContent = "Flow: " + f.name;
 }
 function currentStep() { return FLOWS[state.flow].steps[state.step]; }
+function frameHeight(bp) { return 720; }
 function renderStage() {
   var s = currentStep();
   var html = frameHtml(s.page, state.bp);
-  $("stage").innerHTML = html;
+  var stage = $("stage");
+  stage.innerHTML = html;
+  var w = BP_PX[state.bp] || 360, h = frameHeight(state.bp);
+  var sc = fitBox($("stage-wrap"), stage, w, h);
   var bar = "Step " + (state.step + 1) + "/" + FLOWS[state.flow].steps.length
-    + " · <b>" + esc(s.title) + "</b> · Page: " + esc(s.page) + " · " + state.bp;
+    + ' · <b>' + esc(s.title) + "</b> · Page: " + esc(pageTitle(s.page)) + " · " + state.bp
+    + " " + w + "px · thu " + Math.round(sc * 100) + "% (toàn trang)";
   if (s.action) bar += ' · <span class="act">' + esc(s.action[0] + " " + s.action[1]) + "</span>";
   if (s.expect) bar += "<br>Expect: " + esc(s.expect);
   $("stepbar").innerHTML = bar;
+  $("play-cap").textContent = "Page " + pageTitle(s.page) + " · " + state.bp + " " + w + "px · frame ảo thu " + Math.round(sc * 100) + "% · click component để xem thông tin";
+  markAction(s, sc);
   showConstraints(s);
+}
+function markAction(s, sc) {
+  document.querySelectorAll(".action-tag").forEach(function (t) { t.remove(); });
+  var spec = s.action ? { text: "▸ " + s.action[0] + " " + s.action[1], label: s.action[1] }
+    : (s.inputs && s.inputs[0]) ? { text: "▸ Nhập " + s.inputs[0][0], label: s.inputs[0][0] } : null;
+  if (!spec) return;
+  var t = findTarget(spec.label);
+  if (!t) return;
+  t.el.classList.add("wf-press");
+  var x = 0, y = 0, el = t.el, stage = $("stage");
+  while (el && el !== stage) { x += el.offsetLeft || 0; y += el.offsetTop || 0; el = el.offsetParent; }
+  var tag = document.createElement("div");
+  tag.className = "action-tag";
+  tag.textContent = spec.text;
+  tag.style.left = Math.max(4, x * sc) + "px";
+  tag.style.top = ((y + (t.el.offsetHeight || 24)) * sc + 6) + "px";
+  tag.style.transition = "opacity .4s";
+  $("stage-wrap").appendChild(tag);
+  setTimeout(function () { tag.style.opacity = "0"; }, 1400);
+  setTimeout(function () { tag.remove(); }, 1900);
 }
 function findTarget(label) {
   var stage = $("stage");
@@ -164,6 +236,36 @@ function findTarget(label) {
   el = stage.querySelector(q);
   if (el) return { el: el, kind: "block" };
   return null;
+}
+function compCard(page, label) {
+  var meta = (META[page] && META[page][label]) || {};
+  var vals = (DATA[page] && DATA[page][label]) || null;
+  var rows = [
+    ["Kiểu", meta.type || "—"],
+    ["Trạng thái", (meta.states || []).join(", ") || "—"],
+    ["Hiệu ứng", (meta.effect || []).join(", ") || "—"],
+    ["Hành vi", (meta.behavior || []).join(", ") || "—"],
+    ["Giảm chuyển động", meta.reduced || "—"],
+    ["Chỉ hiện khi", (meta.visible_on || []).join(", ") || "luôn hiện"],
+    ["Yêu cầu", (meta.req || []).join(", ") || "—"],
+    ["Giá trị mẫu", vals == null ? "—" : (Array.isArray(vals) ? vals.join(" · ") : String(vals))],
+    ["Ghi chú", meta.note || "—"]
+  ];
+  var h = "";
+  rows.forEach(function (r) {
+    h += "<dt>" + r[0] + "</dt><dd>" + esc(r[1]) + "</dd>";
+  });
+  $("wf-card-title").textContent = label + " (" + page + ")";
+  $("wf-card-body").innerHTML = h;
+  $("wf-card").classList.remove("hidden");
+}
+function closeCard() { $("wf-card").classList.add("hidden"); }
+function bindCompClicks(rootId, pageOf) {
+  $(rootId).addEventListener("click", function (ev) {
+    var el = ev.target.closest ? ev.target.closest("[data-wf-component]") : null;
+    if (!el) return;
+    compCard(pageOf(), el.getAttribute("data-wf-component"));
+  });
 }
 function typeInto(label, text, done) {
   var t = findTarget(label);
@@ -186,8 +288,8 @@ function typeInto(label, text, done) {
   else { t.el.setAttribute("data-orig", t.el.textContent); t.el.textContent = ""; }
   var timer = setInterval(function () {
     i++;
-    var cur = text.slice(0, i);
-    if (t.kind === "input") t.el.value = cur; else t.el.textContent = cur;
+    var cur2 = text.slice(0, i);
+    if (t.kind === "input") t.el.value = cur2; else t.el.textContent = cur2;
     if (i >= text.length) {
       clearInterval(timer);
       setTimeout(function () { t.el.classList.remove("wf-press"); done(); }, 250);
@@ -245,22 +347,33 @@ function followGo(flow, s, done) {
   }
   done("end");
 }
+function closeStageOverlay() {
+  var o = document.querySelector("#stage > .stage-overlay");
+  if (o) { o.remove(); return true; }
+  return false;
+}
 function showOverlay(s, kind, label) {
-  var box = $("overlay-box");
+  closeStageOverlay();
+  document.querySelectorAll(".action-tag").forEach(function (t) { t.remove(); });
   var meta = (META[s.page] && META[s.page][label]) || {};
   var rows = [["Kiểu", meta.type || "?"], ["Trạng thái", (meta.states || []).join(", ") || "—"],
     ["Hành vi", (meta.behavior || []).join(", ") || kind], ["Ghi chú", meta.note || "—"]];
-  var h = "<h3>" + esc(kind) + ": " + esc(label) + "</h3><dl>";
+  var h = "<h3>" + esc(kind) + ": " + esc(label) + "</h3>"
+    + '<p style="font-size:12px;color:#71717a;margin:0 0 6px">Trang nền "' + esc(pageTitle(s.page))
+    + '" vẫn giữ nguyên phía sau — dialog phủ trong khung khổ này.</p><dl>';
   rows.forEach(function (r) { h += "<dt>" + r[0] + "</dt><dd>" + esc(String(r[1])) + "</dd>"; });
-  h += '</dl><button class="btn" id="ov-close">Đóng / quay lại (go: back)</button>';
-  box.innerHTML = h;
-  $("overlay").style.display = "flex";
-  $("ov-close").onclick = function () { $("overlay").style.display = "none"; doBack(); };
+  h += '</dl><button class="btn ov-close">Đóng / quay lại (go: back)</button>';
+  var ov = document.createElement("div");
+  ov.className = "stage-overlay";
+  ov.innerHTML = '<div class="box">' + h + "</div>";
+  $("stage").appendChild(ov);
+  ov.querySelector(".ov-close").onclick = function () { closeStageOverlay(); doBack(); };
 }
 function showEnd(s) {
   show("view-play");
   $("stage").innerHTML = "";
   $("stepbar").innerHTML = "Hoàn tất step cuối: <b>" + esc(s.title) + "</b>";
+  show("view-end-holder");
   $("endcard").classList.remove("hidden");
   $("end-title").textContent = "Kết thúc: " + (FLOWS[state.flow].terminal || "hết flow");
   $("end-desc").textContent = s.expect || "";
@@ -309,6 +422,12 @@ function execStepNoGo(flow, s) {
 function doNext() {
   var flow = FLOWS[state.flow];
   var s = currentStep();
+  if (document.querySelector("#stage > .stage-overlay")) {
+    closeStageOverlay();
+    var ni = state.step + 1;
+    if (ni >= flow.steps.length) showEnd(s); else playStep(ni);
+    return;
+  }
   execStep(flow, s, function (r) {
     if (r === "hold") return;
     if (r === "back") { doBack(); return; }
@@ -348,13 +467,45 @@ function startAuto() {
   };
   tick();
 }
+function renderPages() {
+  var c = $("page-cards"); c.innerHTML = "";
+  Object.keys(FRAMES).forEach(function (p) {
+    var bps = Object.keys(FRAMES[p] || {});
+    var d = document.createElement("div");
+    d.className = "card";
+    d.innerHTML = thumb(frameHtml(p, "sm"), 360, 200)
+      + '<div class="info"><b>' + esc(pageTitle(p)) + '</b><div>' + bps.join(" · ")
+      + " · toàn trang thu nhỏ</div></div>";
+    d.onclick = function () { openPage(p); };
+    c.appendChild(d);
+  });
+  show("view-pages");
+  $("crumb").textContent = Object.keys(FRAMES).length + " page(s)";
+}
+function openPage(p) {
+  state.page = p;
+  $("page-title").textContent = "Page: " + pageTitle(p);
+  renderPageDetail();
+  show("view-pagedetail");
+  $("crumb").textContent = "Page: " + pageTitle(p);
+}
+function renderPageDetail() {
+  var p = state.page;
+  var html = frameHtml(p, state.bp);
+  var stage = $("page-stage");
+  stage.innerHTML = html;
+  var w = BP_PX[state.bp] || 360;
+  var sc = fitBox($("page-wrap"), stage, w, frameHeight(state.bp));
+  $("page-cap").textContent = "Page " + pageTitle(p) + " · " + state.bp + " " + w + "px · frame ảo thu "
+    + Math.round(sc * 100) + "% · click component để xem thông tin";
+}
 function showConstraints() {
   var s = currentStep();
   var box = $("constraints-body");
   var rows = [];
   var meta = s.action ? (META[s.page] && META[s.page][s.action[1]]) : null;
   var push = function (k, v) {
-    if (v && String(v).trim()) rows.push("<div><code>" + k + "</code>: " + esc(String(v)) + "<br><span style='color:#52525b'>" + esc(KEY_DEFS[k] || "") + "</span></div>");
+    if (v && String(v).trim()) rows.push("<div><code>" + k + "</code>: " + esc(String(v)) + "<br><span style='color:#71717a'>" + esc(KEY_DEFS[k] || "") + "</span></div>");
   };
   if (meta) {
     push("Kiểu", meta.type);
@@ -381,10 +532,12 @@ document.addEventListener("DOMContentLoaded", function () {
       state.bp = b;
       Array.prototype.forEach.call(bp.children, function (x) { x.className = (x.dataset.bp === b ? "on" : ""); });
       if (state.view === "play") renderStage();
+      if (state.view === "pagedetail") renderPageDetail();
     };
     bp.appendChild(btn);
   });
   $("btn-list").onclick = function () { renderList(); show("view-list"); };
+  $("btn-pages").onclick = function () { renderPages(); };
   $("btn-prev").onclick = function () { if (state.view === "play") advance(-1); };
   $("btn-next").onclick = function () { if (state.view === "play") advance(1); };
   $("btn-auto").onclick = function () { if (state.auto) stopAuto(); else if (state.view === "play") startAuto(); };
@@ -393,10 +546,18 @@ document.addEventListener("DOMContentLoaded", function () {
     c.style.display = (c.style.display === "block" ? "none" : "block");
   };
   $("btn-back-list").onclick = function () { renderList(); show("view-list"); };
+  $("wf-card-close").onclick = closeCard;
+  bindCompClicks("stage-wrap", function () { return currentStep().page; });
+  bindCompClicks("page-wrap", function () { return state.page; });
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") {
-      if ($("overlay").style.display === "flex") { $("overlay").style.display = "none"; doBack(); }
+      if (closeStageOverlay()) { doBack(); return; }
+      closeCard();
     }
+  });
+  window.addEventListener("resize", function () {
+    if (state.view === "play") renderStage();
+    if (state.view === "pagedetail") renderPageDetail();
   });
   renderList();
   show("view-list");

@@ -1,0 +1,100 @@
+<!---
+  WF_REVIEW_SNIPPET — templates/review-snippet.html — copy khối
+  <style>+<script> bên dưới vào <head> của mọi *-wireframe.html (xem
+  examples/tree.html). Tác dụng: khi file được mở trong chế độ review
+  (nằm trong iframe viewer, hoặc URL có ?review, hoặc body có class
+  wf-review) thì ẩn chips mô tả inline và cho click vào component để xem
+  card thông tin (đọc từ data-wf-*). Mở trực tiếp để soạn thì chips vẫn
+  hiện như cũ. verify-pair.py đọc text trong DOM nên ẩn bằng CSS không
+  ảnh hưởng kiểm tra "khai gì hiện nấy".
+-->
+<style>
+body.wf-review .chip{display:none!important}
+body.wf-review .canvas{max-width:100%!important}
+body.wf-review [data-wf-component]{cursor:pointer}
+body.wf-review [data-wf-component]:hover{outline:2px dashed #71717a;outline-offset:2px}
+#wf-card{position:fixed;top:16px;right:16px;z-index:9999;width:320px;max-height:80vh;overflow:auto;background:#fff;border:1px solid #e4e4e7;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:16px 18px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;color:#18181b}
+#wf-card h4{margin:0 0 2px;font-size:15px}
+#wf-card .sub{color:#71717a;font-size:12px;margin-bottom:10px}
+#wf-card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px}
+#wf-card dt{color:#71717a;white-space:nowrap}
+#wf-card dd{margin:0;word-break:break-word}
+#wf-card button{margin-top:12px;width:100%;padding:8px;border:1px solid #e4e4e7;border-radius:8px;background:#fafafa;cursor:pointer;font-size:13px}
+#wf-card button:hover{background:#f4f4f5}
+</style>
+<script>
+(function () {
+  "use strict";
+  function reviewMode() {
+    try {
+      if (window !== window.top) return true;
+    } catch (e) { return true; }
+    if (/[?&]review\b/.test(location.search)) return true;
+    if (/[?&]bp=(sm|md|lg|xl)\b/.test(location.search)) return true;
+    if (document.body && document.body.classList.contains("wf-review")) return true;
+    return false;
+  }
+  function labelOf(el, sel) {
+    var n = el.querySelector(sel);
+    return n ? n.textContent.trim() : "";
+  }
+  function sectionOf(el) {
+    var s = el.closest("[data-wf-section]");
+    return s ? s.getAttribute("data-wf-section") : "";
+  }
+  function closeCard() {
+    var c = document.getElementById("wf-card");
+    if (c) c.remove();
+  }
+  function filterBp() {
+    var m = /[?&]bp=(sm|md|lg|xl)\b/.exec(location.search);
+    if (!m) return;
+    var keep = m[1];
+    var frames = document.querySelectorAll("[data-wf-breakpoint]");
+    if (!frames.length) return;
+    Array.prototype.forEach.call(frames, function (fr) {
+      if (fr.getAttribute("data-wf-breakpoint") !== keep) fr.style.display = "none";
+    });
+  }
+  function openCard(el) {
+    closeCard();
+    var rows = [
+      ["Kiểu", labelOf(el, ":scope > .t")],
+      ["Section", sectionOf(el)],
+      ["Trạng thái", el.getAttribute("data-wf-states") || "—"],
+      ["Hiệu ứng", el.getAttribute("data-wf-effect") || "—"],
+      ["Hành vi", el.getAttribute("data-wf-behavior") || "—"],
+      ["Giảm chuyển động", el.getAttribute("data-wf-reduced") || "—"],
+      ["Chỉ hiện khi", el.getAttribute("data-wf-visible-on") || "luôn hiện"],
+      ["Ẩn ở khổ", el.getAttribute("data-wf-hide") || "—"],
+      ["Yêu cầu", el.getAttribute("data-wf-req") || "—"],
+      ["Ghi chú", el.getAttribute("data-wf-note") || "—"]
+    ];
+    var card = document.createElement("div");
+    card.id = "wf-card";
+    var h = "<h4>" + el.getAttribute("data-wf-component") + "</h4>"
+      + '<div class="sub">Click component để xem · không chiếm layout wireframe</div><dl>';
+    rows.forEach(function (r) {
+      h += "<dt>" + r[0] + "</dt><dd>" + r[1].replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</dd>";
+    });
+    card.innerHTML = h + '</dl><button type="button">Đóng (Esc)</button>';
+    card.querySelector("button").onclick = closeCard;
+    document.body.appendChild(card);
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!document.body) return;
+    filterBp();
+    if (!reviewMode()) return;
+    document.body.classList.add("wf-review");
+    document.body.addEventListener("click", function (ev) {
+      var el = ev.target.closest ? ev.target.closest("[data-wf-component]") : null;
+      if (!el || !document.body.classList.contains("wf-review")) return;
+      ev.preventDefault();
+      openCard(el);
+    });
+    document.addEventListener("keydown", function (ev) {
+      if (ev.key === "Escape") closeCard();
+    });
+  });
+})();
+</script>

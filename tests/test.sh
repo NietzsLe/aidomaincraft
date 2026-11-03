@@ -197,9 +197,11 @@ cp "$root/items/wireframe-docs/examples/tree.md" "$t10/suite/checkout/tree.md"
 cp "$root/items/wireframe-docs/examples/tree.html" "$t10/suite/checkout/tree.html"
 cp "$root/items/wireframe-docs/examples/data.json" "$t10/suite/checkout/data.json"
 printf '# Flow: Mua\n\n- Entry: checkout @ sm\n\n## Step 1: Nhap\n- Page: checkout | Action: `Button` **Đặt hàng** | Expect: ok\n- go: back\n' > "$t10/suite/flows/mua.md"
+printf '# Flow: Nhap\n\n- Entry: checkout @ sm\n\n## Step 1: Dien\n- Page: checkout | Expect: thay chu\n- Input: Email = Email\n- go: back\n' > "$t10/suite/flows/nhap.md"
 python3 "$root/items/wireframe-docs/scripts/check-flow.py" "$t10/suite" >/dev/null 2>&1 && ok "flow PASS" || bad "flow FAIL"
 python3 "$root/items/wireframe-docs/scripts/build-flow.py" "$t10/suite" >/dev/null 2>&1 && ok "player built" || bad "player build FAIL"
 [ -f "$t10/suite/player.html" ] && ok "player.html exists" || bad "player.html missing"
+grep -q '"inputs": \[\["Email", "Email"\]\]' "$t10/suite/player.html" && ok "input DSL embedded" || bad "input DSL missing"
 if command -v node >/dev/null 2>&1; then
   python3 -c "import re;s=open('$t10/suite/player.html',encoding='utf-8').read();m=re.search(r'<script>(.*)</script>',s,re.S);open('$t10/p.js','w',encoding='utf-8').write(m.group(1))" && node --check "$t10/p.js" >/dev/null 2>&1 && ok "player JS valid" || bad "player JS invalid"
 fi
@@ -212,6 +214,35 @@ mkdir -p "$t10/nopage"
 printf '# Brief: X\n' > "$t10/nopage/brief.md"
 if python3 "$root/items/wireframe-docs/scripts/check-suite.py" "$t10/nopage" >/dev/null 2>&1; then bad "empty suite passed"; else ok "empty suite FAIL"; fi
 rm -rf "$t10" "$t10.suite"
+
+# 18. wireframe-docs review UX: snippet + Pages tab + scale-fit + chips hidden + click-card (v10.10)
+[ -f "$root/items/wireframe-docs/templates/review-snippet.html" ] && ok "snippet exists" || bad "snippet missing"
+grep -q 'WF_REVIEW_SNIPPET' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet marker" || bad "snippet marker missing"
+grep -q 'WF_REVIEW_SNIPPET' "$root/items/wireframe-docs/examples/tree.html" && ok "example embeds snippet" || bad "example missing snippet"
+grep -q 'view-pages' "$root/items/wireframe-docs/templates/player.template.html" && ok "player Pages tab" || bad "Pages tab missing"
+grep -q 'btn-pages' "$root/items/wireframe-docs/templates/player.template.html" && ok "player Pages button" || bad "Pages button missing"
+grep -q 'wf-review .chip' "$root/items/wireframe-docs/templates/player.template.html" && ok "player hides chips" || bad "player chips visible"
+grep -q 'wf-card' "$root/items/wireframe-docs/templates/player.template.html" && ok "player click-card" || bad "player card missing"
+grep -q 'fitBox' "$root/items/wireframe-docs/templates/player.template.html" && ok "player scale-fit" || bad "player scale-fit missing"
+grep -q 'action-tag' "$root/items/wireframe-docs/templates/player.template.html" && ok "player action tag" || bad "action tag missing"
+grep -q 'fitScale\|scale(' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewer scale-fit" || bad "viewer scale-fit missing"
+grep -q 'thu %\|% thu\|scale %' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewer scale caption" || bad "viewer caption missing"
+if command -v node >/dev/null 2>&1; then
+  python3 -c "import re;s=open('$root/items/wireframe-docs/templates/viewer.html',encoding='utf-8').read();m=re.search(r'<script>(.*)</script>',s,re.S);open('/tmp/opencode/v.js','w',encoding='utf-8').write(m.group(1))" && node --check /tmp/opencode/v.js >/dev/null 2>&1 && ok "viewer JS valid" || bad "viewer JS invalid"
+  python3 -c "s=open('$root/items/wireframe-docs/templates/review-snippet.html',encoding='utf-8').read();a=s.rfind('<script>');b=s.rfind('</script>');open('/tmp/opencode/s.js','w',encoding='utf-8').write(s[a+8:b])" && node --check /tmp/opencode/s.js >/dev/null 2>&1 && ok "snippet JS valid" || bad "snippet JS invalid"
+fi
+grep -q 'review-snippet' "$root/items/wireframe-docs/convention/tree-format.md" && ok "convention snippet rule" || bad "convention rule missing"
+grep -q 'review-snippet' "$root/items/wireframe-docs/README.md" && ok "item docs snippet" || bad "item docs missing"
+grep -q 'bp=" + state.type\|bp=" + k' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewer bp param" || bad "viewer bp missing"
+grep -q '\[hidden\]' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewer hidden rule" || bad "viewer hidden missing"
+grep -q 'ov-inner' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewer grid wrapper" || bad "grid wrapper missing"
+grep -q 'data-wf-breakpoint' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet bp filter" || bad "snippet bp filter missing"
+grep -q 'max-width:100%' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet canvas fit" || bad "canvas fit missing"
+grep -q '__TITLE_DATA__\|PAGE_TITLES' "$root/items/wireframe-docs/templates/player.template.html" && ok "player page titles" || bad "titles missing"
+grep -q 'TITLE_DATA' "$root/items/wireframe-docs/scripts/build-flow.py" && ok "build emits titles" || bad "build titles missing"
+grep -q 'Nhập ' "$root/items/wireframe-docs/templates/player.template.html" && ok "player input tag" || bad "input tag missing"
+grep -q 'stage-overlay' "$root/items/wireframe-docs/templates/player.template.html" && ok "overlay in-stage" || bad "overlay missing"
+if grep -q 'id="overlay"' "$root/items/wireframe-docs/templates/player.template.html"; then bad "fixed overlay remains"; else ok "no fixed overlay"; fi
 
 rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t1.ver" "$t1.guide"
 echo "---"

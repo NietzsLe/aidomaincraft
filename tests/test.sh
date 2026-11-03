@@ -246,6 +246,8 @@ grep -q 'BP_H' "$root/items/wireframe-docs/templates/player.template.html" && gr
 grep -q 'fr-fit' "$root/items/wireframe-docs/templates/viewer.html" && ok "grid gap wrapper" || bad "grid gap missing"
 grep -q '| Khổ |.*| Cao viewport |' "$root/items/wireframe-docs/convention/tree-format.md" && ok "convention heights" || bad "heights missing in convention"
 grep -q 'ov-info' "$root/items/wireframe-docs/templates/player.template.html" && ok "dialog icon button" || bad "dialog icon missing"
+if grep -q 'ⓘ' "$root/items/wireframe-docs/templates/player.template.html" "$root/items/wireframe-docs/templates/review-snippet.html"; then bad "text-circle-i remains"; else ok "no text-circle-i"; fi
+grep -q 'position: sticky; bottom: 0' "$root/items/wireframe-docs/templates/player.template.html" && ok "sticky card close" || bad "close not sticky"
 ! grep -q 'body.wf-review' "$t10/suite/player.html" && ok "no snippet CSS leak" || bad "snippet CSS leaked"
 grep -q '__TITLE_DATA__\|PAGE_TITLES' "$root/items/wireframe-docs/templates/player.template.html" && ok "player page titles" || bad "titles missing"
 grep -q 'TITLE_DATA' "$root/items/wireframe-docs/scripts/build-flow.py" && ok "build emits titles" || bad "build titles missing"

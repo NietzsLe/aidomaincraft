@@ -90,7 +90,7 @@ body.wf-ctrl .wf-review [data-wf-component]:hover { outline: 2px solid var(--amb
 #wf-card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; }
 #wf-card dt { color: var(--muted); white-space: nowrap; }
 #wf-card dd { margin: 0; word-break: break-word; }
-#wf-card button { margin-top: 12px; width: 100%; padding: 8px; border: 1px solid var(--rule-2); border-radius: 6px; background: var(--paper-2); color: var(--ink); cursor: pointer; font-size: 13px; font-weight: 500; }
+#wf-card button { position: sticky; bottom: 0; margin-top: 12px; width: 100%; padding: 8px; border: 1px solid var(--rule-2); border-radius: 6px; background: var(--paper-2); color: var(--ink); cursor: pointer; font-size: 13px; font-weight: 500; }
 #wf-card button:hover { border-color: var(--amber); }
 #constraints { position: fixed; right: 20px; bottom: 20px; z-index: 60; max-width: 340px; background: var(--paper-2); border: 1px solid var(--rule-2); border-radius: 10px; padding: 12px 14px; font-size: 12px; display: none; max-height: 60vh; overflow: auto; }
 #constraints h4 { margin: 0 0 6px; color: var(--ink); font-weight: 500; }
@@ -115,7 +115,7 @@ body.wf-ctrl .wf-review [data-wf-component]:hover { outline: 2px solid var(--amb
   <button id="btn-prev" title="Step trước">Prev</button>
   <button id="btn-auto" title="Tự chạy">▶ Auto</button>
   <button id="btn-next" title="Step tiếp">Next</button>
-  <button id="btn-info" title="Ràng buộc step hiện tại">ⓘ Ràng buộc</button>
+  <button id="btn-info" title="Ràng buộc step hiện tại"><svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" style="vertical-align:-2px"><circle cx="8" cy="8" r="6.6" fill="none" stroke="currentColor" stroke-width="1.6"/><text x="8" y="11.6" text-anchor="middle" font-size="9.5" font-weight="bold" fill="currentColor" font-family="sans-serif">i</text></svg> Ràng buộc</button>
 </div>
 
 <div id="view-list" class="view"><h2>Flows</h2><p class="desc">Chọn flow để xem từng step rồi play như video. Khung xem luôn thu vừa màn hình; caption ghi rộng thật.</p><div class="cards" id="flow-cards"></div></div>
@@ -135,7 +135,7 @@ body.wf-ctrl .wf-review [data-wf-component]:hover { outline: 2px solid var(--amb
 </div>
 <div id="view-end-holder" class="view hidden"><div id="endcard" class="hidden"><h2 id="end-title">Kết thúc flow</h2><p id="end-desc"></p><button class="btn" id="btn-back-list">Về danh sách</button></div></div>
 
-<div id="wf-card" class="hidden"><h4 id="wf-card-title"></h4><div class="sub">Click component để xem, không chiếm layout wireframe</div><dl id="wf-card-body"></dl><button id="wf-card-close">Đóng (Esc)</button></div>
+<div id="wf-card" class="hidden"><h4 id="wf-card-title"></h4><div class="sub">Badge hoặc Ctrl+Click để xem, không chiếm layout wireframe</div><dl id="wf-card-body"></dl><button id="wf-card-close">Đóng (Esc)</button></div>
 <div id="constraints"><h4>Ràng buộc step hiện tại</h4><div id="constraints-body"></div></div>
 
 <script>

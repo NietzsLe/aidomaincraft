@@ -1,4 +1,4 @@
-# CHARTER.md — aidomaincraft — v10
+# CHARTER.md — aidomaincraft — v10.9
 
 ## Tiếng Việt
 
@@ -9,7 +9,7 @@ Tổng hợp kinh nghiệm dùng AI theo lĩnh vực, dưới dạng chỉ dẫn
 - Có: chỉ dẫn usecase, prompt mẫu, pitfalls, tham chiếu tới tool/skill/repo ngoài + đánh giá sử dụng.
 - Không: copy nguyên code/tool ngoài vào đây; lưu log, token, dữ liệu khách hàng.
 
-### 3. Tổ chức (v10: thêm phân loại nguồn gốc item; giữ bộ 3 v9, tooling v8)
+### 3. Tổ chức (v10: thêm phân loại nguồn gốc item; giữ bộ 3 v9, tooling v8; v10.9: tiếng Việt có dấu bắt buộc)
 - Tầng chung (mỏng): root `README.md`, `AGENTS.md`, `CHARTER.md`, `CHANGELOG.md`.
 - Tầng `items/`: 1 item = 1 thư mục, kiến thức TRUNG LẬP domain của 1 công cụ/giải pháp. `items/<x>/README.md` chứa: là gì, ai làm, cài đặt mọi OS, cơ chế core, **cốt lõi bất biến / phần tùy chỉnh / phân công ai làm gì (bắt buộc từ v9)**, định vị vs đối thủ viral, giá/license, pitfalls chung, bản đồ phủ usecase (mạnh ★ / trung bình / không hỗ trợ + thay thế), tham khảo sử dụng (review sâu + số trung bình có trọng số), được dùng ở domain nào (link ngược).
 - Tầng `domains/`: 1 domain = 1 thư mục lĩnh vực (`domains/ui/`, `domains/media/`...). Mỗi domain có `README.md` làm index chọn item theo usecase (cho phép NHIỀU item cùng phục vụ 1 usecase, mỗi cái 1 cách, kèm tiêu chí phân biệt) + 1 file `using-<item>.md` cho MỖI cặp item-domain (usecase trong domain này, lệnh mẫu cụ thể, lưu ý riêng, điểm mạnh cốt lõi của item CHO domain đó, link về đúng section item gốc).
@@ -28,7 +28,7 @@ Tổng hợp kinh nghiệm dùng AI theo lĩnh vực, dưới dạng chỉ dẫn
 - Quy tắc tài nguyên nội tại: tự sở hữu (cấm copy code ngoài vào, giữ luật §2) + verify được (chạy thử/`--help`/test) + gọn nhẹ (chỉ giữ lõi; tài nguyên lớn tách repo riêng).
 
 ### 5. Template item (bắt buộc)
-`Dùng khi / Bỏ qua khi / Cài đặt / Cách item hoạt động (3 phần) / Cốt lõi bất biến / Phần tùy chỉnh / Phân công ai làm gì (3 mục bắt buộc từ v9) / Định vị khác biệt / Bản đồ phủ usecase (★ mạnh nhất lên đầu + trung bình + không hỗ trợ) / Các usecase con (mỗi usecase 1 block 6 field) / Các bước chung / Prompt mẫu / Pitfalls / Tham khảo sử dụng (review sâu + số trung bình có trọng số) / Tham khảo / Được dùng ở đâu (link domain) / Quay lại index`, song ngữ VI trước EN sau.
+`Dùng khi / Bỏ qua khi / Cài đặt / Cách item hoạt động (3 phần) / Cốt lõi bất biến / Phần tùy chỉnh / Phân công ai làm gì (3 mục bắt buộc từ v9) / Định vị khác biệt / Bản đồ phủ usecase (★ mạnh nhất lên đầu + trung bình + không hỗ trợ) / Các usecase con (mỗi usecase 1 block 6 field) / Các bước chung / Prompt mẫu / Pitfalls / Tham khảo sử dụng (review sâu + số trung bình có trọng số) / Tham khảo / Được dùng ở đâu (link domain) / Quay lại index`, song ngữ VI trước EN sau; tiếng Việt có dấu đầy đủ trong mọi nội dung đọc được (docs, CHANGELOG, prompt mẫu, PR, commit message) — chỉ code/lệnh/slug anchor/tên file giữ ASCII.
 - Cấm động từ mơ hồ nếu không kèm lệnh + ngưỡng đo được.
 - Mỗi usecase con: 1 lệnh copy-paste chạy được + 1 ví dụ input-output thật.
 - Pitfalls gắn gate/lỗi cụ thể.
@@ -55,19 +55,19 @@ Tổng hợp kinh nghiệm dùng AI theo lĩnh vực, dưới dạng chỉ dẫn
 - VERIFY B cho item nội tại ghi `N/A` cho stars/installs kèm lý do 1 dòng, không tính FAIL.
 
 ### 6. Template index domain (bắt buộc)
-`Mục đích 1 dòng / Bảng điều hướng: Việc → item(s) (cho phép nhiều item chính, mỗi cái 1 cách + tiêu chí phân biệt) / Bảng định vị / Ma trận chồng lấn (ô = chính-hỗ trợ-thay thế-không dùng + 1 dòng tiêu chí) / Workflow phối hợp / Danh sách item`, song ngữ.
+`Mục đích 1 dòng / Bảng điều hướng: Việc → item(s) (cho phép nhiều item chính, mỗi cái 1 cách + tiêu chí phân biệt) / Bảng định vị / Ma trận chồng lấn (ô = chính-hỗ trợ-thay thế-không dùng + 1 dòng tiêu chí) / Workflow phối hợp / Danh sách item`, song ngữ; tiếng Việt có dấu đầy đủ.
 - Mỗi cặp item-domain PHẢI có `using-<item>.md`. Thiếu = thiếu sót (FAIL theo VERIFY D).
 - Mỗi việc có thể có NHIỀU item chính (khác v6 chỉ 1 chính), nhưng bắt buộc cột tiêu chí phân biệt đo được.
 
 ### 6b. Template using-doc (bắt buộc, `domains/<d>/using-<x>.md`)
-`Usecase trong domain này / Lệnh mẫu cụ thể / Lưu ý riêng cho domain / Điểm mạnh cốt lõi của item CHO domain này / Phân công CHO domain này (agent chính vs claude + link về mục Phân công gốc) / Link về item gốc (đúng section)`, song ngữ tóm tắt (EN có thể ngắn hơn, tối thiểu bảng + link).
+`Usecase trong domain này / Lệnh mẫu cụ thể / Lưu ý riêng cho domain / Điểm mạnh cốt lõi của item CHO domain này / Phân công CHO domain này (agent chính vs claude + link về mục Phân công gốc) / Link về item gốc (đúng section)`, song ngữ tóm tắt (EN có thể ngắn hơn, tối thiểu bảng + link); tiếng Việt có dấu đầy đủ.
 - Chỉ viết phần RIÊNG cho domain. Mọi kiến thức gốc (cài đặt, cơ chế, giá) LINK về `../../items/<x>/README.md#section`, không copy. Trùng lặp nguyên đoạn = FAIL.
 
 ### 7. Nhất quán + link 3 chiều
 - Một nguồn sự thật: lệnh, ngưỡng, steps chi tiết chỉ sống trong `items/<x>/README.md`; `domains/<d>/using-<x>.md` chỉ viết phần riêng + link; `domains/<d>/README.md` chỉ tóm 1 dòng + link.
 - Link 3 chiều bắt buộc: domain index → using-doc → item gốc (tới đúng section, vd `../../items/skillry/README.md#co-ban`), và item gốc mục `Được dùng ở đâu` link ngược lại từng using-doc.
 - Tên việc/lệnh khớp từng chữ giữa 3 tầng. Sửa 1 bên thì sửa các bên kia trong cùng commit + `CHANGELOG.md`.
-- Checklist: không item mồ côi, không link gãy, không trùng lặp, song ngữ VI/EN đồng nội dung.
+- Checklist: không item mồ côi, không link gãy, không trùng lặp, song ngữ VI/EN đồng nội dung, tiếng Việt có dấu đầy đủ (kể cả commit message; chỉ code/lệnh/slug anchor/tên file giữ ASCII).
 
 ### 8. Phương pháp duy trì
 - Sửa item: giữ template, ghi `CHANGELOG.md`.
@@ -87,7 +87,7 @@ Collect hands-on AI experience by field as usecase-first guides, reusable when s
 - In: usecase guides, sample prompts, pitfalls, references to external tools/skills/repos + usage reviews.
 - Out: vendored external code/tools; logs, tokens, customer data.
 
-### 3. Organization (v10: item origin classification added; v9 triad kept, tooling stays v8)
+### 3. Organization (v10: item origin classification added; v9 triad kept, tooling stays v8; v10.9: Vietnamese accents required)
 - Common layer (thin): root `README.md`, `AGENTS.md`, `CHARTER.md`, `CHANGELOG.md`.
 - `items/` layer: 1 item = 1 folder, DOMAIN-NEUTRAL knowledge of one tool/solution. `items/<x>/README.md` holds: what it is, who builds it, install on every OS, core mechanism, **invariant core / customizable surface / work split (required since v9)**, differentiation vs viral opponents, price/license, shared pitfalls, usecase-coverage map (strong ★ / medium / unsupported + replacement), usage references (deep reviews + weighted averages), where-used backlinks.
 - `domains/` layer: 1 domain = 1 field folder (`domains/ui/`, `domains/media/`...). Each domain has an index `README.md` (usecase → item(s), MULTIPLE items may serve one usecase in different ways with a distinguishing rule) + one `using-<item>.md` per item-domain pair (usecases in this domain, concrete commands, domain-specific notes, core strengths FOR this domain, links to the exact item sections).
@@ -106,7 +106,7 @@ Collect hands-on AI experience by field as usecase-first guides, reusable when s
 - Intrinsic resource rules: self-owned (never copy outside code in, per §2) + verifiable (test run/`--help`/tests) + lightweight (core only; large resources get their own repo).
 
 ### 5. Item template (required)
-`When to use / When to skip / Install / How it works (3 parts) / Invariant core / Customizable surface / Work split (3 blocks required since v9) / Differentiation / Coverage map (★ strongest first + medium + unsupported) / Sub-usecases (one 6-field block each) / Shared steps / Prompts / Pitfalls / Usage references (deep + weighted averages) / References / Where used (domain links) / Back to index`, bilingual VI first EN second.
+`When to use / When to skip / Install / How it works (3 parts) / Invariant core / Customizable surface / Work split (3 blocks required since v9) / Differentiation / Coverage map (★ strongest first + medium + unsupported) / Sub-usecases (one 6-field block each) / Shared steps / Prompts / Pitfalls / Usage references (deep + weighted averages) / References / Where used (domain links) / Back to index`, bilingual VI first EN second; Vietnamese must be fully accented in all readable content (docs, CHANGELOG, sample prompts, PRs, commit messages) — only code/commands/slug anchors/file names stay ASCII.
 - Vague verbs banned without runnable command + measurable bar.
 - Each sub-usecase: 1 runnable command + 1 real input-output example.
 - Pitfalls cite concrete gates/errors.
@@ -133,19 +133,19 @@ Collect hands-on AI experience by field as usecase-first guides, reusable when s
 - VERIFY B lets intrinsic items record `N/A` for stars/installs with a 1-line reason, not a FAIL.
 
 ### 6. Domain index template (required)
-`1-line purpose / Routing: job → item(s) (multiple primaries allowed, each with a distinguishing rule) / Positioning / Overlap matrix / Combined workflow / Item list`, bilingual.
+`1-line purpose / Routing: job → item(s) (multiple primaries allowed, each with a distinguishing rule) / Positioning / Overlap matrix / Combined workflow / Item list`, bilingual; Vietnamese fully accented.
 - Every item-domain pair MUST have `using-<item>.md`. Missing = FAIL per VERIFY D.
 - One job may have MULTIPLE primaries (changed from v6 single-primary), but the distinguishing rule column is mandatory.
 
 ### 6b. Using-doc template (required, `domains/<d>/using-<x>.md`)
-`Usecases in this domain / Concrete commands / Domain-specific notes / Core strengths FOR this domain / Work split FOR this domain (main agent vs claude + link to origin Work split) / Links to item origin (exact sections)`, bilingual summary (EN may be shorter, at minimum tables + links).
+`Usecases in this domain / Concrete commands / Domain-specific notes / Core strengths FOR this domain / Work split FOR this domain (main agent vs claude + link to origin Work split) / Links to item origin (exact sections)`, bilingual summary (EN may be shorter, at minimum tables + links); Vietnamese fully accented.
 - Domain-only content. All origin knowledge LINKS to `../../items/<x>/README.md#section`, never copied. Duplicated paragraphs = FAIL.
 
 ### 7. Consistency + 3-way links
 - Single source of truth: commands, bars, detailed steps live only in `items/<x>/README.md`; `domains/<d>/using-<x>.md` holds domain-only deltas + links; `domains/<d>/README.md` holds 1-line summaries + links.
 - Mandatory 3-way links: domain index → using-doc → item origin (exact section, e.g. `../../items/skillry/README.md#co-ban`), and the item's `Where used` section links back to each using-doc.
 - Job/command names match word-for-word across all 3 layers. Change one side and the others in the same commit + `CHANGELOG.md`.
-- Pre-done checklist: no orphans, no broken links, no duplication, VI/EN in sync.
+- Pre-done checklist: no orphans, no broken links, no duplication, VI/EN in sync, Vietnamese fully accented (including commit messages; only code/commands/slug anchors/file names stay ASCII).
 
 ### 8. Consistency method
 - Edit item: keep template, add `CHANGELOG.md` entry.

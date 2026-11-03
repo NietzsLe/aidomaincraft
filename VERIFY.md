@@ -27,7 +27,7 @@
 - [ ] Link 3 chiều sống: index → using-doc → item gốc (đúng section, vd `../../items/skillry/README.md#...`), và item mục `Được dùng ở đâu` link ngược lại từng using-doc.
 - [ ] Không trùng lặp: using-doc chỉ viết phần RIÊNG domain + link, cấm copy nguyên đoạn cài đặt/cơ chế/giá từ item. Trùng lặp = FAIL.
 - [ ] Mỗi khẳng định kỹ thuật trong using-doc phải link về đúng section item gốc.
-- [ ] Không item/cặp mồ côi (item không using-doc, using-doc không index; item nội tại thiếu tài nguyên đã khai trong REGISTRY), không link gãy, VI/EN cùng nội dung.
+- [ ] Không item/cặp mồ côi (item không using-doc, using-doc không index; item nội tại thiếu tài nguyên đã khai trong REGISTRY), không link gãy, VI/EN cùng nội dung, VI có dấu đầy đủ (docs + CHANGELOG + commit message; code/lệnh/slug/tên file giữ ASCII).
 - [ ] Sửa 3 tầng trong cùng commit + `CHANGELOG.md`.
 
 ### Thang điểm
@@ -143,7 +143,7 @@ Mục này dạy *cách hỏi*, không chỉ *mục cần có*. Áp dụng nguy�
 - [ ] Live 3-way links: index → using-doc → item origin (exact section, e.g. `../../items/skillry/README.md#...`), and the item's `Where used` links back to each using-doc.
 - [ ] No duplication: using-doc holds domain-only deltas + links, never copied install/mechanism/price paragraphs. Duplication = FAIL.
 - [ ] Every technical claim in a using-doc links to the exact item section.
-- [ ] No orphan items/pairs (item without using-doc, using-doc without index; intrinsic item missing a REGISTRY-declared resource), no broken links, VI/EN in sync.
+- [ ] No orphan items/pairs (item without using-doc, using-doc without index; intrinsic item missing a REGISTRY-declared resource), no broken links, VI/EN in sync, VI fully accented (docs + CHANGELOG + commit message; code/commands/slugs/file names stay ASCII).
 - [ ] All 3 layers changed in the same commit + `CHANGELOG.md`.
 
 ### E. Iterative self-review loop until pass (required)

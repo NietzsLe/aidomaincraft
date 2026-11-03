@@ -44,6 +44,11 @@
 - Index domain: `./README.md` (hàng wireframe-docs ở điều hướng + định vị + chồng lấn).
 - Được liệt kê ngược tại: `../../items/wireframe-docs/README.md#duoc-dung-o-dau`.
 
+### Tái tạo trên runtime khác
+- Mọi thao tác đều trung lập runtime: `git` CLI + Python stdlib + mở file HTML bằng browser (`file://`, offline); `node --check` là tùy chọn (có node mới chạy).
+- Muốn làm lại đúng kết quả ở runtime khác (OpenCode/Claude Code/Cursor/Copilot...): cài cùng skill + version ghi trong CHANGELOG, đọc quyết định đã ghi (Picks/stamp/commit message — không nằm trong log local `.relay/` vốn bị git-ignore), chạy `tests/test.sh` phải `fail=0`.
+- Verify mắt người: runtime nào cũng làm được — mở `viewer.html`/`player.html` build từ demo và đối chiếu checklist trong CHANGELOG; không phụ thuộc tool điều khiển browser riêng.
+
 ---
 
 ## English
@@ -81,3 +86,8 @@ UI-only deltas for wireframe-docs. Origin lives at `../../items/wireframe-docs/R
 
 ### Links to origin (3-way)
 - Origin: `../../items/wireframe-docs/README.md`. Index: `./README.md`. Backlisted at origin `#where-used`.
+
+### Reproduce on another runtime
+- Everything is runtime-neutral: `git` CLI + stdlib Python + opening HTML files in a browser (`file://`, offline); `node --check` is optional (runs only when node exists).
+- To redo the same result on another runtime (OpenCode/Claude Code/Cursor/Copilot...): install the same skill + version recorded in CHANGELOG, read the recorded decisions (Picks/stamp/commit message — never the local `.relay/` log, which is git-ignored), run `tests/test.sh` until `fail=0`.
+- Human visual check works on any runtime: open the demo-built `viewer.html`/`player.html` and compare against the checklist in CHANGELOG; no dependency on any browser-driving tool.

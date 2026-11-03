@@ -1,5 +1,15 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.11 — 2026-11-04 (Hallmark restyle viewer/player: dark devtool Console)
+- Restyle hệ thống (giữ layout + wiring): `templates/viewer.html` + `templates/player.template.html` theo theme Console (deal 1/3, `console: graphite`): nền graphite 3 nấc, chữ Host Grotesk → **Space Grotesk**, số đo Atkinson Mono → **IBM Plex Mono** (cả 2 face gốc không có subset `vietnamese` — đã verify qua Google Fonts API — nên swap, kèm fallback system, offline vẫn chạy); panel hairline không shadow, nút primary amber, số đo mono tabular, `:focus-visible` mọi control + card bấm được bằng phím, `overflow-x: clip`, tôn trọng `prefers-reduced-motion` (gõ chữ hiện ngay).
+- Copy: bỏ `—`/`·`/`‹ ›` trong UI theo gate 19/63 (dấu hai chấm/phẩy/thẻ đo mono thay thế); card overlay/dialog giữ nguyên chữ.
+- Sweep: `sloplint` 98 FAIL → 0 FAIL/0 WARN; `tests/test.sh` 167 pass / 0 fail (thêm scope-CSS + input DSL); player build từ demo chạy thật, `SUITE 0 FAIL`.
+- Contrast quét bằng số (oklch→luminance→WCAG): `--muted` 71%→80% (2.80→4.83:1), `--rule` 31%→36%; chữ nhỏ (caption/tag/crumb/desc) lên `ink-2`.
+- Sửa lỗi lem CSS: CSS wireframe nhúng vào player không scope nên rule `body` của wireframe đè body shell (chữ sáng trên nền sáng + chữ tối trùng nền tối) — `build-flow.py` giờ scope mọi selector vào `#stage, #page-stage, .wf-frame` (`body`/`html`/`:root` thành vô hiệu đúng thiết kế); overlay `.box` đổi tên `.ov-box` tránh chạm class wireframe; `convention/flows.md` ghi quy tắc scope.
+- `domains/ui/using-wireframe-docs.md`: thêm mục Tái tạo trên runtime khác (skill version + quyết định trong repo + `test.sh` + verify mắt người trung lập).
+- Self-review: lượt 1 đạt (tokens Console + faces swap + focus/motion định nghĩa ngay lần đầu); lượt 2 đạt (restyle khác polish/full: chỉ system, không đụng layout/wiring; lệnh build/test không đổi + ngưỡng sloplint 0 FAIL + pitfalls font offline); lượt 3 đạt với case `mở repo ở runtime khác` → đọc CHANGELOG + skill version → làm lại được (xem `using-wireframe-docs.md` mục Tái tạo).
+- WARN giữ lại: (1) font web cần mạng lần đầu (có fallback system, offline vẫn đủ); (2) visual do claude chụp, chưa qua mắt người trên máy thật.
+
 ## v10.10 — 2026-11-04 (wireframe-docs: review shell đẹp + tab Pages + click-card + frame ảo)
 - Shell review mới: `templates/viewer.html` + `templates/player.template.html` restyle cùng ngôn ngữ (topbar gọn, thẻ card, caption rộng thật + % thu); mọi chế độ xem đơn luôn thu vừa màn hình (frame ảo, không còn iframe pixel thật tràn màn hình); lưới 4 khung giữ nguyên cơ chế scale.
 - Tab `▦ Pages` trong player: lưới thumbnail toàn trang + xem chi tiết từng khổ, độc lập flow (tận dụng `FRAMES`/`META` đã nhúng, không script mới, không artifact mới).

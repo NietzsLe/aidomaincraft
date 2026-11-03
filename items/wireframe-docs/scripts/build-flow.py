@@ -24,6 +24,96 @@ VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
         "meta", "param", "source", "track", "wbr"}
 
 
+WIRE_FRAME_SCOPE = ("#stage", "#page-stage", ".wf-frame")
+
+
+def _split_selectors(sel):
+    """Split a selector list on top-level commas (ignore parens/quotes)."""
+    parts, depth, quote, cur = [], 0, "", []
+    for ch in sel:
+        if quote:
+            cur.append(ch)
+            if ch == quote:
+                quote = ""
+        elif ch in ("'", '"'):
+            cur.append(ch)
+            quote = ch
+        elif ch == "(":
+            depth += 1
+            cur.append(ch)
+        elif ch == ")":
+            depth = max(0, depth - 1)
+            cur.append(ch)
+        elif ch == "," and depth == 0:
+            parts.append("".join(cur))
+            cur = []
+        else:
+            cur.append(ch)
+    parts.append("".join(cur))
+    return [x.strip() for x in parts if x.strip()]
+
+
+def _scope_rule_block(css):
+    """Prefix every style rule selector with the player frame scope."""
+    out, i, n = [], 0, len(css)
+    while i < n:
+        while i < n and css[i] in " \t\n\r":
+            i += 1
+        if i >= n:
+            break
+        if css[i] == "@":
+            j = css.find("{", i)
+            semi = css.find(";", i)
+            if j == -1 or (semi != -1 and semi < j):
+                out.append(css[i:semi + 1] if semi != -1 else css[i:])
+                i = len(css) if semi == -1 else semi + 1
+                continue
+            head = css[i:j].strip()
+            depth, k = 1, j + 1
+            while k < n and depth:
+                if css[k] == "{":
+                    depth += 1
+                elif css[k] == "}":
+                    depth -= 1
+                k += 1
+            inner = css[j + 1:k - 1]
+            name = head.split("(", 1)[0].split(" ", 1)[0]
+            if name in ("@media", "@supports", "@container", "@layer"):
+                out.append(head + "{" + _scope_rule_block(inner) + "}")
+            else:
+                out.append(head + "{" + inner + "}")
+            i = k
+            continue
+        j = css.find("{", i)
+        if j == -1:
+            out.append(css[i:])
+            break
+        sel = css[i:j].strip()
+        depth, k = 1, j + 1
+        while k < n and depth:
+            if css[k] == "{":
+                depth += 1
+            elif css[k] == "}":
+                depth -= 1
+            k += 1
+        body = css[j + 1:k - 1]
+        scoped = ", ".join(
+            "%s %s" % (w, x) for w in WIRE_FRAME_SCOPE for x in _split_selectors(sel))
+        out.append(scoped + "{" + body + "}")
+        i = k
+    return "".join(out)
+
+
+def scope_wireframe_css(css):
+    """Scope author wireframe CSS to player frames.
+
+    Bare element selectors (body/html/:root) become inert on purpose:
+    the shell owns page chrome. Keep frame styling in classes.
+    """
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    return _scope_rule_block(css.strip())
+
+
 class FrameExtractor(HTMLParser):
     """Capture raw HTML of each element with data-wf-breakpoint."""
 
@@ -174,7 +264,8 @@ def main(argv):
         sx = StyleExtractor()
         sx.feed(src)
         for css in sx.styles:
-            if css not in seen_css:
+            css = scope_wireframe_css(css)
+            if css and css not in seen_css:
                 seen_css.add(css)
                 css_list.append(css)
         pmap = {}

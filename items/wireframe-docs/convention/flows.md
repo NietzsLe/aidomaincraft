@@ -65,4 +65,7 @@ Nhúng trực tiếp (không dùng iframe như viewer) vì play cần gõ chữ 
 được. Chế độ xem: list flow (card + thumbnail live) / detail grid từng step /
 play (prev-next-auto + chọn khổ + branch-choice + typing vào field +
 nút lún + render kết quả) + panel ràng buộc ⓘ (định nghĩa từ
-`constraints.md`). Sửa flow thì build lại player, cấm sửa player tay.
+`constraints.md`). CSS của wireframe được build scope vào khung (`#stage`,
+`#page-stage`, `.wf-frame`) nên không lem ra shell: selector `body`/`html`/`:root`
+trong wireframe thành vô hiệu (shell giữ chrome trang), class chung như `.box`
+cũng không chạm shell. Sửa flow thì build lại player, cấm sửa player tay.

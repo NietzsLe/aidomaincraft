@@ -2,68 +2,95 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<title>Flow player — wireframe-docs</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Flow player: wireframe-docs</title>
 <!--
   Mẫu player do build-flow.py sinh ra player.html (không sửa tay file sinh).
-  Chạy qua file:// — không fetch, không server. Dữ liệu nhúng ở FLOW_DATA.
+  Chạy qua file://: không fetch, không server. Dữ liệu nhúng ở FLOW_DATA.
   Chế độ xem luôn thu vừa khung (frame ảo, caption ghi rộng thật + %).
   Chips mô tả trong frame bị ẩn ở chế độ review; click vào component để
   xem card thông tin (đọc từ META + DATA nhúng).
 -->
 <style>
-  * { box-sizing: border-box; }
-  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: #fafafa; color: #18181b; }
-  #topbar { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid #e4e4e7; padding: 8px 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  #topbar .title { font-weight: 700; font-size: 14px; }
-  #topbar button, .btn { border: 1px solid #e4e4e7; background: #fff; border-radius: 8px; padding: 7px 13px; font-size: 13px; cursor: pointer; }
-  #topbar button:hover, .btn:hover { background: #f4f4f5; }
-  #topbar button.on, .btn.on { background: #18181b; color: #fff; border-color: #18181b; }
-  #topbar button:disabled { opacity: .4; cursor: default; }
-  #topbar .seg { display: flex; border: 1px solid #e4e4e7; border-radius: 999px; overflow: hidden; background: #fafafa; }
-  #topbar .seg button { border: 0; border-radius: 0; background: transparent; padding: 6px 12px; font-size: 12px; color: #52525b; }
-  #topbar .seg button + button { border-left: 1px solid #e4e4e7; }
-  #topbar .seg button.on { background: #18181b; color: #fff; font-weight: 600; }
-  #crumb { font-size: 12px; color: #71717a; }
-  .view { padding: 16px; max-width: 1400px; margin: 0 auto; }
-  .view h2 { margin: 0 0 4px; font-size: 20px; }
-  .view .desc { font-size: 13px; color: #71717a; margin: 0 0 12px; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
-  .card { background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; cursor: pointer; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
-  .card:hover { border-color: #a1a1aa; }
-  .card .thumb { height: 200px; overflow: hidden; border-bottom: 1px solid #f4f4f5; position: relative; background: #fff; }
-  .card .info { padding: 12px 14px; }
-  .card .info b { font-size: 14px; }
-  .card .info div { font-size: 12px; color: #71717a; margin-top: 2px; }
-  .framebox { background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; overflow: hidden; position: relative; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
-  .framebox .stage { transform-origin: top left; position: relative; }
-  .stage-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; z-index: 30; }
-  .stage-overlay .box { background: #fff; border-radius: 12px; width: min(480px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; padding: 20px 22px; box-shadow: 0 16px 48px rgba(0,0,0,.25); }
-  .stage-overlay .box h3 { margin: 0 0 8px; font-size: 16px; }
-  .stage-overlay .box dl { font-size: 13px; margin: 8px 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; }
-  .stage-overlay .box dt { color: #71717a; }
-  .stage-overlay .box dd { margin: 0; }
-  .cap { font-size: 12px; color: #71717a; margin: 10px 2px 0; }
-  #stepbar { background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; margin-top: 12px; padding: 12px 16px; font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
-  #stepbar .act { background: #18181b; color: #fff; padding: 2px 10px; border-radius: 999px; font-size: 12px; }
-  #typing { font-family: monospace; background: #18181b; color: #4ade80; border-radius: 8px; padding: 6px 10px; margin-top: 8px; font-size: 12px; display: none; }
-  #choices { margin-top: 8px; display: none; gap: 8px; flex-wrap: wrap; }
-  .wf-press { outline: 3px solid #18181b !important; outline-offset: 2px; filter: brightness(0.94); transition: none !important; }
-  .wf-review .chip { display: none !important; }
-  .wf-review [data-wf-component] { cursor: pointer; }
-  .wf-review [data-wf-component]:hover { outline: 2px dashed #71717a; outline-offset: 2px; }
-  .action-tag { position: absolute; z-index: 20; background: #18181b; color: #fff; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; pointer-events: none; white-space: nowrap; }
-  #wf-card { position: fixed; top: 70px; right: 20px; z-index: 90; width: 320px; max-height: 75vh; overflow: auto; background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.18); padding: 16px 18px; font-size: 13px; }
-  #wf-card h4 { margin: 0 0 2px; font-size: 15px; }
-  #wf-card .sub { color: #71717a; font-size: 12px; margin-bottom: 10px; }
-  #wf-card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; }
-  #wf-card dt { color: #71717a; white-space: nowrap; }
-  #wf-card dd { margin: 0; word-break: break-word; }
-  #wf-card button { margin-top: 12px; width: 100%; padding: 8px; border: 1px solid #e4e4e7; border-radius: 8px; background: #fafafa; cursor: pointer; font-size: 13px; }
-  #constraints { position: fixed; right: 20px; bottom: 20px; z-index: 60; max-width: 340px; background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; padding: 12px 14px; font-size: 12px; display: none; max-height: 60vh; overflow: auto; box-shadow: 0 12px 32px rgba(0,0,0,.15); }
-  #constraints h4 { margin: 0 0 6px; }
-  #constraints code { background: #f4f4f5; padding: 0 4px; border-radius: 4px; }
-  #endcard { text-align: center; padding: 48px 20px; background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; margin-top: 16px; }
-  .hidden { display: none !important; }
+/* Hallmark · restyle viewer+player · theme: Console (dealt 1/3, console: graphite) · faces swapped Space Grotesk/IBM Plex Mono (vietnamese subset verified, offline fallback system) · keeps: layout, ids, wiring, markers */
+:root {
+  color-scheme: dark;
+  --paper: oklch(17% 0.008 250); --paper-2: oklch(21% 0.009 250); --paper-3: oklch(13.5% 0.007 250);
+  --ink: oklch(95% 0.005 250); --ink-2: oklch(83% 0.008 250); --muted: oklch(80% 0.01 250);
+  --rule: oklch(36% 0.01 250); --rule-2: oklch(42% 0.012 250);
+  --amber: oklch(82% 0.15 80); --amber-ink: oklch(18% 0.04 75); --amber-soft: oklch(29% 0.05 80);
+  --cool: oklch(77% 0.12 245); --cool-soft: oklch(29% 0.05 245);
+  --ok: oklch(76% 0.15 150);
+  --wf-paper: #fff;
+  --veil: rgba(0,0,0,.45);
+  --focus: oklch(82% 0.15 80);
+  --display: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body { margin: 0; font-family: var(--display); font-weight: 400; background: var(--paper); color: var(--ink-2); line-height: 1.55; }
+button { font-family: var(--display); }
+button:focus-visible, .card:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+#topbar { position: sticky; top: 0; z-index: 50; background: var(--paper-2); border-bottom: 1px solid var(--rule); padding: 8px 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+#topbar .title { font-weight: 500; font-size: 14px; letter-spacing: -0.01em; color: var(--ink); }
+#topbar button, .btn { border: 1px solid var(--rule-2); background: var(--paper-2); color: var(--ink); border-radius: 6px; padding: 7px 13px; font-size: 13px; font-weight: 500; cursor: pointer; transition: background-color .15s ease-out, border-color .15s ease-out; }
+#topbar button:hover, .btn:hover { border-color: var(--amber); }
+#topbar button.on, .btn.on { background: var(--amber); color: var(--amber-ink); border-color: var(--amber); }
+#topbar button:disabled { opacity: .4; cursor: default; }
+#topbar .seg { display: flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--paper); }
+#topbar .seg button { border: 0; border-radius: 0; background: transparent; padding: 6px 12px; font-size: 12px; color: var(--ink-2); }
+#topbar .seg button + button { border-left: 1px solid var(--rule); }
+#topbar .seg button.on { background: var(--cool-soft); color: var(--cool); font-weight: 500; }
+#crumb { font-size: 12px; color: var(--ink-2); }
+#crumb .m, .cap .m { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--cool); }
+.view { padding: 16px; max-width: 1400px; margin: 0 auto; }
+.view h2 { margin: 0 0 4px; font-size: 20px; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); }
+.view .desc { font-size: 13px; color: var(--ink-2); margin: 0 0 12px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.card { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 10px; cursor: pointer; overflow: hidden; }
+.card:hover { border-color: var(--rule-2); }
+.card .thumb { height: 200px; overflow: hidden; border-bottom: 1px solid var(--rule); position: relative; background: var(--wf-paper); }
+.card .info { padding: 12px 14px; }
+.card .info b { font-size: 14px; font-weight: 500; color: var(--ink); }
+.card .info div { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+.framebox { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; position: relative; }
+.framebox .stage { transform-origin: top left; position: relative; }
+#stage-wrap { border-radius: 10px 10px 0 0; border-bottom: 0; }
+.cap { font-size: 13px; color: var(--ink-2); margin: 10px 2px 0; }
+#stepbar { background: var(--paper-2); border: 1px solid var(--rule); border-top: 0; border-radius: 0 0 10px 10px; margin-top: 0; padding: 12px 16px; font-size: 13px; }
+#stepbar .act { background: var(--amber-soft); color: var(--amber); padding: 2px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; }
+#typing { font-family: var(--mono); font-size: 12px; background: var(--paper-3); color: var(--ok); border: 1px solid var(--rule); border-radius: 6px; padding: 6px 10px; margin-top: 8px; display: none; }
+#choices { margin-top: 8px; display: none; gap: 8px; flex-wrap: wrap; }
+.wf-press { outline: 3px solid var(--amber) !important; outline-offset: 2px; filter: brightness(0.94); }
+.wf-review .chip { display: none !important; }
+.wf-review [data-wf-component] { cursor: pointer; }
+.wf-review [data-wf-component]:hover { outline: 2px dashed var(--rule-2); outline-offset: 2px; }
+.action-tag { position: absolute; z-index: 20; background: var(--amber); color: var(--amber-ink); font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 6px; pointer-events: none; white-space: nowrap; transition: opacity .4s; }
+.stage-overlay { position: absolute; inset: 0; background: var(--veil); display: flex; align-items: center; justify-content: center; z-index: 30; }
+.stage-overlay .ov-box { background: var(--paper-2); border: 1px solid var(--rule-2); border-radius: 10px; width: min(480px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; padding: 20px 22px; }
+.stage-overlay .ov-box h3 { margin: 0 0 8px; font-size: 16px; font-weight: 500; color: var(--ink); }
+.stage-overlay .ov-box p { font-size: 12px; color: var(--muted); margin: 0 0 6px; }
+.stage-overlay .ov-box dl { font-size: 13px; margin: 8px 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; }
+.stage-overlay .ov-box dt { color: var(--muted); }
+.stage-overlay .ov-box dd { margin: 0; }
+#wf-card { position: fixed; top: 70px; right: 20px; z-index: 90; width: 320px; max-height: 75vh; overflow: auto; background: var(--paper-2); border: 1px solid var(--rule-2); border-radius: 10px; padding: 16px 18px; font-size: 13px; }
+#wf-card h4 { margin: 0 0 2px; font-size: 15px; font-weight: 500; color: var(--ink); }
+#wf-card .sub { color: var(--muted); font-size: 12px; margin-bottom: 10px; }
+#wf-card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; }
+#wf-card dt { color: var(--muted); white-space: nowrap; }
+#wf-card dd { margin: 0; word-break: break-word; }
+#wf-card button { margin-top: 12px; width: 100%; padding: 8px; border: 1px solid var(--rule-2); border-radius: 6px; background: var(--paper-2); color: var(--ink); cursor: pointer; font-size: 13px; font-weight: 500; }
+#wf-card button:hover { border-color: var(--amber); }
+#constraints { position: fixed; right: 20px; bottom: 20px; z-index: 60; max-width: 340px; background: var(--paper-2); border: 1px solid var(--rule-2); border-radius: 10px; padding: 12px 14px; font-size: 12px; display: none; max-height: 60vh; overflow: auto; }
+#constraints h4 { margin: 0 0 6px; color: var(--ink); font-weight: 500; }
+#constraints code { background: var(--paper-3); padding: 0 4px; border-radius: 4px; font-family: var(--mono); font-size: 11px; }
+#endcard { text-align: center; padding: 48px 20px; background: var(--paper-2); border: 1px solid var(--rule); border-radius: 10px; margin-top: 16px; }
+#endcard h2 { color: var(--ink); font-weight: 500; }
+.hidden { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  #topbar button, .btn, .action-tag { transition: none; }
+}
 </style>
 <style>/*__WIREFRAME_CSS__*/</style>
 </head>
@@ -75,9 +102,9 @@
   <span id="crumb"></span>
   <span style="flex:1"></span>
   <span class="seg" id="bps"></span>
-  <button id="btn-prev" title="Step trước">‹ Prev</button>
+  <button id="btn-prev" title="Step trước">Prev</button>
   <button id="btn-auto" title="Tự chạy">▶ Auto</button>
-  <button id="btn-next" title="Step tiếp">Next ›</button>
+  <button id="btn-next" title="Step tiếp">Next</button>
   <button id="btn-info" title="Ràng buộc step hiện tại">ⓘ Ràng buộc</button>
 </div>
 
@@ -90,15 +117,15 @@
   <div id="typing"></div>
   <div id="choices" style="display:none"></div>
 </div>
-<div id="view-pages" class="view hidden"><h2>Pages</h2><p class="desc">Mọi trang trong suite — xem độc lập, không theo flow. Bấm card để xem toàn trang; click vào component để xem card thông tin.</p><div class="cards" id="page-cards"></div></div>
+<div id="view-pages" class="view hidden"><h2>Pages</h2><p class="desc">Mọi trang trong suite: xem độc lập, không theo flow. Bấm card để xem toàn trang; click vào component để xem card thông tin.</p><div class="cards" id="page-cards"></div></div>
 <div id="view-pagedetail" class="view hidden">
   <h2 id="page-title"></h2>
   <div class="framebox" id="page-wrap"><div class="stage wf-review" id="page-stage"></div></div>
   <div class="cap" id="page-cap"></div>
 </div>
-<div id="view-end-holder" class="view hidden"><div id="endcard" class="hidden"><h2 id="end-title">Kết thúc flow</h2><p id="end-desc"></p><button class="btn" id="btn-back-list">‹ Về danh sách</button></div></div>
+<div id="view-end-holder" class="view hidden"><div id="endcard" class="hidden"><h2 id="end-title">Kết thúc flow</h2><p id="end-desc"></p><button class="btn" id="btn-back-list">Về danh sách</button></div></div>
 
-<div id="wf-card" class="hidden"><h4 id="wf-card-title"></h4><div class="sub">Click component để xem · không chiếm layout wireframe</div><dl id="wf-card-body"></dl><button id="wf-card-close">Đóng (Esc)</button></div>
+<div id="wf-card" class="hidden"><h4 id="wf-card-title"></h4><div class="sub">Click component để xem, không chiếm layout wireframe</div><dl id="wf-card-body"></dl><button id="wf-card-close">Đóng (Esc)</button></div>
 <div id="constraints"><h4>Ràng buộc step hiện tại</h4><div id="constraints-body"></div></div>
 
 <script>
@@ -136,7 +163,7 @@ function frameHtml(page, bp) {
 }
 function thumb(html, w, h) {
   var sc = Math.min(1, 300 / w);
-  return '<div class="wf-review" style="width:300px;height:' + h + 'px;overflow:hidden;position:relative;background:#fff">'
+  return '<div class="wf-review wf-frame" style="width:300px;height:' + h + 'px;overflow:hidden;position:relative;background:var(--wf-paper)">'
     + '<div style="transform:scale(' + sc + ');transform-origin:top left;width:' + w + 'px">' + html + "</div></div>";
 }
 function fitBox(wrap, inner, w, h) {
@@ -161,13 +188,14 @@ function renderList() {
     var first = f.steps[0] || {};
     var d = document.createElement("div");
     d.className = "card";
+    d.tabIndex = 0;
     d.innerHTML = thumb(frameHtml(first.page || "", "sm"), 360, 200)
-      + '<div class="info"><b>' + esc(f.name) + '</b><div>' + f.steps.length + ' steps · entry: '
+      + '<div class="info"><b>' + esc(f.name) + '</b><div>' + f.steps.length + ' steps, entry: '
       + esc(pageTitle(first.page || "?")) + '</div><div>' + esc(f.desc || "") + "</div></div>";
     d.onclick = function () { openFlow(i); };
     c.appendChild(d);
   });
-  $("crumb").textContent = FLOWS.length + " flow(s) · " + Object.keys(FRAMES).length + " page(s)";
+  $("crumb").textContent = FLOWS.length + " flow(s), " + Object.keys(FRAMES).length + " page(s)";
 }
 function openFlow(i) {
   state.flow = i; state.step = 0; state.history = [];
@@ -177,9 +205,10 @@ function openFlow(i) {
   f.steps.forEach(function (s, idx) {
     var d = document.createElement("div");
     d.className = "card";
+    d.tabIndex = 0;
     d.innerHTML = thumb(frameHtml(s.page, state.bp), BP_PX[state.bp] || 360, 200)
       + '<div class="info"><b>Step ' + (idx + 1) + ': ' + esc(s.title) + '</b><div>Page: '
-      + esc(pageTitle(s.page || "?")) + (s.action ? " · " + esc(s.action[0] + " " + s.action[1]) : "")
+      + esc(pageTitle(s.page || "?")) + (s.action ? ", " + esc(s.action[0] + " " + s.action[1]) : "")
       + "</div><div>" + esc(s.expect || "") + "</div></div>";
     d.onclick = function () { playStep(idx); };
     c.appendChild(d);
@@ -197,12 +226,12 @@ function renderStage() {
   var w = BP_PX[state.bp] || 360, h = frameHeight(state.bp);
   var sc = fitBox($("stage-wrap"), stage, w, h);
   var bar = "Step " + (state.step + 1) + "/" + FLOWS[state.flow].steps.length
-    + ' · <b>' + esc(s.title) + "</b> · Page: " + esc(pageTitle(s.page)) + " · " + state.bp
-    + " " + w + "px · thu " + Math.round(sc * 100) + "% (toàn trang)";
+    + ': <b>' + esc(s.title) + "</b>, Page: " + esc(pageTitle(s.page)) + ", " + state.bp
+    + " " + w + "px, thu " + Math.round(sc * 100) + "% (toàn trang)";
   if (s.action) bar += ' · <span class="act">' + esc(s.action[0] + " " + s.action[1]) + "</span>";
   if (s.expect) bar += "<br>Expect: " + esc(s.expect);
   $("stepbar").innerHTML = bar;
-  $("play-cap").textContent = "Page " + pageTitle(s.page) + " · " + state.bp + " " + w + "px · frame ảo thu " + Math.round(sc * 100) + "% · click component để xem thông tin";
+  $("play-cap").innerHTML = "Page " + esc(pageTitle(s.page)) + ", " + state.bp + ' <span class="m">' + w + 'px</span>, frame ảo thu <span class="m">' + Math.round(sc * 100) + '%</span>, click component để xem thông tin';
   markAction(s, sc);
   showConstraints(s);
 }
@@ -241,15 +270,15 @@ function compCard(page, label) {
   var meta = (META[page] && META[page][label]) || {};
   var vals = (DATA[page] && DATA[page][label]) || null;
   var rows = [
-    ["Kiểu", meta.type || "—"],
-    ["Trạng thái", (meta.states || []).join(", ") || "—"],
-    ["Hiệu ứng", (meta.effect || []).join(", ") || "—"],
-    ["Hành vi", (meta.behavior || []).join(", ") || "—"],
-    ["Giảm chuyển động", meta.reduced || "—"],
+    ["Kiểu", meta.type || "không có"],
+    ["Trạng thái", (meta.states || []).join(", ") || "không có"],
+    ["Hiệu ứng", (meta.effect || []).join(", ") || "không có"],
+    ["Hành vi", (meta.behavior || []).join(", ") || "không có"],
+    ["Giảm chuyển động", meta.reduced || "không có"],
     ["Chỉ hiện khi", (meta.visible_on || []).join(", ") || "luôn hiện"],
-    ["Yêu cầu", (meta.req || []).join(", ") || "—"],
+    ["Yêu cầu", (meta.req || []).join(", ") || "không có"],
     ["Giá trị mẫu", vals == null ? "—" : (Array.isArray(vals) ? vals.join(" · ") : String(vals))],
-    ["Ghi chú", meta.note || "—"]
+    ["Ghi chú", meta.note || "không có"]
   ];
   var h = "";
   rows.forEach(function (r) {
@@ -267,8 +296,15 @@ function bindCompClicks(rootId, pageOf) {
     compCard(pageOf(), el.getAttribute("data-wf-component"));
   });
 }
+var REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 function typeInto(label, text, done) {
   var t = findTarget(label);
+  if (REDUCED) {
+    if (t) { if (t.kind === "input") { t.el.value = text; } else { t.el.textContent = text; } }
+    else { var box = $("typing"); box.style.display = "block"; box.textContent = text; }
+    setTimeout(done, 250);
+    return;
+  }
   var box = $("typing");
   if (!t) {
     box.style.display = "block";
@@ -356,16 +392,16 @@ function showOverlay(s, kind, label) {
   closeStageOverlay();
   document.querySelectorAll(".action-tag").forEach(function (t) { t.remove(); });
   var meta = (META[s.page] && META[s.page][label]) || {};
-  var rows = [["Kiểu", meta.type || "?"], ["Trạng thái", (meta.states || []).join(", ") || "—"],
-    ["Hành vi", (meta.behavior || []).join(", ") || kind], ["Ghi chú", meta.note || "—"]];
+  var rows = [["Kiểu", meta.type || "?"], ["Trạng thái", (meta.states || []).join(", ") || "không có"],
+    ["Hành vi", (meta.behavior || []).join(", ") || kind], ["Ghi chú", meta.note || "không có"]];
   var h = "<h3>" + esc(kind) + ": " + esc(label) + "</h3>"
-    + '<p style="font-size:12px;color:#71717a;margin:0 0 6px">Trang nền "' + esc(pageTitle(s.page))
-    + '" vẫn giữ nguyên phía sau — dialog phủ trong khung khổ này.</p><dl>';
+    + '<p style="font-size:12px;color:var(--muted);margin:0 0 6px">Trang nền "' + esc(pageTitle(s.page))
+    + '" vẫn giữ nguyên phía sau: dialog phủ trong khung khổ này.</p><dl>';
   rows.forEach(function (r) { h += "<dt>" + r[0] + "</dt><dd>" + esc(String(r[1])) + "</dd>"; });
   h += '</dl><button class="btn ov-close">Đóng / quay lại (go: back)</button>';
   var ov = document.createElement("div");
   ov.className = "stage-overlay";
-  ov.innerHTML = '<div class="box">' + h + "</div>";
+  ov.innerHTML = '<div class="ov-box">' + h + "</div>";
   $("stage").appendChild(ov);
   ov.querySelector(".ov-close").onclick = function () { closeStageOverlay(); doBack(); };
 }
@@ -473,9 +509,10 @@ function renderPages() {
     var bps = Object.keys(FRAMES[p] || {});
     var d = document.createElement("div");
     d.className = "card";
+    d.tabIndex = 0;
     d.innerHTML = thumb(frameHtml(p, "sm"), 360, 200)
-      + '<div class="info"><b>' + esc(pageTitle(p)) + '</b><div>' + bps.join(" · ")
-      + " · toàn trang thu nhỏ</div></div>";
+      + '<div class="info"><b>' + esc(pageTitle(p)) + '</b><div>' + bps.join(", ")
+      + ", toàn trang thu nhỏ</div></div>";
     d.onclick = function () { openPage(p); };
     c.appendChild(d);
   });
@@ -496,8 +533,8 @@ function renderPageDetail() {
   stage.innerHTML = html;
   var w = BP_PX[state.bp] || 360;
   var sc = fitBox($("page-wrap"), stage, w, frameHeight(state.bp));
-  $("page-cap").textContent = "Page " + pageTitle(p) + " · " + state.bp + " " + w + "px · frame ảo thu "
-    + Math.round(sc * 100) + "% · click component để xem thông tin";
+  $("page-cap").innerHTML = "Page " + esc(pageTitle(p)) + ", " + state.bp + ' <span class="m">' + w + 'px</span>, frame ảo thu <span class="m">'
+    + Math.round(sc * 100) + '%</span>, click component để xem thông tin';
 }
 function showConstraints() {
   var s = currentStep();
@@ -505,7 +542,7 @@ function showConstraints() {
   var rows = [];
   var meta = s.action ? (META[s.page] && META[s.page][s.action[1]]) : null;
   var push = function (k, v) {
-    if (v && String(v).trim()) rows.push("<div><code>" + k + "</code>: " + esc(String(v)) + "<br><span style='color:#71717a'>" + esc(KEY_DEFS[k] || "") + "</span></div>");
+    if (v && String(v).trim()) rows.push("<div><code>" + k + "</code>: " + esc(String(v)) + "<br><span style='color:var(--muted)'>" + esc(KEY_DEFS[k] || "") + "</span></div>");
   };
   if (meta) {
     push("Kiểu", meta.type);
@@ -550,6 +587,9 @@ document.addEventListener("DOMContentLoaded", function () {
   bindCompClicks("stage-wrap", function () { return currentStep().page; });
   bindCompClicks("page-wrap", function () { return state.page; });
   document.addEventListener("keydown", function (e) {
+    if ((e.key === "Enter" || e.key === " ") && e.target && e.target.classList && e.target.classList.contains("card")) {
+      e.preventDefault(); e.target.click(); return;
+    }
     if (e.key === "Escape") {
       if (closeStageOverlay()) { doBack(); return; }
       closeCard();

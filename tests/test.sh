@@ -202,6 +202,8 @@ python3 "$root/items/wireframe-docs/scripts/check-flow.py" "$t10/suite" >/dev/nu
 python3 "$root/items/wireframe-docs/scripts/build-flow.py" "$t10/suite" >/dev/null 2>&1 && ok "player built" || bad "player build FAIL"
 [ -f "$t10/suite/player.html" ] && ok "player.html exists" || bad "player.html missing"
 grep -q '"inputs": \[\["Email", "Email"\]\]' "$t10/suite/player.html" && ok "input DSL embedded" || bad "input DSL missing"
+grep -q '#stage .frame' "$t10/suite/player.html" && ok "wireframe CSS scoped" || bad "CSS not scoped"
+if grep -q '}body{' "$t10/suite/player.html"; then bad "wireframe body leaks to shell"; else ok "no body leak"; fi
 if command -v node >/dev/null 2>&1; then
   python3 -c "import re;s=open('$t10/suite/player.html',encoding='utf-8').read();m=re.search(r'<script>(.*)</script>',s,re.S);open('$t10/p.js','w',encoding='utf-8').write(m.group(1))" && node --check "$t10/p.js" >/dev/null 2>&1 && ok "player JS valid" || bad "player JS invalid"
 fi

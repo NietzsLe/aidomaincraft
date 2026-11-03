@@ -10,11 +10,13 @@
 - Agent đọc tree để build tiếp (sang hallmark): xem [Usecase con 4](../../items/wireframe-docs/README.md#usecase-con-4-agent-doc-tree-de-build).
 
 ### Lệnh mẫu cụ thể (cho UI)
-- Viết tree: `cp items/wireframe-docs/examples/tree.md my-page-tree.md` rồi sửa theo `convention/tree-format.md` — xem [Usecase con 1](../../items/wireframe-docs/README.md#usecase-con-1-viet-treemd-moi).
-- Validate + render (chạy trong `items/wireframe-docs/`): `python3 scripts/check.py my-page-tree.md` rồi `python3 scripts/build.py my-page-tree.md -o my-page.html` — xem [Usecase con 2](../../items/wireframe-docs/README.md#usecase-con-2-validate-treemd).
+- Viết tree: `mkdir -p .tmp/wireframes && cp items/wireframe-docs/examples/tree.md .tmp/wireframes/my-page-tree.md` rồi sửa theo `convention/tree-format.md` — xem [Usecase con 1](../../items/wireframe-docs/README.md#usecase-con-1-viet-treemd-moi).
+- Đảm bảo ignored: kiểm tra `.gitignore` đã có dòng `.tmp/` chưa (thiếu thì thêm), verify bằng `git check-ignore -v .tmp/wireframes/my-page-tree.md`.
+- Validate + render (chạy trong `items/wireframe-docs/`): `python3 scripts/check.py .tmp/wireframes/my-page-tree.md` rồi `python3 scripts/build.py .tmp/wireframes/my-page-tree.md -o .tmp/wireframes/my-page.html` — xem [Usecase con 2](../../items/wireframe-docs/README.md#usecase-con-2-validate-treemd).
 
 ### Lưu ý riêng cho UI
 - Tree chốt rồi mới sang hallmark build chi tiết; tree đổi thì render lại, cấm sửa HTML render. Nguồn: [Cốt lõi](../../items/wireframe-docs/README.md#cot-loi-bat-bien).
+- Mọi tree/HTML nháp giữ trong `.tmp/wireframes/` đã ignored; cấm viết ra root. Nguồn: [Áp dụng](../../items/wireframe-docs/README.md#ap-dung-khong-cai-tu-ngoai).
 - Thông tin quan trọng (CTA, states, note) phải nằm trong cú pháp `note:/states:`, cấm để trong dòng tự do (parser + agent đều bỏ qua). Nguồn: [Pitfalls](../../items/wireframe-docs/README.md#pitfalls).
 - Nhận xét bố cục/nhãn trên HTML render là việc của mắt người — giao claude, agent không tự kết luận. Nguồn: [Phân công](../../items/wireframe-docs/README.md#phan-cong-ai-lam-gi).
 
@@ -42,11 +44,12 @@ UI-only deltas for wireframe-docs. Origin lives at `../../items/wireframe-docs/R
 - Agent reads the tree to keep building (into hallmark): see [Sub-usecase 4](../../items/wireframe-docs/README.md#sub-usecase-4-agent-reads-the-tree-to-build).
 
 ### Concrete commands (for UI)
-- Write: `cp items/wireframe-docs/examples/tree.md my-page-tree.md`, edit per `convention/tree-format.md`.
-- Validate + render (inside `items/wireframe-docs/`): `python3 scripts/check.py my-page-tree.md` then `python3 scripts/build.py my-page-tree.md -o my-page.html`.
+- Write: `mkdir -p .tmp/wireframes && cp items/wireframe-docs/examples/tree.md .tmp/wireframes/my-page-tree.md`, edit per `convention/tree-format.md`.
+- Ensure ignored: check `.gitignore` already lists `.tmp/` (add when missing), verify with `git check-ignore -v .tmp/wireframes/my-page-tree.md`.
+- Validate + render (inside `items/wireframe-docs/`): `python3 scripts/check.py .tmp/wireframes/my-page-tree.md` then `python3 scripts/build.py .tmp/wireframes/my-page-tree.md -o .tmp/wireframes/my-page.html`.
 
 ### Domain-specific notes
-- Settle the tree before the hallmark detail build; re-render on change, never edit rendered HTML. Visual judgment on rendered HTML goes to claude. Key info (CTA, states, notes) must be in `note:/states:` syntax, never free prose.
+- Settle the tree before the hallmark detail build; re-render on change, never edit rendered HTML. Keep every draft tree/HTML under ignored `.tmp/wireframes/`, never at the root. Visual judgment on rendered HTML goes to claude. Key info (CTA, states, notes) must be in `note:/states:` syntax, never free prose.
 
 ### Core strengths FOR UI
 - Git-versioned structure agents read directly: tree.md is the spec hallmark builds from. Absolute lightness: stdlib Python, $0, offline.

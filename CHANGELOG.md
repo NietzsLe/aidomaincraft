@@ -1,5 +1,12 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.3 — 2026-11-03 (wireframe-docs: nháp vào `.tmp/wireframes/` + kiểm tra gitignore)
+- Đổi quy ước output: mọi tree/HTML nháp vào `.tmp/wireframes/` của dự án đích (`mkdir -p .tmp/wireframes`), không viết ra root. Thêm bước kiểm tra `.gitignore` có `.tmp/` (thiếu thì thêm) + verify `git check-ignore -v`. Sửa đồng bộ VI+EN ở `items/wireframe-docs/README.md` (Áp dụng, Usecase 1-4, Bước chung, Prompt mẫu, Pitfalls) + `domains/ui/using-wireframe-docs.md` (Lệnh mẫu, Lưu ý riêng, Domain notes) trong cùng commit.
+- Dogfood: thêm `.tmp/` vào `.gitignore` của repo. Thêm `tests/test.sh` §14 kiểm tra `.tmp/wireframes`, `git check-ignore`, và root ignored.
+- Verify đã chạy: `check.py` PASS trên tree mẫu copy vào `.tmp/wireframes/` + `build.py` render HTML vào `.tmp/wireframes/` + `git check-ignore -v` xác nhận ignored + `tests/test.sh` xanh.
+- Self-review: lượt 1 đạt (thuật ngữ `.tmp/wireframes` + `git check-ignore` định nghĩa ngay Áp dụng lần đầu xuất hiện, ví dụ Pricing/Checkout điền sẵn đường dẫn mới, nhãn minh họa); lượt 2 đạt (4 usecase cơ chế khác nhau giữ nguyên, chỉ đổi đường dẫn output + lệnh khớp scripts + ngưỡng PASS/exit-0/đánh số + pitfalls riêng cho viết ngoài `.tmp` + phân công giữ nguyên); lượt 3 đạt với case `agent mới cần vẽ tree Pricing không làm bẩn git` → tạo `.tmp/wireframes/` → check gitignore → check PASS → render HTML (<3 phút, `git status` sạch).
+- WARN giữ lại: tree chốt muốn lưu lịch sử git thì promote thủ công ra `docs/` (chưa có lệnh promote chuẩn) — bổ sung khi có case thật.
+
 ## v10.2 — 2026-11-03 (hướng dẫn đóng góp: CONTRIBUTING + mẫu PR)
 - Mới `CONTRIBUTING.md` (song ngữ): ai đóng góp được (mọi runtime + lưu ý Plan mode/relay) + luồng PR 6 bước (nhánh → CHARTER → self-review E → test xanh → CHANGELOG → mở PR kèm relay session) + chuẩn PR + luật review (1 FAIL không merge).
 - Mới `.github/PULL_REQUEST_TEMPLATE.md`: checklist tự hiện (template/khung, song ngữ, 3 chiều link, test xanh + output tài nguyên, CHANGELOG, không secret, relay session, log self-review).

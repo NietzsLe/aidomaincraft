@@ -241,6 +241,8 @@ grep -q 'max-width:100%' "$root/items/wireframe-docs/templates/review-snippet.ht
 grep -q '__TITLE_DATA__\|PAGE_TITLES' "$root/items/wireframe-docs/templates/player.template.html" && ok "player page titles" || bad "titles missing"
 grep -q 'TITLE_DATA' "$root/items/wireframe-docs/scripts/build-flow.py" && ok "build emits titles" || bad "build titles missing"
 grep -q 'Nhập ' "$root/items/wireframe-docs/templates/player.template.html" && ok "player input tag" || bad "input tag missing"
+grep -q 'stage-overlay' "$root/items/wireframe-docs/templates/player.template.html" && ok "overlay in-stage" || bad "overlay missing"
+if grep -q 'id="overlay"' "$root/items/wireframe-docs/templates/player.template.html"; then bad "fixed overlay remains"; else ok "no fixed overlay"; fi
 
 rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t1.ver" "$t1.guide"
 echo "---"

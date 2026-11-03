@@ -50,7 +50,7 @@ button:focus-visible, .card:focus-visible { outline: 2px solid var(--focus); out
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
 .card { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 10px; cursor: pointer; overflow: hidden; }
 .card:hover { border-color: var(--rule-2); }
-.card .thumb { height: 200px; overflow: hidden; border-bottom: 1px solid var(--rule); position: relative; background: var(--wf-paper); }
+.card .thumb { height: 200px; overflow: hidden; border-bottom: 1px solid var(--rule); position: relative; background: var(--paper-2); padding: 10px; }
 .card .info { padding: 12px 14px; }
 .card .info b { font-size: 14px; font-weight: 500; color: var(--ink); }
 .card .info div { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
@@ -173,9 +173,26 @@ function frameHtml(page, bp) {
   return p[bp] || p["sm"] || "";
 }
 function thumb(html, w, h) {
-  var sc = Math.min(1, 300 / w);
-  return '<div class="wf-review wf-frame" style="width:300px;height:' + h + 'px;overflow:hidden;position:relative;background:var(--wf-paper)">'
-    + '<div style="transform:scale(' + sc + ');transform-origin:top left;width:' + w + 'px">' + html + "</div></div>";
+  return '<div class="wf-review wf-frame" data-w="' + w + '" style="height:' + h + 'px;overflow:hidden;position:relative;background:var(--wf-paper);padding:10px">'
+    + '<div style="width:' + w + 'px;margin:0 auto">' + html + "</div></div>";
+}
+function fitThumbs(root) {
+  var boxes = root.querySelectorAll(".wf-frame[data-w]");
+  Array.prototype.forEach.call(boxes, function (box) {
+    var w = parseFloat(box.getAttribute("data-w")) || 0;
+    var inner = box.firstElementChild;
+    if (!w || !inner) return;
+    var avail = Math.max(50, box.clientWidth - 20);
+    var sc = Math.min(1, avail / w);
+    inner.style.transform = "scale(" + sc + ")";
+    inner.style.transformOrigin = "top left";
+  });
+}
+function refitVisibleThumbs() {
+  ["view-list", "view-detail", "view-pages"].forEach(function (id) {
+    var v = $(id);
+    if (v && !v.classList.contains("hidden")) fitThumbs(v);
+  });
 }
 function fitBox(wrap, inner, w, h) {
   var avail = Math.max(300, wrap.clientWidth || document.documentElement.clientWidth - 48);
@@ -190,6 +207,7 @@ function show(view) {
   ["view-list", "view-detail", "view-play", "view-pages", "view-pagedetail", "view-end-holder"].forEach(function (v) { $(v).classList.add("hidden"); });
   $(view).classList.remove("hidden");
   $("endcard").classList.add("hidden");
+  if (view === "view-list" || view === "view-detail" || view === "view-pages") fitThumbs($(view));
   state.view = view.replace("view-", "");
   stopAuto();
 }
@@ -206,6 +224,7 @@ function renderList() {
     d.onclick = function () { openFlow(i); };
     c.appendChild(d);
   });
+  fitThumbs(c);
   $("crumb").textContent = FLOWS.length + " flow(s), " + Object.keys(FRAMES).length + " page(s)";
 }
 function openFlow(i) {
@@ -224,6 +243,7 @@ function openFlow(i) {
     d.onclick = function () { playStep(idx); };
     c.appendChild(d);
   });
+  fitThumbs(c);
   show("view-detail");
   $("crumb").textContent = "Flow: " + f.name;
 }
@@ -571,6 +591,7 @@ function renderPages() {
     d.onclick = function () { openPage(p); };
     c.appendChild(d);
   });
+  fitThumbs(c);
   show("view-pages");
   $("crumb").textContent = Object.keys(FRAMES).length + " page(s)";
 }
@@ -660,6 +681,7 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener("resize", function () {
     if (state.view === "play") renderStage();
     if (state.view === "pagedetail") renderPageDetail();
+    refitVisibleThumbs();
   });
   renderList();
   show("view-list");

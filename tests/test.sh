@@ -243,6 +243,7 @@ grep -q 'max-width:100%' "$root/items/wireframe-docs/templates/review-snippet.ht
 grep -q 'wf-info' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet badge" || bad "snippet badge missing"
 grep -q 'wf-ctrl' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet ctrl mode" || bad "ctrl mode missing"
 grep -q 'BP_H' "$root/items/wireframe-docs/templates/player.template.html" && grep -q 'h: 740' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewport heights" || bad "viewport heights missing"
+grep -q 'fr-fit' "$root/items/wireframe-docs/templates/viewer.html" && ok "grid gap wrapper" || bad "grid gap missing"
 grep -q '| Khổ |.*| Cao viewport |' "$root/items/wireframe-docs/convention/tree-format.md" && ok "convention heights" || bad "heights missing in convention"
 grep -q 'ov-info' "$root/items/wireframe-docs/templates/player.template.html" && ok "dialog icon button" || bad "dialog icon missing"
 ! grep -q 'body.wf-review' "$t10/suite/player.html" && ok "no snippet CSS leak" || bad "snippet CSS leaked"

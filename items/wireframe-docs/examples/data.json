@@ -1,0 +1,9 @@
+{
+  "page": "Checkout mẫu",
+  "values": {
+    "Email": "ban@example.com",
+    "Địa chỉ": "123 Nguyễn Huệ, Q.1, TP.HCM",
+    "Đặt hàng": "Đặt hàng",
+    "Quay lại giỏ": "Quay lại giỏ hàng"
+  }
+}

@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
-"""Verify a wireframe-docs tree.md <-> wireframe.html pair.
+"""Verify a wireframe-docs tree.md <-> data.json <-> wireframe.html trio.
 
 Usage:
-    python3 verify-pair.py <tree.md> <wireframe.html>
+    python3 verify-pair.py <tree.md> <wireframe.html> [data.json]
 
-The tree only defines scope; the wireframe is hand-authored (one file,
-four breakpoint frames). This script reports every drift between the two
-so the designer can rule on it. It never fixes anything by itself.
+The tree defines scope, the data file holds sample content, the wireframe
+is hand-authored (one file, four breakpoint frames). This script reports
+every drift between the three so the designer can rule on it. It never
+fixes anything by itself. The data file defaults to the tree's sibling
+<slug>-data.json.
 
-Exit 0 + PASS line when the pair matches; exit 1 + FAIL lines otherwise.
-FAIL classes: missing frame/section/component, extra section/component,
-layout/states/effect mismatch, unknown breakpoint, bad width, structural
-errors (section outside a frame, component outside a section, duplicates).
+Exit 0 + PASS line when the trio matches; exit 1 + FAIL lines otherwise.
+FAIL classes: missing data file/keys/values, missing frame/section/
+component, extra section/component, layout/states/effect/reduced mismatch,
+unknown breakpoint, bad width, structural errors.
 """
+import json
 import os
 import sys
 from html.parser import HTMLParser
@@ -34,10 +37,17 @@ def norm_set(value):
 class PairHTML(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
-        self.stack = []  # [(tag, frame_bp_or_None, section_or_None)]
+        self.stack = []  # [(tag, frame_bp_or_None, section_or_None, label_or_None)]
         self.pages = set()
         self.frames = {}  # bp -> {"width": str|None, "sections": {...}}
+        self.text = {}  # (frame, section, label) -> rendered text
         self.errors = []
+
+    def _cur(self):
+        for _tag, frame, section, label in reversed(self.stack):
+            if label is not None:
+                return (frame, section, label)
+        return None
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -45,6 +55,7 @@ class PairHTML(HTMLParser):
         parent_section = self.stack[-1][2] if self.stack else None
         frame = parent_frame
         section = parent_section
+        label = None
         if "data-wf-page" in a:
             self.pages.add(a["data-wf-page"].strip())
         if "data-wf-breakpoint" in a:
@@ -87,15 +98,62 @@ class PairHTML(HTMLParser):
                                        % (frame, section, label))
                 else:
                     comps[label] = {"states": norm_set(a.get("data-wf-states", "")),
-                                    "effect": norm_set(a.get("data-wf-effect", ""))}
-        self.stack.append((tag, frame, section))
+                                    "effect": norm_set(a.get("data-wf-effect", "")),
+                                    "reduced": (a.get("data-wf-reduced", "") or "").strip()}
+                    self.text.setdefault((frame, section, label), "")
+        self.stack.append((tag, frame, section, label))
 
     def handle_endtag(self, tag):
         if self.stack:
             self.stack.pop()
 
+    def handle_data(self, data):
+        cur = self._cur()
+        if cur is not None:
+            self.text[cur] = self.text.get(cur, "") + data
 
-def verify(tree_path, html_path):
+
+def norm_text(value):
+    return " ".join((value or "").split())
+
+
+def load_data(tree_path, data_path, tree):
+    """Returns (data_values_dict, fails). Values: label -> [strings]."""
+    if data_path is None:
+        if tree_path.endswith("-tree.md"):
+            data_path = tree_path[:-len("-tree.md")] + "-data.json"
+        elif os.path.basename(tree_path) == "tree.md":
+            data_path = os.path.join(os.path.dirname(tree_path) or ".",
+                                     "data.json")
+        else:
+            return None, ["khong xac dinh duoc data file cho '%s' "
+                          "(dat ten <slug>-tree.md)" % tree_path]
+    try:
+        with open(data_path, encoding="utf-8") as f:
+            raw = json.load(f)
+    except FileNotFoundError:
+        return None, ["thieu data file: %s" % data_path]
+    except ValueError as e:
+        return None, ["data file loi JSON (%s): %s" % (data_path, e)]
+    if not isinstance(raw, dict) or not isinstance(raw.get("values"), dict) \
+            or not raw["values"]:
+        return None, ["data file '%s' thieu object 'values' khong rong"
+                       % data_path]
+    if raw.get("page", "") != tree["page"]:
+        return None, ["data file page '%s' != tree page '%s'"
+                       % (raw.get("page", ""), tree["page"])]
+    values = {}
+    for label, v in raw["values"].items():
+        items = v if isinstance(v, list) else [v]
+        if not all(isinstance(x, str) and x.strip() for x in items) \
+                or not items:
+            return None, ["data key '%s' phai la chuoi / mang chuoi khong rong"
+                           % label]
+        values[label] = [x.strip() for x in items]
+    return values, []
+
+
+def verify(tree_path, html_path, data_path=None):
     fails = []
     try:
         tree = parse(tree_path)
@@ -103,6 +161,15 @@ def verify(tree_path, html_path):
         return ["file not found: %s" % tree_path]
     except TreeError as e:
         return ["tree.md khong PASS check.py: %s" % e]
+    data, data_fails = load_data(tree_path, data_path, tree)
+    fails.extend(data_fails)
+    if data is not None:
+        tree_labels = {c["label"] for _, _, comps in tree["sections"]
+                       for c in comps}
+        for label in sorted(set(tree_labels) - set(data)):
+            fails.append("thieu data cho component '%s'" % label)
+        for label in sorted(set(data) - tree_labels):
+            fails.append("data thua key '%s' (khong co trong tree)" % label)
     try:
         with open(html_path, encoding="utf-8") as f:
             src = f.read()
@@ -170,6 +237,19 @@ def verify(tree_path, html_path):
                                  "khai %s" % (bp, name, label,
                                               sorted(got[label]["effect"]),
                                               sorted(want[label]["effect"])))
+                want_reduced = want[label].get("reduced", "") or ""
+                if want_reduced != (got[label].get("reduced", "") or ""):
+                    fails.append("[%s] section '%s' component '%s' reduced '%s' != "
+                                 "khai '%s'" % (bp, name, label,
+                                                got[label].get("reduced", ""),
+                                                want_reduced))
+                if data is not None and label in data:
+                    shown = norm_text(doc.text.get((bp, name, label), ""))
+                    for val in data[label]:
+                        if norm_text(val) not in shown:
+                            fails.append("[%s] section '%s' component '%s' thieu "
+                                         "gia tri data '%s' trong HTML"
+                                         % (bp, name, label, val))
         for name in got_sections:
             if name not in {n for n, _m, _c in tree["sections"]}:
                 fails.append("[%s] thua section '%s'" % (bp, name))
@@ -178,9 +258,11 @@ def verify(tree_path, html_path):
 
 def main(argv):
     if len(argv) < 3 or "-h" in argv or "--help" in argv:
-        print("usage: python3 verify-pair.py <tree.md> <wireframe.html>")
+        print("usage: python3 verify-pair.py <tree.md> <wireframe.html> [data.json]")
+        print("  data.json defaults to the tree's sibling <slug>-data.json")
         return 2
-    fails = verify(argv[1], argv[2])
+    data_arg = argv[3] if len(argv) > 3 else None
+    fails = verify(argv[1], argv[2], data_arg)
     if fails:
         for f in fails:
             print("FAIL: %s" % f)
@@ -193,7 +275,7 @@ def main(argv):
     nsec = len(tree["sections"])
     ncomp = sum(len(c) for _, _, c in tree["sections"])
     print("PASS: pair '%s' \u00b7 4 breakpoints \u00b7 %d sections \u00b7 %d "
-          "components (tree<->wireframe khop)" % (tree["page"], nsec, ncomp))
+          "components (tree<->wireframe<->data khop)" % (tree["page"], nsec, ncomp))
     return 0
 
 

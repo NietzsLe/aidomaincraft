@@ -154,12 +154,34 @@ grep -q '4 breakpoints' "$root/items/wireframe-docs/README.md" && ok "4 breakpoi
 python3 "$root/items/wireframe-docs/scripts/check.py" "$root/items/wireframe-docs/examples/tree.md" >/dev/null 2>&1 && ok "example tree PASS" || bad "example tree FAIL"
 python3 "$root/items/wireframe-docs/scripts/verify-pair.py" "$root/items/wireframe-docs/examples/tree.md" "$root/items/wireframe-docs/examples/tree.html" >/dev/null 2>&1 && ok "example pair PASS" || bad "example pair FAIL"
 t8=$(mktemp -d)
-printf '# Page: P\n\n## Section: S\n- `Button` **B** — note: n | states: default\n' > "$t8/t-tree.md"
+printf '# Page: P\n\n## Section: S\n- `Button` **B** — note: n | states: default, focus\n' > "$t8/t-tree.md"
+printf '{"page": "P", "values": {"B": "bee"}}' > "$t8/t-data.json"
 printf '<div data-wf-page="Q"><div data-wf-breakpoint="sm" data-wf-width="360"><section data-wf-section="S" data-wf-layout="stack"></section></div></div>' > "$t8/t-wire.html"
-if python3 "$root/items/wireframe-docs/scripts/verify-pair.py" "$t8/t-tree.md" "$t8/t-wire.html" >/dev/null 2>&1; then bad "drifting pair passed"; else ok "drifting pair FAIL"; fi
+if python3 "$root/items/wireframe-docs/scripts/verify-pair.py" "$t8/t-tree.md" "$t8/t-wire.html" "$t8/t-data.json" >/dev/null 2>&1; then bad "drifting pair passed"; else ok "drifting pair FAIL"; fi
 rm -rf "$t8"
 
-rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t1.ver"
+# 16. wireframe-docs v10.7: vocab + data + guidelines (checked 03/11/2026)
+[ "$(grep -c '^[A-Za-z]*$' "$root/items/wireframe-docs/convention/component-roles.md" 2>/dev/null || echo 0)" -ge 60 ] && ok "vocab pinned 60+" || bad "vocab list short"
+grep -q '^Accordion: group$' "$root/items/wireframe-docs/convention/component-roles.md" && ok "role-map present" || bad "role-map missing"
+grep -q '^fade-scale: ' "$root/items/wireframe-docs/convention/animations.md" && ok "anim catalog present" || bad "anim catalog missing"
+grep -q 'ref:' "$root/items/wireframe-docs/convention/animations.md" && ok "ref rule documented" || bad "ref rule missing"
+[ -f "$root/items/wireframe-docs/convention/references.md" ] && ok "references doc exists" || bad "references doc missing"
+[ -f "$root/items/wireframe-docs/convention/data-schema.md" ] && ok "data schema exists" || bad "data schema missing"
+[ -f "$root/items/wireframe-docs/examples/data.json" ] && ok "example data exists" || bad "example data missing"
+python3 "$root/items/wireframe-docs/scripts/check-guidelines.py" "$root/items/wireframe-docs/examples/tree.md" > "$t1.guide" 2>&1 && ok "guidelines example SCORE" || bad "guidelines example FAIL"
+grep -q 'SCORE: 6/6' "$t1.guide" && ok "guidelines 6/6" || bad "guidelines score wrong"
+t9=$(mktemp -d)
+printf '# Page: P\n\n## Section: S\n- `Button` **B** — note: n | states: default\n' > "$t9/t-tree.md"
+printf '{"page": "P", "values": {"B": "bee"}}' > "$t9/t-data.json"
+if python3 "$root/items/wireframe-docs/scripts/check-guidelines.py" "$t9/t-tree.md" "$t9/t-data.json" >/dev/null 2>&1; then bad "missing focus passed"; else ok "missing focus FAIL"; fi
+cp "$root/items/wireframe-docs/examples/tree.html" "$t9/t-wire.html"
+cp "$root/items/wireframe-docs/examples/tree.md" "$t9/t-tree.md"
+cp "$root/items/wireframe-docs/examples/data.json" "$t9/data.json"
+python3 -c "import json;p='$t9/data.json';d=json.load(open(p));d['values']['Email']='khong-co-trong-html';json.dump(d,open(p,'w'),ensure_ascii=False)"
+if python3 "$root/items/wireframe-docs/scripts/verify-pair.py" "$t9/t-tree.md" "$t9/t-wire.html" "$t9/data.json" >/dev/null 2>&1; then bad "missing value passed"; else ok "missing value FAIL"; fi
+rm -rf "$t9"
+
+rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t1.ver" "$t1.guide"
 echo "---"
 echo "pass=$pass fail=$fail"
 [ "$fail" = "0" ]

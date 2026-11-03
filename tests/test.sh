@@ -237,6 +237,7 @@ grep -q 'bp=" + state.type\|bp=" + k' "$root/items/wireframe-docs/templates/view
 grep -q '\[hidden\]' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewer hidden rule" || bad "viewer hidden missing"
 grep -q 'ov-inner' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewer grid wrapper" || bad "grid wrapper missing"
 grep -q 'data-wf-breakpoint' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet bp filter" || bad "snippet bp filter missing"
+grep -q 'max-width:100%' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet canvas fit" || bad "canvas fit missing"
 grep -q '__TITLE_DATA__\|PAGE_TITLES' "$root/items/wireframe-docs/templates/player.template.html" && ok "player page titles" || bad "titles missing"
 grep -q 'TITLE_DATA' "$root/items/wireframe-docs/scripts/build-flow.py" && ok "build emits titles" || bad "build titles missing"
 grep -q 'Nhập ' "$root/items/wireframe-docs/templates/player.template.html" && ok "player input tag" || bad "input tag missing"

@@ -139,7 +139,8 @@ Kiểu + behavior + effect/reduced/ref khóa theo 3 tài liệu sau (không tự
    (iframe), hoặc URL có `?review`/`?bp=<khổ>`, snippet tự ẩn chips + cho click
    component để xem card thông tin (đọc từ `data-wf-*`, không chiếm layout).
    `viewer.html` tự gắn `?bp=<khổ đang xem>` vào iframe nên chế độ xem đơn/lưới chỉ
-   hiện đúng khung khổ đó (thay vì chồng cả 4 khung). Mở trực tiếp để soạn thì
+   hiện đúng khung khổ đó (thay vì chồng cả 4 khung); canvas co lại vừa màn hình
+   (`max-width:100%` ở chế độ review) nên không cắt nội dung. Mở trực tiếp để soạn thì
    chips vẫn hiện. Thiếu snippet = review xấu đi nhưng không FAIL máy (ghi vào
    pitfalls trình designer); `tests/test.sh` kiểm tra file mẫu có snippet.
 

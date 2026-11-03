@@ -139,7 +139,7 @@
     var keys = Object.keys(TYPES);
     var bases = keys.reduce(function (s, k) { return s + TYPES[k].base; }, 0);
     var gaps = (keys.length - 1) * 16;
-    var avail = Math.max(320, ov.clientWidth || document.documentElement.clientWidth - 48);
+    var avail = Math.max(320, (ov.clientWidth || document.documentElement.clientWidth) - 48);
     var sc = Math.min(1, (avail - gaps) / bases);
     keys.forEach(function (k) {
       var w = TYPES[k].base;

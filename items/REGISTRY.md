@@ -15,4 +15,3 @@
 | `skillry` | ngoại nhập | — (ngoài repo) | ui, media | ≤v7 |
 | `universal-modder` | ngoại nhập | — (ngoài repo) | game | v9.3 |
 | `web-interface-guidelines` | ngoại nhập | — (ngoài repo) | ui | v9.7 |
-| `wireframe-docs` | nội tại | scripts/, convention/, examples/, templates/ | ui | v10 |

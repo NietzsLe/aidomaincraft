@@ -1,7 +1,7 @@
 <!-- Mẫu PR aidomaincraft (CHARTER v10) — tick hết mới merge. Xóa dòng này khi điền xong. -->
 
 ## Việc gì
-- [ví dụ: v10.1: item nội tại wireframe-docs + cặp UI]
+- [ví dụ: v9.4: item dembrandt + cặp UI]
 
 ## Checklist (thiếu = yêu cầu sửa)
 - [ ] Đúng template + khung (ngoại nhập | nội tại đã khai ở `items/REGISTRY.md`)

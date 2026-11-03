@@ -7,7 +7,7 @@
 - Lưu ý theo runtime: Plan mode (OpenCode) không được sửa file — chỉ bàn kế hoạch; relay log bắt buộc theo `AGENTS.md` (mọi task thật đều `start`/`note`/`end`); không paste secret/token/PII vào relay, PR, hay prompt delegate.
 
 ### Luồng PR chuẩn (6 bước)
-1. **Mở nhánh**: `git checkout -b <loai>-<ten>` (vd `item-wireframe-docs`, `fix-ui-matrix`). Không commit thẳng `main`.
+1. **Mở nhánh**: `git checkout -b <loai>-<ten>` (vd `item-dembrandt`, `fix-ui-matrix`). Không commit thẳng `main`.
 2. **Sửa theo CHARTER**: item mới khai `Nguồn gốc` trước (§4b), đúng template (`item-template.md` | `intrinsic-item-template.md`), đủ khung + song ngữ; cặp domain mới đủ using-doc; sửa 3 tầng + `CHANGELOG.md` trong cùng commit.
 3. **Self-review** lặp theo `VERIFY.md` mục E (+F6 cho item mới) tới hết FAIL; WARN ghi lý do 1 dòng (sẽ vào CHANGELOG).
 4. **Chạy máy**: `bash tests/test.sh` phải `fail=0`; item nội tại chạy thêm tài nguyên của nó (`check.py`/script tương đương) + ghi output vào CHANGELOG.
@@ -15,7 +15,7 @@
 6. **Mở PR**: push nhánh, mở PR theo mẫu (`.github/PULL_REQUEST_TEMPLATE.md` tự hiện checklist); link relay session trong mô tả để reviewer đọc log không cần hỏi. Làm việc từ project đã cài aidomaincraft? Xem `INSTALL.md` mục "Local clone" (`.aidomaincraft/src/`) để tham khảo + thử sửa local rồi PR ngược.
 
 ### Chuẩn PR (thiếu là yêu cầu sửa)
-- 1 PR = 1 việc; commit message `vX.Y: <gì> (<phạm vi>)`, vd `v10.1: item nội tại wireframe-docs + cặp UI`.
+- 1 PR = 1 việc; commit message `vX.Y: <gì> (<phạm vi>)`, vd `v9.4: item dembrandt + cặp UI`.
 - Không commit log, token, PII, file local (`.relay/`, `.test/`, `.aidomaincraft/` đã git-ignored — kiểm tra `git status` trước khi add).
 - Mọi khẳng định số (stars/installs/ngày đo) có nguồn + ngày; thiếu số ghi `chưa xác minh`, cấm đoán.
 - Reviewer merge khi: 0 FAIL theo VERIFY + test xanh + 3 chiều link sống + song ngữ đồng nội dung + tiếng Việt có dấu đầy đủ (docs/CHANGELOG/PR/commit message thiếu dấu = yêu cầu sửa).
@@ -33,7 +33,7 @@
 - Runtime notes: Plan mode (OpenCode) must not edit files — discuss only; relay logging is mandatory per `AGENTS.md`; never paste secrets/tokens/PII into relays, PRs, or delegate prompts.
 
 ### Standard PR flow (6 steps)
-1. **Branch**: `git checkout -b <kind>-<name>` (e.g. `item-wireframe-docs`). Never commit straight to `main`.
+1. **Branch**: `git checkout -b <kind>-<name>` (e.g. `item-dembrandt`). Never commit straight to `main`.
 2. **Follow CHARTER**: new items declare `Origin` first (§4b), use the right template, full frame + bilingual; new domain pairs get using-docs; all 3 layers + `CHANGELOG.md` in the same commit.
 3. **Self-review** per `VERIFY.md` section E (+F6 for new items) until zero FAILs; WARNs get a 1-line reason (goes to CHANGELOG).
 4. **Run machines**: `bash tests/test.sh` must print `fail=0`; intrinsic items additionally run their own resources + record output in CHANGELOG.

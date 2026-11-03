@@ -1,5 +1,12 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.16 — 2026-11-04 (xóa item wireframe-docs, không hỗ trợ nữa)
+- Xóa hẳn `items/wireframe-docs/` (README + convention + scripts + templates + examples) và `domains/ui/using-wireframe-docs.md`; không hỗ trợ hệ wireframe tay nữa vì nặng chi phí duy trì.
+- Đồng bộ `items/REGISTRY.md` (bỏ 1 dòng), `domains/ui/README.md` VI+EN (bỏ 3 hàng routing + 1 hàng định vị + 1 cột ma trận + câu workflow + bullet using-doc mỗi ngôn ngữ, vá 2 dòng phân cách ma trận về 8 cột), `tests/test.sh` (bỏ §14–§20, thêm §14 guard quét tham chiếu sót qua `git ls-files` trừ `CHANGELOG.md`), `CONTRIBUTING.md` + `.github/PULL_REQUEST_TEMPLATE.md` (ví dụ sang `item-dembrandt` / `v9.4` có thật trong lịch sử).
+- Giữ nguyên lịch sử v10.1–v10.15 (log sự thật đã xảy ra); suite local dưới `.aidomaincraft/.tmp/wireframes/` là gitignored nên không vào commit.
+- `bash tests/test.sh` 83 pass / 0 fail; `git ls-files | grep wireframe-docs` (trừ `CHANGELOG.md` lịch sử + `tests/test.sh` guard) rỗng.
+- Self-review: lượt 1 đạt (liệt kê đủ mọi tham chiếu bằng grep trừ thư mục ignore); lượt 2 đạt (cơ chế khác: guard đọc file tracked qua git thay vì quét thư mục, ma trận cắt cột bằng script đếm ô thay vì sửa tay); lượt 3 đạt với case `grep toàn repo sau xóa` → chỉ còn CHANGELOG lịch sử + `.aidomaincraft/` local → quyết định xóa hẳn.
+
 ## v10.15 — 2026-11-04 (wireframe-docs: element thật + link nội bộ + cấm placeholder)
 - Wireframe tương tác được như thật: form dùng `<input>`/`<select>`/`<button>` thật, nút dẫn trang dùng `<a href>` tương đối; `verify-pair.py` đọc `value`/`placeholder` của input như chữ hiển thị; `check-suite.py` FAIL khi link nội bộ gãy; cấm placeholder (`lorem`/`xxx`/`TODO`/`[ghi chú]`/`[mô tả]`) trong block và data — wireframe phải đầy đủ nội dung như trang cuối.
 - `tests/test.sh` §20 (input thật PASS + self-link PASS + link gãy FAIL + placeholder FAIL); `test.sh` 185 pass / 0 fail.

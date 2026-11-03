@@ -1,5 +1,11 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.1 — 2026-11-03 (item nội tại đầu tiên: wireframe-docs + cặp UI)
+- Thêm `items/wireframe-docs/` (nội tại, tree markdown → HTML wireframe + component tree cho agent/designer, Python stdlib 0đ offline): `README.md` khung nội tại (`Nguồn gốc` + `Áp dụng` + cốt lõi/tree-duy-nhất + tùy chỉnh + phân công) + `scripts/build.py` + `scripts/check.py` + `convention/tree-format.md` (chuẩn 3 loại dòng) + `examples/tree.md` + `examples/tree.html` (render thật đã verify). Verify đã chạy: `check.py` PASS (2 sections/4 components) + `build.py` ra HTML hợp lệ + 3 case lỗi exit 1 đúng.
+- Thêm `domains/ui/using-wireframe-docs.md` + cập nhật `domains/ui/README.md` VI+EN (hàng routing, dòng phân biệt, định vị, ma trận thêm cột + 3 hàng hỗ trợ, workflow, using-doc list; sửa luôn dòng EN `One React effect` thiếu cột guidelines có từ trước). `items/REGISTRY.md` thêm dòng wireframe-docs (nội tại). test.sh §13 xanh nhánh nội tại.
+- Self-review: lượt 1 đạt (cú pháp 3 loại dòng + `—`/`note:/states:` định nghĩa ngay convention; ví dụ Checkout điền sẵn; nhãn minh-họa); lượt 2 đạt (4 usecase cơ chế khác nhau: soạn/check/render/đọc + lệnh khớp scripts + ngưỡng PASS/exit-0/đánh số + pitfalls riêng + phân công từng usecase); lượt 3 đạt với case `chốt cấu trúc trang Pricing cho agent build` → wireframe-docs (tree + PASS) rồi sang hallmark (<3 phút qua hàng ma trận mới).
+- WARN giữ lại: (1) chưa dùng ở dự án thật nên Tham khảo chỉ có bằng chứng nội bộ (relay + test) — bổ sung khi có case thật; (2) parser bỏ qua dòng lạ im lặng (đã document trong Pitfalls, chưa có mode cảnh báo).
+
 ## v10 — 2026-11-03 (phân loại nguồn gốc item: ngoại nhập vs nội tại)
 - `CHARTER.md` v9→v10: thêm §4b (2 nguồn gốc: ngoại nhập = chỉ dẫn dùng, tài nguyên ngoài repo; nội tại = tri thức + tài nguyên do repo sở hữu trong `items/<x>/`) + §5d (khung nội tại: `Nguồn gốc` thay `Tổ chức đứng sau`, `Áp dụng` thay `Cài đặt`, VERIFY B cho ghi `N/A` stars) + quy tắc tài nguyên nội tại (tự sở hữu + verify được + gọn nhẹ).
 - `VERIFY.md` A/B/D VI+EN: khung nội tại, ô check khai nguồn gốc khớp REGISTRY, orphan mở rộng cho tài nguyên nội tại thiếu.

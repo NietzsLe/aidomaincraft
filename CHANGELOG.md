@@ -1,7 +1,7 @@
 # CHANGELOG.md — aidomaincraft
 
 ## v10.14 — 2026-11-04 (viewport cuộn tự nhiên + typing luôn chạy animation)
-- Stage play chuyển từ `transform: scale` sang `zoom`: khung vẫn thu đúng tỉ lệ nhưng nội dung dài thì cuộn native được (trước đây bị cắt cứng); nhãn nổi tính lại bằng rect nên luôn bám đúng component khi cuộn; mở dialog tự cuộn về đầu để hộp thoại trong tầm mắt.
+- Stage play chuyển từ `transform: scale` sang `zoom`: khung vẫn thu đúng tỉ lệ nhưng nội dung dài thì cuộn native được (trước đây bị cắt cứng); nhãn nổi tính lại bằng rect nên luôn bám đúng component khi cuộn; mở dialog tự cuộn để hộp thoại vào giữa khung nhìn thấy.
 - Gõ chữ luôn chạy animation từng ký tự (kể cả khi giá trị mẫu trùng chữ hiện có) để play đúng nghĩa "xem như video"; giữ nhánh `prefers-reduced-motion` (hiện chữ ngay, không animation).
 - E2E claude (MutationObserver bắt đủ 21 lần đổi DOM khi gõ; cuộn wrap 0→300→600, nhãn bám đúng; dialog gọn trong khung; console sạch).
 

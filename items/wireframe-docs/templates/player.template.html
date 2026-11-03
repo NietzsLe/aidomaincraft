@@ -455,7 +455,6 @@ function closeStageOverlay() {
 function showOverlay(s, kind, label) {
   closeStageOverlay();
   document.querySelectorAll(".action-tag").forEach(function (t) { t.remove(); });
-  $("stage-wrap").scrollTop = 0;
   var stage = $("stage");
   var q = '[data-wf-component="' + label.replace(/"/g, "") + '"]';
   var src = stage.querySelector(q);
@@ -493,6 +492,14 @@ function showOverlay(s, kind, label) {
     ov.querySelector(".ov-close").onclick = function () { closeStageOverlay(); doBack(); };
   }
   stage.appendChild(ov);
+  (function centerBox() {
+    var wr = $("stage-wrap");
+    var bx = ov.querySelector(".ov-box");
+    if (!bx) return;
+    var r = bx.getBoundingClientRect();
+    var wrr = wr.getBoundingClientRect();
+    wr.scrollTop = Math.max(0, wr.scrollTop + (r.top + r.height / 2) - (wrr.top + wrr.clientHeight / 2));
+  })();
 }
 
 function showEnd(s) {

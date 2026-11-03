@@ -49,6 +49,14 @@ button:focus-visible, .cell:focus-visible { outline: 2px solid var(--focus); out
 #hint .m, #cap .m, .tag .m { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--cool); }
 #stage { padding: 12px; display: flex; justify-content: center; }
 #framebox { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 0; overflow: hidden; }
+  .tabstrip { display: flex; align-items: center; gap: 6px; background: var(--paper-3); border-bottom: 1px solid var(--rule); height: 34px; padding: 0 8px; font-size: 12px; color: var(--ink-2); }
+  .dots { display: inline-flex; gap: 6px; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; }
+  .dots i:nth-child(1) { background: #ff5f57; }
+  .dots i:nth-child(2) { background: #febc2e; }
+  .dots i:nth-child(3) { background: #28c840; }
+  .tabstrip .tt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tabstrip .m { margin-left: auto; }
 #framebox iframe { border: 0; display: block; transform-origin: top left; background: var(--wf-paper); }
 #cap { text-align: center; font-size: 13px; color: var(--ink-2); padding: 0 12px 12px; }
 #overview { text-align: center; padding: 12px; overflow-x: auto; }
@@ -56,8 +64,9 @@ button:focus-visible, .cell:focus-visible { outline: 2px solid var(--focus); out
 .cell { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 0; overflow: hidden; cursor: pointer; flex: none; }
   .cell .fr-fit { margin: 12px; overflow: hidden; background: var(--wf-paper); }
 .cell:hover { border-color: var(--rule-2); }
-.cell .tag { font-size: 12px; font-weight: 500; color: var(--ink-2); padding: 8px 12px; border-bottom: 1px solid var(--rule); }
-.cell iframe { border: 0; display: block; transform-origin: top left; pointer-events: none; background: var(--wf-paper); }
+.cell .tag { font-size: 12px; font-weight: 500; color: var(--ink-2); padding: 0 12px; height: 34px; border-bottom: 1px solid var(--rule); }
+.cell .tag.tabstrip { border-bottom: 1px solid var(--rule); }
+.cell iframe { border: 0; display: block; transform-origin: top left; pointer-events: none; background: var(--wf-paper); margin: 0 auto; }
 #help { max-width: 560px; margin: 80px auto; background: var(--paper-2); border: 1px solid var(--rule); border-radius: 10px; padding: 28px; }
 code { background: var(--paper-3); padding: 1px 5px; border-radius: 4px; font-family: var(--mono); font-size: 12px; }
 @media (prefers-reduced-motion: reduce) {
@@ -75,7 +84,7 @@ code { background: var(--paper-3); padding: 1px 5px; border-radius: 4px; font-fa
   <span id="hint"></span>
   <button id="gridbtn">Lưới 4 khung</button>
 </div>
-<div id="stage" hidden><div id="framebox"><iframe id="frame" title="wireframe single view"></iframe></div></div>
+<div id="stage" hidden><div id="framebox"><div class="tabstrip"><span class="dots"><i></i><i></i><i></i></span><span class="tt" id="tab-title"></span><span class="m" id="tab-size"></span></div><iframe id="frame" title="wireframe single view"></iframe></div></div>
 <div id="cap" hidden></div>
 <div id="overview" hidden></div>
 <div id="help" hidden>
@@ -142,12 +151,14 @@ code { background: var(--paper-3); padding: 1px 5px; border-radius: 4px; font-fa
     $("overview").hidden = true; $("stage").hidden = false; $("cap").hidden = false;
     var f = $("frame");
     var sc = fitScale(state.width);
-    f.src = file + (file.indexOf("?") >= 0 ? "&" : "?") + "bp=" + state.type;
     var fh = frameH();
+    $("tab-title").textContent = file;
+    $("tab-size").textContent = state.width + "×" + fh;
+    f.src = file + (file.indexOf("?") >= 0 ? "&" : "?") + "bp=" + state.type;
     f.style.width = state.width + "px"; f.style.height = fh + "px";
     f.style.transform = "scale(" + sc + ")";
     $("framebox").style.width = Math.floor(state.width * sc) + "px";
-    $("framebox").style.height = Math.floor(fh * sc) + "px";
+    $("framebox").style.height = (Math.floor(fh * sc) + 34) + "px";
     var pct = Math.round(sc * 100);
     $("cap").innerHTML = esc(state.type) + ', rộng thật <span class="m">' + state.width + '×' + frameH() + '</span>'
       + ' (chuẩn <span class="m">' + TYPES[state.type].base + 'px</span>), frame ảo thu <span class="m">' + pct + '%</span>';
@@ -162,10 +173,10 @@ code { background: var(--paper-3); padding: 1px 5px; border-radius: 4px; font-fa
     var bases = keys.reduce(function (s, k) { return s + TYPES[k].base; }, 0);
     var gaps = (keys.length - 1) * 16;
     var avail = Math.max(320, (ov.clientWidth || document.documentElement.clientWidth) - 48);
-    var sc = Math.min(1, (avail - gaps) / bases);
+    var sc = Math.min(1, (avail - gaps - keys.length * 24) / bases);
     keys.forEach(function (k) {
       var w = TYPES[k].base, fh = TYPES[k].h;
-      var cellW = Math.ceil(w * sc) + 24, cellH = Math.ceil(fh * sc) + 58;
+      var cellW = Math.floor(w * sc) + 24, cellH = Math.floor(fh * sc) + 60;
       var cell = document.createElement("div");
       cell.className = "cell";
       cell.style.width = cellW + "px";
@@ -173,10 +184,11 @@ code { background: var(--paper-3); padding: 1px 5px; border-radius: 4px; font-fa
       cell.style.overflow = "hidden";
       cell.title = "Bấm để xem đơn " + k + " " + w + "×" + fh;
       var tag = document.createElement("div");
-      tag.className = "tag"; tag.innerHTML = esc(k) + ', <span class="m">' + w + '×' + fh + '</span>';
+      tag.className = "tag tabstrip";
+      tag.innerHTML = '<span class="tt">' + esc(k) + '</span> <span class="m">' + w + '×' + fh + '</span>';
       var fit = document.createElement("div");
       fit.className = "fr-fit";
-      fit.style.height = Math.ceil(fh * sc) + "px";
+      fit.style.height = Math.floor(fh * sc) + "px";
       var fr = document.createElement("iframe");
       fr.title = k; fr.src = file + (file.indexOf("?") >= 0 ? "&" : "?") + "bp=" + k;
       fr.style.width = w + "px"; fr.style.height = fh + "px";

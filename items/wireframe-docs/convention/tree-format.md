@@ -139,7 +139,10 @@ Kiểu + behavior + effect/reduced/ref khóa theo 3 tài liệu sau (không tự
 8. Snippet review bắt buộc: copy nguyên khối trong `templates/review-snippet.html`
    vào `<head>` của wireframe (xem `examples/tree.html`). Khi file mở trong viewer
    (iframe), hoặc URL có `?review`/`?bp=<khổ>`, snippet tự ẩn chips + caption Kiểu
-   (`.t`), dựng tiêu đề section thành legend nổi trên viền, gắn badge icon SVG
+   (`.t`) + tiêu đề khung (`h2` theo khổ) + tiêu đề và đoạn mô tả file (`h1`,
+   `.docnote` — chỉ là chú thích soạn, không thuộc viewport), dựng tiêu đề
+   section thành legend nổi trên viền (viền section + viền khung chuyển trong suốt
+   ở chế độ review để nội dung tràn full viewport như UI thật), gắn badge icon SVG
    vào từng component (hiện khi hover) + chế độ Ctrl+Click (giữ Ctrl/Cmd hiện viền
    riêng, Ctrl+Click mở card; click thường không làm gì). Mở trực tiếp để soạn thì
    mọi thứ hiện như cũ. Thiếu snippet = review xấu đi nhưng không FAIL máy (ghi vào

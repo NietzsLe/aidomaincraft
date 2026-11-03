@@ -11,8 +11,10 @@
 -->
 <style data-wf-review>
 body.wf-review .chip, body.wf-review .t { display: none !important; }
-body.wf-review .canvas { max-width:100% !important; }
-body.wf-review .wsec { position: relative; margin-top: 14px; }
+body.wf-review .frame > h2, body.wf-review .doc > h1, body.wf-review .docnote { display: none !important; }
+body.wf-review .canvas { max-width:100% !important; box-sizing: border-box; }
+body.wf-review .wsec { position: relative; margin-top: 14px; border-color: transparent; }
+body.wf-review .frame { border-color: transparent; }
 body.wf-review .wsec > h3 { position: absolute; top: -11px; left: 10px; margin: 0; font-size: 11px; font-weight: 600; line-height: 1.6; padding: 0 10px; background: rgba(255,255,255,.93); border: 1px solid #a1a1aa; border-radius: 999px; color: #3f3f46; white-space: nowrap; }
 body.wf-review [data-wf-component] { position: relative; }
 body.wf-review [data-wf-component]:hover { outline: none; }

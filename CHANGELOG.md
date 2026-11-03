@@ -1,5 +1,12 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.13 — 2026-11-04 (viewport hiện rõ như tab browser + card gap kín + review ẩn chữ soạn)
+- Thanh tab kiểu browser trên mọi khung ảo (3 chấm + tiêu đề trang + cỡ W×H): viewer đơn + lưới 4 ô + player play/detail — khung tách khỏi nền chung rõ ràng, đúng ẩn dụ "ảo hóa như tab browser".
+- Card thumbnail/viewer: khung vuông lùi vào trong với gap 12px (viewer) / padding 10px + co giãn theo card + căn giữa (player); không còn chạm sát viền.
+- Review ẩn toàn bộ chữ soạn thảo khỏi layout: chips + caption Kiểu + tiêu đề khung `h2` + tiêu đề/mô tả file (`h1`/`.docnote`, chỉ viewer thấy vì nằm ngoài khung) — chỉ còn UI thật + legend nổi; mở file trực tiếp vẫn hiện đủ để soạn.
+- Gọn padding shell (topbar/view/desc/caption) + bỏ hẳn padding body wireframe mẫu.
+- `tests/test.sh` 180 pass / 0 fail (tabstrip + fr-fit + snippet rules); E2E claude (tab hiện đúng tên trang + W×H, không tràn, console sạch); `.canvas` ép `border-box` trong review nên hết tràn ngang (scrollWidth = clientWidth mọi khổ).
+
 ## v10.12 — 2026-11-04 (wireframe-docs: review như UI thật — badge icon + Ctrl+Click + dialog markup + legend + khung vuông + cao viewport)
 - Review render như UI thật: snippet + player ẩn caption Kiểu (`.t`) cùng chips; tiêu đề section thành legend nổi đè viền (kiểu fieldset); mô tả chỉ mở qua badge icon SVG (hover mới hiện, tuyệt đối góc phải, không chiếm layout) hoặc Ctrl/Cmd+Click (giữ Ctrl hiện viền riêng + cursor help; click thường không làm gì).
 - Dialog overlay render đúng block component (clone markup, strip id + badge thừa) + nút icon SVG mở card meta; không tìm thấy block khớp nhãn mới fallback bảng meta cũ.

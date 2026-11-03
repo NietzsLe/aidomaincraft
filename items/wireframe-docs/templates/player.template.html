@@ -56,6 +56,14 @@ button:focus-visible, .card:focus-visible { outline: 2px solid var(--focus); out
 .card .info div { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
 .framebox { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 0; overflow: hidden; position: relative; }
 .framebox .stage { transform-origin: top left; position: relative; }
+.tabstrip { display: flex; align-items: center; gap: 8px; background: var(--paper-3); border-bottom: 1px solid var(--rule); height: 34px; padding: 0 12px; font-size: 12px; color: var(--ink-2); flex: none; }
+.dots { display: inline-flex; gap: 6px; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; }
+.dots i:nth-child(1) { background: #ff5f57; }
+.dots i:nth-child(2) { background: #febc2e; }
+.dots i:nth-child(3) { background: #28c840; }
+.tabstrip .tt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tabstrip .m { margin-left: auto; font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--cool); }
 #stage-wrap { border-radius: 0; border-bottom: 0; }
 .cap { font-size: 13px; color: var(--ink-2); margin: 10px 2px 0; }
 #stepbar { background: var(--paper-2); border: 1px solid var(--rule); border-top: 0; border-radius: 0; margin-top: 0; padding: 12px 16px; font-size: 13px; }
@@ -67,7 +75,10 @@ button:focus-visible, .card:focus-visible { outline: 2px solid var(--focus); out
 .wf-review [data-wf-component] { cursor: pointer; }
 .wf-review [data-wf-component]:hover { outline: none; }
 .wf-review .t, .wf-review .chip { display: none !important; }
+.wf-review .canvas { max-width: 100% !important; box-sizing: border-box; }
+.wf-review .frame > h2 { display: none !important; }
 .wf-review .wsec { position: relative; margin-top: 14px; }
+.wf-review .wsec, .wf-review .frame { border-color: transparent; }
 .wf-review .wsec > h3 { position: absolute; top: -11px; left: 10px; margin: 0; font-size: 11px; font-weight: 600; line-height: 1.6; padding: 0 10px; background: var(--paper-2); border: 1px solid var(--rule-2); border-radius: 999px; color: var(--ink-2); white-space: nowrap; }
 .wf-review [data-wf-component] { position: relative; }
 body.wf-ctrl .wf-review [data-wf-component]:hover { outline: 2px solid var(--amber); outline-offset: 2px; cursor: help; }
@@ -121,7 +132,7 @@ body.wf-ctrl .wf-review [data-wf-component]:hover { outline: 2px solid var(--amb
 <div id="view-list" class="view"><h2>Flows</h2><p class="desc">Chọn flow để xem từng step rồi play như video. Khung xem luôn thu vừa màn hình; caption ghi rộng thật.</p><div class="cards" id="flow-cards"></div></div>
 <div id="view-detail" class="view hidden"><h2 id="detail-title"></h2><p class="desc">Bấm step để play từ đó. Thumbnail là toàn trang thu nhỏ.</p><div class="cards" id="step-cards"></div></div>
 <div id="view-play" class="view hidden">
-  <div class="framebox" id="stage-wrap"><div class="stage wf-review" id="stage"></div></div>
+  <div class="framebox" id="stage-wrap"><div class="tabstrip"><span class="dots"><i></i><i></i><i></i></span><span class="tt" id="stage-tab-title"></span><span class="m" id="stage-tab-size"></span></div><div class="stage wf-review" id="stage"></div></div>
   <div class="cap" id="play-cap"></div>
   <div id="stepbar"></div>
   <div id="typing"></div>
@@ -130,7 +141,7 @@ body.wf-ctrl .wf-review [data-wf-component]:hover { outline: 2px solid var(--amb
 <div id="view-pages" class="view hidden"><h2>Pages</h2><p class="desc">Mọi trang trong suite: xem độc lập, không theo flow. Bấm card để xem toàn trang; click vào component để xem card thông tin.</p><div class="cards" id="page-cards"></div></div>
 <div id="view-pagedetail" class="view hidden">
   <h2 id="page-title"></h2>
-  <div class="framebox" id="page-wrap"><div class="stage wf-review" id="page-stage"></div></div>
+  <div class="framebox" id="page-wrap"><div class="tabstrip"><span class="dots"><i></i><i></i><i></i></span><span class="tt" id="page-tab-title"></span><span class="m" id="page-tab-size"></span></div><div class="stage wf-review" id="page-stage"></div></div>
   <div class="cap" id="page-cap"></div>
 </div>
 <div id="view-end-holder" class="view hidden"><div id="endcard" class="hidden"><h2 id="end-title">Kết thúc flow</h2><p id="end-desc"></p><button class="btn" id="btn-back-list">Về danh sách</button></div></div>
@@ -154,6 +165,7 @@ function pageTitle(p) { return TITLES[p] || p; }
 var BPS = ["sm", "md", "lg", "xl"];
 var BP_PX = { sm: 360, md: 768, lg: 1366, xl: 1920 };
 var BP_H = { sm: 740, md: 1024, lg: 768, xl: 1080 };
+var TAB_H = 34;
 var state = { view: "list", flow: -1, step: 0, bp: "sm", auto: false, timer: null, history: [], page: null };
 var KEY_DEFS = {
   "states": "Các trạng thái component tồn tại (vd default, hover, focus, disabled).",
@@ -200,7 +212,7 @@ function fitBox(wrap, inner, w, h) {
   inner.style.width = w + "px";
   inner.style.height = h + "px";
   inner.style.transform = "scale(" + sc + ")";
-  wrap.style.height = Math.floor(h * sc) + "px";
+  wrap.style.height = (TAB_H + Math.floor(h * sc)) + "px";
   return sc;
 }
 function show(view) {
@@ -257,6 +269,8 @@ function renderStage() {
   stage.innerHTML = html;
   var w = BP_PX[state.bp] || 360, h = frameHeight(state.bp);
   injectBadges(stage, s.page);
+  $("stage-tab-title").textContent = pageTitle(s.page);
+  $("stage-tab-size").textContent = state.bp + " " + w + "×" + h;
   var sc = fitBox($("stage-wrap"), stage, w, h);
   var bar = "Step " + (state.step + 1) + "/" + FLOWS[state.flow].steps.length
     + ': <b>' + esc(s.title) + "</b>, Page: " + esc(pageTitle(s.page)) + ", " + state.bp
@@ -282,7 +296,7 @@ function markAction(s, sc) {
   tag.className = "action-tag";
   tag.textContent = spec.text;
   tag.style.left = Math.max(4, x * sc) + "px";
-  tag.style.top = ((y + (t.el.offsetHeight || 24)) * sc + 6) + "px";
+  tag.style.top = (TAB_H + (y + (t.el.offsetHeight || 24)) * sc + 6) + "px";
   tag.title = "Đang tác động: " + spec.text.replace(/^▸ /, "");
   $("stage-wrap").appendChild(tag);
 }
@@ -610,6 +624,8 @@ function renderPageDetail() {
   stage.innerHTML = html;
   var w = BP_PX[state.bp] || 360;
   injectBadges(stage, p);
+  $("page-tab-title").textContent = pageTitle(p);
+  $("page-tab-size").textContent = state.bp + " " + w + "×" + frameHeight(state.bp);
   var sc = fitBox($("page-wrap"), stage, w, frameHeight(state.bp));
   $("page-cap").innerHTML = "Page " + esc(pageTitle(p)) + ", " + state.bp + ' <span class="m">' + w + "×" + frameHeight(state.bp) + '</span>, frame ảo thu <span class="m">'
     + Math.round(sc * 100) + '%</span>, badge hoặc Ctrl+Click để xem thông tin';

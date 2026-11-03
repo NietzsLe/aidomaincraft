@@ -143,6 +143,12 @@ def main(argv):
             fails.append("G-motion [%s] '%s': effect %s thieu reduced: "
                          "instant|none" % (sec, c["label"], sorted(fx)))
 
+    # W-req: component chua gan REQ nao (truy vet brief)
+    for sec, c in comps:
+        if not c.get("req"):
+            warns.append("W-req [%s] '%s': chua gan req: REQ-xx (kho truy vet "
+                         "brief)" % (sec, c["label"]))
+
     # G-alt: Avatar/Chart can alt trong note
     for sec, c in comps:
         if c["type"] in ("Avatar", "Chart") and "alt" not in c["note"].lower():

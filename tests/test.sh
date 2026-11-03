@@ -130,11 +130,19 @@ while IFS= read -r line; do
   esac
 done < "$reg"
 
-# 14. wireframe-docs drafts stay under ignored .aidomaincraft/.tmp dated folders (v10.6)
-grep -q '\.aidomaincraft/\.tmp/wireframes/' "$root/items/wireframe-docs/README.md" && ok "wireframe dated path" || bad "wireframe dated path missing"
-grep -q 'YYYY-MM-DD-HHmm' "$root/items/wireframe-docs/README.md" && ok "wireframe datetime folders" || bad "datetime folder rule missing"
+# 14. wireframe-docs suites live under ignored .aidomaincraft/.tmp (v10.8)
+grep -q '\.aidomaincraft/\.tmp/wireframes/<suite>' "$root/items/wireframe-docs/README.md" && ok "wireframe suite path" || bad "wireframe suite path missing"
+grep -q 'flows/' "$root/items/wireframe-docs/README.md" && ok "flows in item" || bad "flows missing in item"
+grep -q 'brief\.md' "$root/items/wireframe-docs/README.md" && ok "brief in item" || bad "brief missing in item"
 grep -q 'git check-ignore' "$root/items/wireframe-docs/README.md" && ok "wireframe gitignore check" || bad "wireframe gitignore check missing"
-grep -q '\.aidomaincraft/\.tmp/wireframes/' "$root/domains/ui/using-wireframe-docs.md" && ok "using dated path" || bad "using dated path missing"
+grep -q '\.aidomaincraft/\.tmp/wireframes/<suite>' "$root/domains/ui/using-wireframe-docs.md" && ok "using suite path" || bad "using suite path missing"
+[ -f "$root/items/wireframe-docs/convention/flows.md" ] && ok "flows doc exists" || bad "flows doc missing"
+[ -f "$root/items/wireframe-docs/convention/brief-template.md" ] && ok "brief template exists" || bad "brief template missing"
+[ -f "$root/items/wireframe-docs/convention/constraints.md" ] && ok "constraints doc exists" || bad "constraints doc missing"
+[ -f "$root/items/wireframe-docs/scripts/check-flow.py" ] && ok "check-flow exists" || bad "check-flow missing"
+[ -f "$root/items/wireframe-docs/scripts/build-flow.py" ] && ok "build-flow exists" || bad "build-flow missing"
+[ -f "$root/items/wireframe-docs/scripts/check-suite.py" ] && ok "check-suite exists" || bad "check-suite missing"
+[ -f "$root/items/wireframe-docs/templates/player.template.html" ] && ok "player template exists" || bad "player template missing"
 grep -q 'templates/viewer\.html' "$root/items/wireframe-docs/README.md" && ok "viewer in item" || bad "viewer missing in item"
 [ -f "$root/items/wireframe-docs/templates/viewer.html" ] && ok "viewer file exists" || bad "viewer file missing"
 for w in 360 768 1366 1920; do
@@ -180,6 +188,30 @@ cp "$root/items/wireframe-docs/examples/data.json" "$t9/data.json"
 python3 -c "import json;p='$t9/data.json';d=json.load(open(p));d['values']['Email']='khong-co-trong-html';json.dump(d,open(p,'w'),ensure_ascii=False)"
 if python3 "$root/items/wireframe-docs/scripts/verify-pair.py" "$t9/t-tree.md" "$t9/t-wire.html" "$t9/data.json" >/dev/null 2>&1; then bad "missing value passed"; else ok "missing value FAIL"; fi
 rm -rf "$t9"
+
+# 17. wireframe-docs suites + flows + player + check-suite (v10.8)
+t10=$(mktemp -d)
+mkdir -p "$t10/suite/checkout" "$t10/suite/flows"
+printf '# Brief: Demo\n\n## Muc tieu\n- x\n\n## Yeu cau\n- REQ-01: thu email\n- REQ-02: xac nhan don\n' > "$t10/suite/brief.md"
+cp "$root/items/wireframe-docs/examples/tree.md" "$t10/suite/checkout/tree.md"
+cp "$root/items/wireframe-docs/examples/tree.html" "$t10/suite/checkout/tree.html"
+cp "$root/items/wireframe-docs/examples/data.json" "$t10/suite/checkout/data.json"
+printf '# Flow: Mua\n\n- Entry: checkout @ sm\n\n## Step 1: Nhap\n- Page: checkout | Action: `Button` **Đặt hàng** | Expect: ok\n- go: back\n' > "$t10/suite/flows/mua.md"
+python3 "$root/items/wireframe-docs/scripts/check-flow.py" "$t10/suite" >/dev/null 2>&1 && ok "flow PASS" || bad "flow FAIL"
+python3 "$root/items/wireframe-docs/scripts/build-flow.py" "$t10/suite" >/dev/null 2>&1 && ok "player built" || bad "player build FAIL"
+[ -f "$t10/suite/player.html" ] && ok "player.html exists" || bad "player.html missing"
+if command -v node >/dev/null 2>&1; then
+  python3 -c "import re;s=open('$t10/suite/player.html',encoding='utf-8').read();m=re.search(r'<script>(.*)</script>',s,re.S);open('$t10/p.js','w',encoding='utf-8').write(m.group(1))" && node --check "$t10/p.js" >/dev/null 2>&1 && ok "player JS valid" || bad "player JS invalid"
+fi
+python3 "$root/items/wireframe-docs/scripts/check-suite.py" "$t10/suite" > "$t10.suite" 2>&1 && ok "suite PASS" || bad "suite FAIL"
+grep -q 'SUITE .* 0 FAIL' "$t10.suite" && ok "suite 0 FAIL" || bad "suite has FAIL"
+printf '# Flow: Xau\n\n- Entry: nowhere @ sm\n\n## Step 1: A\n- Page: nowhere\n' > "$t10/suite/flows/xau.md"
+if python3 "$root/items/wireframe-docs/scripts/check-flow.py" "$t10/suite/flows/xau.md" >/dev/null 2>&1; then bad "bad flow passed"; else ok "bad flow FAIL"; fi
+rm -f "$t10/suite/flows/xau.md"
+mkdir -p "$t10/nopage"
+printf '# Brief: X\n' > "$t10/nopage/brief.md"
+if python3 "$root/items/wireframe-docs/scripts/check-suite.py" "$t10/nopage" >/dev/null 2>&1; then bad "empty suite passed"; else ok "empty suite FAIL"; fi
+rm -rf "$t10" "$t10.suite"
 
 rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t1.ver" "$t1.guide"
 echo "---"

@@ -164,13 +164,20 @@ class StyleExtractor(HTMLParser):
         self.styles = []
         self._in = False
         self._buf = []
+        self._skip = False
 
     def handle_starttag(self, tag, attrs):
         if tag == "style":
+            if any(k == "data-wf-review" for k, _ in attrs):
+                self._skip = True
+                return
             self._in = True
             self._buf = []
 
     def handle_endtag(self, tag):
+        if tag == "style" and self._skip:
+            self._skip = False
+            return
         if tag == "style" and self._in:
             self._in = False
             text = "".join(self._buf).strip()

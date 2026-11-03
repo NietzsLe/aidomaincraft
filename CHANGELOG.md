@@ -1,5 +1,13 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.12 — 2026-11-04 (wireframe-docs: review như UI thật — badge icon + Ctrl+Click + dialog markup + legend + khung vuông + cao viewport)
+- Review render như UI thật: snippet + player ẩn caption Kiểu (`.t`) cùng chips; tiêu đề section thành legend nổi đè viền (kiểu fieldset); mô tả chỉ mở qua badge icon SVG (hover mới hiện, tuyệt đối góc phải, không chiếm layout) hoặc Ctrl/Cmd+Click (giữ Ctrl hiện viền riêng + cursor help; click thường không làm gì).
+- Dialog overlay render đúng block component (clone markup, strip id + badge thừa) + nút icon SVG mở card meta; không tìm thấy block khớp nhãn mới fallback bảng meta cũ.
+- Frame ảo cạnh vuông (bỏ bo tròn ở khung đơn/lưới/stage) + cao viewport theo màn hình thực (sm 360×740, md 768×1024, lg 1366×768, xl 1920×1080); caption ghi W×H thật; bảng khổ trong `convention/tree-format.md` thêm cột cao.
+- `tests/test.sh` §18–§19 (badge/ctrl/dialog-icon/viewport/convention); `test.sh` 167+ pass / 0 fail; E2E claude (click thường im lặng, badge/Ctrl mở card, dialog render đúng UI, caption W×H).
+- Self-review: lượt 1 đạt (badge/ctrl/dialog-markup/legend/khung vuông/W×H định nghĩa ngay UC6/UC8 lần đầu); lượt 2 đạt (badge khác click-cả-block: chỉ điểm gọi, không chiếm sự kiện; dialog markup khác bảng meta: đọc visual, fallback khi thiếu block; lệnh build/test không đổi + ngưỡng E2E + pitfalls snippet thiếu); lượt 3 đạt với case `designer muốn xem wireframe như UI thật` → review sạch chữ thừa, card chỉ mở khi gọi (<2 phút).
+- WARN giữ lại: (1) legend absolute đè viền có thể che nội dung sát mép trên section ở khổ hẹp (chấp nhận, designer duyệt visual); (2) visual do claude chụp, chưa qua mắt người trên máy thật.
+
 ## v10.11 — 2026-11-04 (Hallmark restyle viewer/player: dark devtool Console)
 - Restyle hệ thống (giữ layout + wiring): `templates/viewer.html` + `templates/player.template.html` theo theme Console (deal 1/3, `console: graphite`): nền graphite 3 nấc, chữ Host Grotesk → **Space Grotesk**, số đo Atkinson Mono → **IBM Plex Mono** (cả 2 face gốc không có subset `vietnamese` — đã verify qua Google Fonts API — nên swap, kèm fallback system, offline vẫn chạy); panel hairline không shadow, nút primary amber, số đo mono tabular, `:focus-visible` mọi control + card bấm được bằng phím, `overflow-x: clip`, tôn trọng `prefers-reduced-motion` (gõ chữ hiện ngay).
 - Copy: bỏ `—`/`·`/`‹ ›` trong UI theo gate 19/63 (dấu hai chấm/phẩy/thẻ đo mono thay thế); card overlay/dialog giữ nguyên chữ.

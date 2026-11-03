@@ -17,6 +17,9 @@
 |---|---|
 | Làm UI (page system, effect React, landing mẫu) | `domains/ui/` |
 | Làm media (video launch, deck, OG image) | `domains/media/` |
+| Mod game PC sở hữu (recon, assets, test in-game, field note) | `domains/game/` |
+| Hiểu app/binary/website có evidence để rebuild (reverse) | `domains/reverse/` |
+| Audit SEO site (technical, GEO, drift, report) | `domains/seo/` |
 | Xem gốc 1 tool (cài đặt, cơ chế, giá, review) | `items/<tool>/` |
 | Lĩnh vực khác (sau này: hardware, backend...) | thêm thư mục ngang `domains/<mới>/`, không đổi khung |
 
@@ -41,6 +44,9 @@
 |---|---|
 | UI work (page system, React effects, sample landing) | `domains/ui/` |
 | Media work (launch video, deck, OG image) | `domains/media/` |
+| Modding owned PC games (recon, assets, in-game test, field note) | `domains/game/` |
+| Evidence-backed app/binary/website understanding for rebuilds (reverse) | `domains/reverse/` |
+| Site SEO audit (technical, GEO, drift, reports) | `domains/seo/` |
 | One tool's origin (install, mechanism, price, reviews) | `items/<tool>/` |
 | Other domains (later: hardware, backend...) | add a sibling of `domains/<new>/`, do not change the skeleton |
 

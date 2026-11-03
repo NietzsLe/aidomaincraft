@@ -21,7 +21,85 @@ h1{margin:0 0 4px;font-size:24px}.docnote{color:#52525b;margin:0 0 24px}
 .linklike .box{color:#1c1e21;font-size:13px;text-decoration:underline}
 .chip{display:inline-block;border:1px solid #a1a1aa;font-size:11px;padding:1px 6px;margin:6px 4px 0 0}
 .fx{border-style:dashed}
-</style></head>
+</style>
+<!--WF_REVIEW_SNIPPET (copy từ templates/review-snippet.html — cấm sửa tay, sửa gốc rồi copy lại)-->
+<style>
+body.wf-review .chip{display:none!important}
+body.wf-review [data-wf-component]{cursor:pointer}
+body.wf-review [data-wf-component]:hover{outline:2px dashed #71717a;outline-offset:2px}
+#wf-card{position:fixed;top:16px;right:16px;z-index:9999;width:320px;max-height:80vh;overflow:auto;background:#fff;border:1px solid #e4e4e7;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:16px 18px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;color:#18181b}
+#wf-card h4{margin:0 0 2px;font-size:15px}
+#wf-card .sub{color:#71717a;font-size:12px;margin-bottom:10px}
+#wf-card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px}
+#wf-card dt{color:#71717a;white-space:nowrap}
+#wf-card dd{margin:0;word-break:break-word}
+#wf-card button{margin-top:12px;width:100%;padding:8px;border:1px solid #e4e4e7;border-radius:8px;background:#fafafa;cursor:pointer;font-size:13px}
+#wf-card button:hover{background:#f4f4f5}
+</style>
+<script>
+(function () {
+  "use strict";
+  function reviewMode() {
+    try {
+      if (window !== window.top) return true;
+    } catch (e) { return true; }
+    if (/[?&]review\b/.test(location.search)) return true;
+    if (document.body && document.body.classList.contains("wf-review")) return true;
+    return false;
+  }
+  function labelOf(el, sel) {
+    var n = el.querySelector(sel);
+    return n ? n.textContent.trim() : "";
+  }
+  function sectionOf(el) {
+    var s = el.closest("[data-wf-section]");
+    return s ? s.getAttribute("data-wf-section") : "";
+  }
+  function closeCard() {
+    var c = document.getElementById("wf-card");
+    if (c) c.remove();
+  }
+  function openCard(el) {
+    closeCard();
+    var rows = [
+      ["Kiểu", labelOf(el, ":scope > .t")],
+      ["Section", sectionOf(el)],
+      ["Trạng thái", el.getAttribute("data-wf-states") || "—"],
+      ["Hiệu ứng", el.getAttribute("data-wf-effect") || "—"],
+      ["Hành vi", el.getAttribute("data-wf-behavior") || "—"],
+      ["Giảm chuyển động", el.getAttribute("data-wf-reduced") || "—"],
+      ["Chỉ hiện khi", el.getAttribute("data-wf-visible-on") || "luôn hiện"],
+      ["Ẩn ở khổ", el.getAttribute("data-wf-hide") || "—"],
+      ["Yêu cầu", el.getAttribute("data-wf-req") || "—"],
+      ["Ghi chú", el.getAttribute("data-wf-note") || "—"]
+    ];
+    var card = document.createElement("div");
+    card.id = "wf-card";
+    var h = "<h4>" + el.getAttribute("data-wf-component") + "</h4>"
+      + '<div class="sub">Click component để xem · không chiếm layout wireframe</div><dl>';
+    rows.forEach(function (r) {
+      h += "<dt>" + r[0] + "</dt><dd>" + r[1].replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</dd>";
+    });
+    card.innerHTML = h + '</dl><button type="button">Đóng (Esc)</button>';
+    card.querySelector("button").onclick = closeCard;
+    document.body.appendChild(card);
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!reviewMode() || !document.body) return;
+    document.body.classList.add("wf-review");
+    document.body.addEventListener("click", function (ev) {
+      var el = ev.target.closest ? ev.target.closest("[data-wf-component]") : null;
+      if (!el || !document.body.classList.contains("wf-review")) return;
+      ev.preventDefault();
+      openCard(el);
+    });
+    document.addEventListener("keydown", function (ev) {
+      if (ev.key === "Escape") closeCard();
+    });
+  });
+})();
+</script>
+</head>
 <body><div class="doc" data-wf-page="Checkout mẫu">
 <h1>Checkout mẫu</h1>
 <p class="docnote">Wireframe soạn tay theo tree.md — 4 khổ trong 1 file: sm 360 · md 768 · lg 1366 · xl 1920. Khung rộng cho cuộn ngang khi màn xem nhỏ hơn.</p>

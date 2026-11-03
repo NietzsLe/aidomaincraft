@@ -9,64 +9,58 @@
   Sizes mirror convention/tree-format.md. Canonical widths are locked;
   variants are extra preview widths. Never edit sizes here without
   updating the convention doc (drift = FAIL review).
+  Single view always scales to fit (virtual frame); caption shows the real
+  width + scale %. Wireframe files hide their chips + offer click-cards
+  in review via templates/review-snippet.html.
 -->
 <style>
   :root { color-scheme: light; }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: sans-serif; background: #e4e4e7; color: #18181b; }
-  #toggle {
-    position: fixed; top: 12px; right: 12px; z-index: 50;
-    border: 1px solid #18181b; background: #fff; padding: 6px 12px;
-    font-size: 13px; cursor: pointer;
-  }
-  #panel {
-    position: fixed; top: 52px; right: 12px; z-index: 50; width: 300px;
-    background: #fff; border: 2px solid #18181b; padding: 12px;
-  }
-  #panel h4 { margin: 8px 0 6px; font-size: 12px; color: #52525b; }
-  #panel h4:first-child { margin-top: 0; }
-  .row button {
-    border: 1px solid #71717a; background: #fafafa; padding: 5px 9px;
-    margin: 0 4px 4px 0; font-size: 12px; cursor: pointer;
-  }
-  .row button.on { background: #18181b; color: #fff; border-color: #18181b; }
-  .row button.base { font-weight: bold; border-width: 2px; }
-  #current { margin-top: 8px; font-size: 12px; color: #52525b; }
-  #gridbtn { margin-top: 8px; width: 100%; padding: 6px; cursor: pointer;
-    background: #fff; border: 1px solid #18181b; font-size: 13px; }
-  #stage { padding: 56px 16px 32px; text-align: center; }
-  #stage iframe { border: 2px solid #18181b; background: #fff; }
-  #cap { font-size: 12px; color: #52525b; margin-top: 6px; }
-  #overview { display: flex; gap: 16px; align-items: flex-start; justify-content: center;
-    padding: 56px 16px 32px; flex-wrap: nowrap; overflow-x: auto; }
-  .cell { border: 2px solid #18181b; background: #fff; cursor: pointer; flex: none; }
-  .cell .tag { font-size: 11px; background: #18181b; color: #fff; padding: 2px 6px; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: #fafafa; color: #18181b; }
+  #topbar { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid #e4e4e7; padding: 10px 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  #topbar .title { font-weight: 700; font-size: 14px; margin-right: 4px; }
+  #topbar .file { font-size: 12px; color: #71717a; font-family: monospace; }
+  #topbar .sep { width: 1px; height: 22px; background: #e4e4e7; }
+  .seg { display: flex; border: 1px solid #e4e4e7; border-radius: 999px; overflow: hidden; background: #fafafa; }
+  .seg button { border: 0; background: transparent; padding: 6px 12px; font-size: 12px; cursor: pointer; color: #52525b; }
+  .seg button + button { border-left: 1px solid #e4e4e7; }
+  .seg button.on { background: #18181b; color: #fff; font-weight: 600; }
+  .seg button.base { text-decoration: underline; text-underline-offset: 3px; }
+  #gridbtn { margin-left: auto; border: 1px solid #e4e4e7; background: #fff; border-radius: 8px; padding: 7px 14px; font-size: 12px; cursor: pointer; }
+  #gridbtn:hover { background: #f4f4f5; }
+  #gridbtn.on { background: #18181b; color: #fff; border-color: #18181b; }
+  #hint { font-size: 12px; color: #71717a; }
+  #stage { padding: 24px; display: flex; justify-content: center; }
+  #framebox { background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+  #framebox iframe { border: 0; display: block; transform-origin: top left; }
+  #cap { text-align: center; font-size: 12px; color: #71717a; padding: 0 24px 28px; }
+  #overview { display: flex; gap: 16px; align-items: flex-start; justify-content: center; padding: 24px; flex-wrap: nowrap; overflow-x: auto; }
+  .cell { background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; overflow: hidden; cursor: pointer; flex: none; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+  .cell:hover { border-color: #a1a1aa; }
+  .cell .tag { font-size: 11px; font-weight: 600; color: #52525b; padding: 8px 12px; border-bottom: 1px solid #f4f4f5; }
   .cell iframe { border: 0; display: block; transform-origin: top left; pointer-events: none; }
-  #help { max-width: 560px; margin: 80px auto; background: #fff;
-    border: 2px solid #18181b; padding: 24px; }
-  code { background: #f4f4f5; padding: 1px 5px; }
+  #help { max-width: 560px; margin: 80px auto; background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; padding: 28px; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+  code { background: #f4f4f5; padding: 1px 5px; border-radius: 4px; }
 </style>
 </head>
 <body>
-<button id="toggle" title="Hiện/ẩn panel (Esc)">▦ Sizes</button>
-<div id="panel" hidden>
-  <h4>Loại khổ (rộng chuẩn)</h4>
-  <div class="row" id="types"></div>
-  <h4>Biến thể trong khổ</h4>
-  <div class="row" id="variants"></div>
-  <div id="current"></div>
-  <button id="gridbtn">Lưới 4 khung (so 1 màn hình)</button>
+<div id="topbar" hidden>
+  <span class="title">Wireframe</span>
+  <span class="file" id="fname"></span>
+  <span class="sep"></span>
+  <span class="seg" id="types"></span>
+  <span class="seg" id="variants"></span>
+  <span id="hint"></span>
+  <button id="gridbtn">Lưới 4 khung</button>
 </div>
-<div id="stage" hidden>
-  <iframe id="frame" title="wireframe single view"></iframe>
-  <div id="cap"></div>
-</div>
+<div id="stage" hidden><div id="framebox"><iframe id="frame" title="wireframe single view"></iframe></div></div>
+<div id="cap" hidden></div>
 <div id="overview" hidden></div>
 <div id="help" hidden>
   <b>wireframe-docs viewer</b>
   <p>Mở kèm file cần xem:</p>
   <p><code>viewer.html?file=&lt;slug&gt;-wireframe.html</code></p>
-  <p>Copy file này vào cùng thư mục bản wireframe rồi mở bằng browser (chạy trực tiếp qua <code>file://</code>).</p>
+  <p>Copy file này vào cùng thư mục bản wireframe rồi mở bằng browser (chạy trực tiếp qua <code>file://</code>). Khung xem luôn thu vừa màn hình (frame ảo); caption ghi rộng thật + tỉ lệ thu. Chips mô tả tự ẩn khi xem, click vào component để xem card thông tin.</p>
 </div>
 <script>
 (function () {
@@ -87,55 +81,66 @@
   var file = fileParam();
   var state = { type: "lg", width: 1366, grid: false };
   if (!file) { $("help").hidden = false; return; }
+  $("topbar").hidden = false;
+  $("fname").textContent = file;
 
   var typesEl = $("types"), varEl = $("variants");
   Object.keys(TYPES).forEach(function (k) {
     var b = document.createElement("button");
     b.textContent = k + " " + TYPES[k].base;
     b.dataset.type = k;
+    b.title = TYPES[k].name + " (rộng chuẩn " + TYPES[k].base + "px)";
     b.onclick = function () { selectType(k, TYPES[k].base); };
     typesEl.appendChild(b);
   });
-  function paintTypes() {
+  function paint() {
     Array.prototype.forEach.call(typesEl.children, function (b) {
       b.className = (b.dataset.type === state.type && !state.grid) ? "on" : "";
     });
-  }
-  function selectType(k, w) {
-    state.type = k; state.width = (w || TYPES[k].base); state.grid = false;
-    paintTypes(); paintVariants(); single();
-  }
-  function paintVariants() {
     varEl.innerHTML = "";
     TYPES[state.type].variants.forEach(function (w) {
       var b = document.createElement("button");
       b.textContent = w + (w === TYPES[state.type].base ? " ●" : "");
-      if (w === TYPES[state.type].base) b.className = "base";
-      if (w === state.width && !state.grid) b.className += " on";
-      b.onclick = function () { state.width = w; state.grid = false; paintVariants(); single(); };
+      if (w === state.width && !state.grid) b.className = "on";
+      b.onclick = function () { state.width = w; state.grid = false; sync(); };
       varEl.appendChild(b);
     });
-    $("current").textContent = "Đang xem: " + state.type + " · " + state.width + "px";
+    $("gridbtn").className = state.grid ? "on" : "";
+  }
+  function selectType(k, w) {
+    state.type = k; state.width = (w || TYPES[k].base); state.grid = false;
+    sync();
+  }
+  function fitScale(w) {
+    var avail = Math.max(300, document.documentElement.clientWidth - 48);
+    return Math.min(1, avail / w);
   }
   function single() {
-    $("overview").hidden = true; $("stage").hidden = false;
+    $("overview").hidden = true; $("stage").hidden = false; $("cap").hidden = false;
     var f = $("frame");
-    f.src = file; f.style.width = state.width + "px"; f.style.height = FRAME_H + "px";
-    $("cap").textContent = state.type + " · " + state.width + "px (rộng chuẩn: " + TYPES[state.type].base + "px)";
+    var sc = fitScale(state.width);
+    f.src = file;
+    f.style.width = state.width + "px"; f.style.height = FRAME_H + "px";
+    f.style.transform = "scale(" + sc + ")";
+    $("framebox").style.width = Math.floor(state.width * sc) + "px";
+    $("framebox").style.height = Math.floor(FRAME_H * sc) + "px";
+    var pct = Math.round(sc * 100);
+    $("cap").textContent = state.type + " · rộng thật " + state.width + "px"
+      + " (chuẩn " + TYPES[state.type].base + "px) · frame ảo thu " + pct + "%";
+    $("hint").textContent = state.type + " · " + state.width + "px · thu " + pct + "%";
   }
-  $("gridbtn").onclick = function () {
-    state.grid = true; paintTypes(); paintVariants();
-    $("stage").hidden = true;
+  function grid() {
+    $("stage").hidden = true; $("cap").hidden = true;
     var ov = $("overview"); ov.hidden = false; ov.innerHTML = "";
     var total = Object.keys(TYPES).reduce(function (s, k) { return s + TYPES[k].base; }, 0) + 3 * 16;
-    var avail = Math.max(320, ov.clientWidth || document.documentElement.clientWidth - 32);
+    var avail = Math.max(320, ov.clientWidth || document.documentElement.clientWidth - 48);
     var sc = Math.min(1, avail / total);
     Object.keys(TYPES).forEach(function (k) {
       var w = TYPES[k].base;
       var cell = document.createElement("div");
       cell.className = "cell";
       cell.style.width = Math.floor(w * sc) + "px";
-      cell.style.height = Math.floor(FRAME_H * sc + 22) + "px";
+      cell.style.height = (Math.floor(FRAME_H * sc) + 34) + "px";
       cell.style.overflow = "hidden";
       cell.title = "Bấm để xem đơn " + k + " " + w + "px";
       var tag = document.createElement("div");
@@ -145,16 +150,18 @@
       fr.style.width = w + "px"; fr.style.height = FRAME_H + "px";
       fr.style.transform = "scale(" + sc + ")";
       cell.appendChild(tag); cell.appendChild(fr);
-      cell.onclick = function () { selectType(k); };
+      (function (kk) { cell.onclick = function () { selectType(kk); }; })(k);
       ov.appendChild(cell);
     });
-  };
-  function togglePanel() { $("panel").hidden = !$("panel").hidden; }
-  $("toggle").onclick = togglePanel;
+    $("hint").textContent = "lưới 4 khung · thu " + Math.round(sc * 100) + "%";
+  }
+  function sync() { paint(); if (state.grid) grid(); else single(); }
+  $("gridbtn").onclick = function () { state.grid = !state.grid; sync(); };
+  window.addEventListener("resize", function () { sync(); });
   document.addEventListener("keydown", function (ev) {
-    if (ev.key === "Escape" && !$("panel").hidden) togglePanel();
+    if (ev.key === "Escape" && state.grid) { state.grid = false; sync(); }
   });
-  selectType("lg");
+  sync();
 })();
 </script>
 </body>

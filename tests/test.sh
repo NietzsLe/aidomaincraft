@@ -213,6 +213,25 @@ printf '# Brief: X\n' > "$t10/nopage/brief.md"
 if python3 "$root/items/wireframe-docs/scripts/check-suite.py" "$t10/nopage" >/dev/null 2>&1; then bad "empty suite passed"; else ok "empty suite FAIL"; fi
 rm -rf "$t10" "$t10.suite"
 
+# 18. wireframe-docs review UX: snippet + Pages tab + scale-fit + chips hidden + click-card (v10.10)
+[ -f "$root/items/wireframe-docs/templates/review-snippet.html" ] && ok "snippet exists" || bad "snippet missing"
+grep -q 'WF_REVIEW_SNIPPET' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet marker" || bad "snippet marker missing"
+grep -q 'WF_REVIEW_SNIPPET' "$root/items/wireframe-docs/examples/tree.html" && ok "example embeds snippet" || bad "example missing snippet"
+grep -q 'view-pages' "$root/items/wireframe-docs/templates/player.template.html" && ok "player Pages tab" || bad "Pages tab missing"
+grep -q 'btn-pages' "$root/items/wireframe-docs/templates/player.template.html" && ok "player Pages button" || bad "Pages button missing"
+grep -q 'wf-review .chip' "$root/items/wireframe-docs/templates/player.template.html" && ok "player hides chips" || bad "player chips visible"
+grep -q 'wf-card' "$root/items/wireframe-docs/templates/player.template.html" && ok "player click-card" || bad "player card missing"
+grep -q 'fitBox' "$root/items/wireframe-docs/templates/player.template.html" && ok "player scale-fit" || bad "player scale-fit missing"
+grep -q 'action-tag' "$root/items/wireframe-docs/templates/player.template.html" && ok "player action tag" || bad "action tag missing"
+grep -q 'fitScale\|scale(' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewer scale-fit" || bad "viewer scale-fit missing"
+grep -q 'thu %\|% thu\|scale %' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewer scale caption" || bad "viewer caption missing"
+if command -v node >/dev/null 2>&1; then
+  python3 -c "import re;s=open('$root/items/wireframe-docs/templates/viewer.html',encoding='utf-8').read();m=re.search(r'<script>(.*)</script>',s,re.S);open('/tmp/opencode/v.js','w',encoding='utf-8').write(m.group(1))" && node --check /tmp/opencode/v.js >/dev/null 2>&1 && ok "viewer JS valid" || bad "viewer JS invalid"
+  python3 -c "s=open('$root/items/wireframe-docs/templates/review-snippet.html',encoding='utf-8').read();a=s.rfind('<script>');b=s.rfind('</script>');open('/tmp/opencode/s.js','w',encoding='utf-8').write(s[a+8:b])" && node --check /tmp/opencode/s.js >/dev/null 2>&1 && ok "snippet JS valid" || bad "snippet JS invalid"
+fi
+grep -q 'review-snippet' "$root/items/wireframe-docs/convention/tree-format.md" && ok "convention snippet rule" || bad "convention rule missing"
+grep -q 'review-snippet' "$root/items/wireframe-docs/README.md" && ok "item docs snippet" || bad "item docs missing"
+
 rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t1.ver" "$t1.guide"
 echo "---"
 echo "pass=$pass fail=$fail"

@@ -1,5 +1,14 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.10 — 2026-11-04 (wireframe-docs: review shell đẹp + tab Pages + click-card + frame ảo)
+- Shell review mới: `templates/viewer.html` + `templates/player.template.html` restyle cùng ngôn ngữ (topbar gọn, thẻ card, caption rộng thật + % thu); mọi chế độ xem đơn luôn thu vừa màn hình (frame ảo, không còn iframe pixel thật tràn màn hình); lưới 4 khung giữ nguyên cơ chế scale.
+- Tab `▦ Pages` trong player: lưới thumbnail toàn trang + xem chi tiết từng khổ, độc lập flow (tận dụng `FRAMES`/`META` đã nhúng, không script mới, không artifact mới).
+- Step = toàn trang: play render full frame + vòng sáng + nhãn nổi ở component được tác động; step dialog giữ trang nền phía sau (overlay phủ lên, caption ghi rõ).
+- Mô tả không chiếm layout: chips inline tự ẩn ở chế độ review (CSS `display:none`, text vẫn trong DOM nên `verify-pair.py` "khai gì hiện nấy" không ảnh hưởng); click component → card thông tin nổi (đọc từ `data-wf-*` + META/DATA). Mới `templates/review-snippet.html` (nhúng vào `<head>` wireframe cho viewer/iframe; player inline tự xử lý tương đương); `examples/tree.html` đã nhúng mẫu; `convention/tree-format.md` thêm mục 8 (quy tắc snippet) + chú thích ở quy tắc 9.
+- `tests/test.sh` §18 (snippet tồn tại + nhúng mẫu + Pages tab/nút + chips ẩn + click-card + scale-fit + action-tag + caption + `node --check` viewer/snippet + quy tắc convention + docs); `test.sh` 154 pass / 0 fail.
+- Self-review: lượt 1 đạt (Pages/full-page/click-card/scale-fit/snippet định nghĩa ngay UC6/UC8 lần đầu, ví dụ checkout + card REQ-02); lượt 2 đạt (Pages cơ chế khác: duyệt trang không qua flow, không check; click-card khác verify-pair: đọc không chấm; lệnh build/play không đổi + ngưỡng caption % + pitfalls snippet thiếu + phân công riêng); lượt 3 đạt với case `designer muốn xem hết trang không cần flow` → tab Pages (<2 phút) và case `wireframe rối vì chips` → click-card (<1 phút mở card).
+- WARN giữ lại: (1) player/viewer mới verify headless + `node --check`, chưa qua phiên review mắt người thật (đợi user tunnel port 8321 + claude chrome); (2) wireframe cũ thiếu snippet thì click không ra card (chips vẫn hiện — không FAIL máy).
+
 ## v10.9 — 2026-11-04 (luật tiếng Việt có dấu bắt buộc)
 - `CHARTER.md` bump v10 → v10.9: tiếng Việt có dấu đầy đủ trong mọi nội dung đọc được (docs, CHANGELOG, prompt mẫu, PR, commit message); chỉ code/lệnh/slug anchor/tên file giữ ASCII. Chạm §5 (khung item), §6 (index domain), §6b (using-doc), §7 checklist + mirror EN tương ứng.
 - `AGENTS.md` (mục Tạo mới VI+EN) + `CONTRIBUTING.md` (Chuẩn PR VI+EN: thiếu dấu = yêu cầu sửa) + `VERIFY.md` (mục D VI+EN: VI có dấu + VI/EN đồng nội dung) đồng bộ luật mới; không đụng `templates/` (giữ mẫu điền sạch).

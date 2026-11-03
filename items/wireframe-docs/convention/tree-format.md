@@ -114,7 +114,7 @@ Kiểu + behavior + effect/reduced/ref khóa theo 3 tài liệu sau (không tự
    là FAIL (kể cả sai chính tả nhỏ). Component mới chỉ vào khi convention cập nhật.
 8. Thuộc tính `data-wf-*` nào tree không khai thì HTML để rỗng/vắng — thừa
    thuộc tính không khai cũng là lệch (trừ `data-wf-behavior` tùy chọn).
-9. Khai gì hiện nấy: mọi giá trị đã khai (Kiểu, nhãn, states, effect, behavior, reduced, hide, visible-on, req) phải xuất hiện bằng chữ trong block wireframe tương ứng (thường là chip). `verify-pair.py` đối chiếu text — thiếu = FAIL.
+9. Khai gì hiện nấy: mọi giá trị đã khai (Kiểu, nhãn, states, effect, behavior, reduced, hide, visible-on, req) phải xuất hiện bằng chữ trong block wireframe tương ứng (thường là chip). `verify-pair.py` đối chiếu text — thiếu = FAIL. Chips là dữ liệu để máy đối chiếu + để người soạn đọc khi mở file trực tiếp; ở chế độ review (viewer/player) chips tự ẩn bằng CSS và mô tả chuyển vào card khi click (xem mục 8 bên dưới) — ẩn bằng CSS không xóa text trong DOM nên không ảnh hưởng kiểm tra này.
 
 ## Chuẩn wireframe.html soạn tay (bắt buộc để `verify-pair.py` đọc được)
 
@@ -134,6 +134,12 @@ Kiểu + behavior + effect/reduced/ref khóa theo 3 tài liệu sau (không tự
 6. Section/khung thừa ngoài tree, component thừa ngoài tree đều là lệch.
 7. Trình bày visual (màu khung, độ lớn chữ, gợi ý hình khối theo Kiểu) do người soạn
    quyết — máy chỉ kiểm tra đối chiếu, cảm quan giao diện thuộc về designer (xem phân công).
+8. Snippet review bắt buộc: copy nguyên khối trong `templates/review-snippet.html`
+   vào `<head>` của wireframe (xem `examples/tree.html`). Khi file mở trong viewer
+   (iframe), hoặc URL có `?review`, snippet tự ẩn chips + cho click component để xem
+   card thông tin (đọc từ `data-wf-*`, không chiếm layout). Mở trực tiếp để soạn thì
+   chips vẫn hiện. Thiếu snippet = review xấu đi nhưng không FAIL máy (ghi vào
+   pitfalls trình designer); `tests/test.sh` kiểm tra file mẫu có snippet.
 
 ## Ví dụ tối thiểu (cặp đôi trong `<suite>/pricing/`)
 

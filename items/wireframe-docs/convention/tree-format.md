@@ -116,7 +116,9 @@ Kiểu + behavior + effect/reduced/ref khóa theo 3 tài liệu sau (không tự
    là FAIL (kể cả sai chính tả nhỏ). Component mới chỉ vào khi convention cập nhật.
 8. Thuộc tính `data-wf-*` nào tree không khai thì HTML để rỗng/vắng — thừa
    thuộc tính không khai cũng là lệch (trừ `data-wf-behavior` tùy chọn).
-9. Khai gì hiện nấy: mọi giá trị đã khai (Kiểu, nhãn, states, effect, behavior, reduced, hide, visible-on, req) phải xuất hiện bằng chữ trong block wireframe tương ứng (thường là chip). `verify-pair.py` đối chiếu text — thiếu = FAIL. Chips là dữ liệu để máy đối chiếu + để người soạn đọc khi mở file trực tiếp; ở chế độ review (viewer/player) chips tự ẩn bằng CSS và mô tả chuyển vào card khi click (xem mục 8 bên dưới) — ẩn bằng CSS không xóa text trong DOM nên không ảnh hưởng kiểm tra này.
+9. Khai gì hiện nấy: mọi giá trị đã khai (Kiểu, nhãn, states, effect, behavior, reduced, hide, visible-on, req) phải xuất hiện bằng chữ trong block wireframe tương ứng (thường là chip; với `Input` thì `value`/`placeholder` cũng tính là chữ hiển thị). `verify-pair.py` đối chiếu text — thiếu = FAIL. Chips là dữ liệu để máy đối chiếu + để người soạn đọc khi mở file trực tiếp; ở chế độ review (viewer/player) chips tự ẩn bằng CSS và mô tả chuyển vào card khi click (xem mục 8 bên dưới) — ẩn bằng CSS không xóa text trong DOM nên không ảnh hưởng kiểm tra này.
+10. Cấm placeholder: block text hoặc data value chứa `lorem`, `xxx`, `TODO`, `[ghi chú]`, `[mô tả]` (không phân biệt hoa thường) là FAIL — wireframe phải là nội dung thật, đầy đủ như trang cuối.
+11. Element thật, link thật: form dùng `<input>`/`<select>`/`<button>` thật (không div giả), nút dẫn trang dùng `<a href="...">` trỏ file wireframe tương đối tồn tại. `check-suite.py` báo FAIL nếu link gãy. Khung xem thu nhỏ (viewer/player) vẫn bấm/gõ được như thật.
 
 ## Chuẩn wireframe.html soạn tay (bắt buộc để `verify-pair.py` đọc được)
 

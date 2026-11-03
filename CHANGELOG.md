@@ -1,5 +1,11 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.8 — 2026-11-03 (wireframe-docs: suite + flow play được + rà soát DoD)
+- Suite thay thư mục ngày-giờ: `.aidomaincraft/.tmp/wireframes/<suite>/` chứa `brief.md` + các `<slug>/` + `flows/` + `player.html`; mỗi suite là 1 hệ độc lập đầy đủ. `convention/brief-template.md` (mẫu brief) + `convention/flows.md` (khuôn flow, DSL `go:`/`Input:`, luật verify) + `convention/constraints.md` (từ điển ràng buộc + checklist dễ sót: visible-on, req, toast, skeleton, empty...).
+- `scripts/check.py`: thêm key `req:` (format REQ-xx) + `visible-on:`; `scripts/verify-pair.py`: đối chiếu `data-wf-visible-on` + luật "khai gì hiện nấy" (mọi token khai báo phải xuất hiện bằng chữ trong block); `scripts/check-guidelines.py`: thêm WARN W-req.
+- Mới `scripts/check-flow.py`: verify flow (FAIL = go: trỏ target không tồn tại, thiếu field/Input key/Entry; WARN = orphan/dead-end/destructive-không-dialog/thiếu nhánh lỗi/thiếu Expect). Mới `scripts/build-flow.py`: nhúng flows + frames + metadata + data vào `templates/player.template.html` → `player.html` (list/detail/play/auto + chọn khổ + rẽ nhánh + gõ Input + overlay dialog + panel ràng buộc ⓘ, chạy `file://` thuần). Mới `scripts/check-suite.py`: DoD gộp (brief + mọi trang + mọi flow + REQ đối chiếu + player tươi; exit 1 khi còn FAIL).
+- Examples: `tree.md` + `tree.html` thêm `req:` + chip hiển thị (REQ-01/REQ-02, `reduced: instant`) để pass luật "khai gì hiện nấy".
+
 ## v10.7 — 2026-11-03 (wireframe-docs: data mẫu + vocab shadcn/ARIA + animation catalog + đánh giá guidelines)
 - Mới `convention/component-roles.md`: từ vựng Kiểu pin từ toàn bộ shadcn/ui registry (66 mục, đối chiếu ui.shadcn.com/docs/components 03/11/2026) + mapping ARIA role (đối chiếu MDN, dựa trên WAI-ARIA) + 4 layout primitives (Section/Grid/Stack/Container) + khối máy đọc `type-vocab`/`role-map` + luật mở rộng.
 - Mới `convention/animations.md`: catalog 10 tên gọi chung (fade, fade-scale, slide-4 hướng, hover-lift, collapse-expand, stagger-list, focus-ring; thuộc tính transform/opacity, easing đóng) + quy tắc custom + `ref:` URL + thăng cấp ≥3 lần.

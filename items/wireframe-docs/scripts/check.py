@@ -18,12 +18,14 @@ WIDTHS = {"sm": 360, "md": 768, "lg": 1366, "xl": 1920}
 LAYOUTS = ("stack", "grid-2", "grid-3", "grid-4", "sidebar-left", "sidebar-right")
 SECTION_KEYS = {"layout", "layout-sm", "layout-md", "layout-lg", "layout-xl", "hide"}
 COMP_KEYS = {"note", "states", "effect", "reduced", "ref", "behavior",
+             "visible-on", "req",
              "span", "span-sm", "span-md", "span-lg", "span-xl", "hide"}
 BEHAVIORS = {"dialog", "drawer", "sheet", "popover", "menu", "menubar",
              "tabs", "accordion", "pagination", "carousel", "toast",
              "tooltip", "dropdown", "sticky"}
 REDUCED = {"instant", "none"}
 CUSTOM_FX = re.compile(r"^[a-z0-9-]+$")
+REQ = re.compile(r"^REQ-[A-Za-z0-9-]+$")
 URL = re.compile(r"^https?://\S+$")
 CONVENTION_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                "..", "convention")
@@ -134,6 +136,29 @@ def check_vocab(ctype, where):
     if ctype not in TYPE_VOCAB:
         raise TreeError("%s: Kieu '%s' ngoai von shadcn pin "
                         "(xem convention/component-roles.md)" % (where, ctype))
+
+
+def check_req(meta, where):
+    reqs = set()
+    if "req" in meta:
+        for r in meta["req"].split(","):
+            r = r.strip()
+            if not REQ.match(r):
+                raise TreeError("%s: req '%s' sai dinh dang (vd REQ-01)"
+                                % (where, r))
+            reqs.add(r)
+    return reqs
+
+
+def check_visible_on(meta, where):
+    states = set()
+    if "visible-on" in meta:
+        for st in meta["visible-on"].split(","):
+            st = st.strip()
+            if not st:
+                raise TreeError("%s: visible-on rong" % where)
+            states.add(st)
+    return states
 
 
 def check_hide(value, where):
@@ -247,6 +272,8 @@ def parse(path):
                 "effect": fx,
                 "reduced": meta.get("reduced", "").strip(),
                 "behavior": {b.strip() for b in meta.get("behavior", "").split(",") if b.strip()},
+                "visible_on": check_visible_on(meta, where),
+                "req": check_req(meta, where),
                 "hide": check_hide(meta.get("hide", ""), where),
                 "span": meta,
             }

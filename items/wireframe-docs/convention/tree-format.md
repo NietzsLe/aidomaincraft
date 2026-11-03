@@ -16,12 +16,13 @@
 3. `*-wireframe.html`: soạn tay (HTML/CSS self-contained, không mạng, không build ngoài),
    1 file chứa đúng 4 khung khổ màn hình, mỗi khung vẽ lại toàn bộ trang ở khổ đó
    bằng đúng giá trị trong data.
-4. Tên bộ ba trong thư mục bản `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<slug>/`:
+4. Tên bộ ba trong thư mục trang `.aidomaincraft/.tmp/wireframes/<suite>/<slug>/`:
    `<slug>-tree.md` + `<slug>-data.json` đi với `<slug>-wireframe.html`
-   (ví dụ `2026-11-03-1430-pricing/` chứa đủ 3 file). Giờ 24h local; slug
-   viết thường-gạch-ngang-không-dấu; trùng phút thì thêm `-v2`, `-v3`.
+   (ví dụ suite `ban-hang` có thư mục `checkout/` chứa đủ 3 file).
+   Mỗi suite là 1 hệ độc lập đầy đủ (brief + các trang + flows + player),
+   không chia thư mục theo ngày-giờ. Slug viết thường-gạch-ngang-không-dấu.
    Trình review luôn trình cả 3 + dòng PASS của `check.py` + dòng PASS
-   của `verify-pair.py` + báo cáo `check-guidelines.py`.
+   của `verify-pair.py` + báo cáo `check-guidelines.py` + bản đồ flow liên quan.
 
 ## Bốn khổ màn hình khóa cứng
 
@@ -57,7 +58,7 @@ các số trên — lệch là FAIL review (kiểm tra ở `tests/test.sh` §14)
 > <ghi chú trang — 1 dòng, tùy chọn>
 
 ## Section: <tên section> — layout: <base> | layout-md: <ghi đè> | hide: <khổ...>
-- `<KiểuComponent>` **<nhãn hiển thị>** — note: <ghi chú> | states: <state, state> | effect: <effect> | reduced: <instant|none> | behavior: <behavior> | ref: <url> | span-md: <số> | hide: <khổ...>
+- `<KiểuComponent>` **<nhãn hiển thị>** — note: <ghi chú> | states: <state, state> | effect: <effect> | reduced: <instant|none> | behavior: <behavior> | visible-on: <state,...> | req: <REQ-xx> | ref: <url> | span-md: <số> | hide: <khổ...>
 ```
 
 Kiểu + behavior + effect/reduced/ref khóa theo 3 tài liệu sau (không tự bịa):
@@ -94,6 +95,8 @@ Kiểu + behavior + effect/reduced/ref khóa theo 3 tài liệu sau (không tự
    - `reduced:` `instant|none`, bắt buộc khi có effect (trừ `focus-ring`).
    - `behavior:` hành vi đặc biệt, thuộc danh sách cho phép ở trên (tùy chọn).
    - `ref:` URL nguồn animation tự đặt (bắt buộc khi effect ngoài catalog).
+   - `visible-on:` chỉ hiện khi ở (các) state liệt kê (vd báo lỗi chỉ hiện khi `error`, toast chỉ hiện khi `show`). Block vẫn vẽ đủ 4 khung nhưng gắn nhãn điều kiện + `data-wf-visible-on`.
+   - `req:` mã yêu cầu trong `brief.md` của suite (`REQ-` + mã, vd `REQ-01`). Mã sai định dạng = FAIL; mã không tồn tại trong brief = FAIL (do `check-suite.py`); component không cite req nào = WARN.
    - `span:` / `span-sm/md/lg/xl:` số cột chiếm trong lưới (số nguyên ≥1, mặc định 1;
      hậu tố khổ ghi đè dần lên như layout; chỉ có nghĩa trong section dạng lưới).
    - `hide:` liệt kê khổ ẩn component (ví dụ `hide: sm` = có mặt ở md/lg/xl, vắng ở sm).
@@ -102,7 +105,7 @@ Kiểu + behavior + effect/reduced/ref khóa theo 3 tài liệu sau (không tự
    từ vựng shadcn pin, `behavior` ngoài danh sách, `effect` ngoài catalog mà
    thiếu `ref:`, `reduced` sai giá trị — đều FAIL cùng cơ chế.
 5. Giá trị `hide` chỉ gồm `sm`, `md`, `lg`, `xl`; `span*` phải là số nguyên ≥1;
-   `layout*` phải thuộc danh sách cho phép; `ref:` phải là URL http(s) — sai đều FAIL.
+   `layout*` phải thuộc danh sách cho phép; `ref:` phải là URL http(s); `req:` phải khớp `^REQ-[A-Za-z0-9-]+$`; `visible-on` không được rỗng — sai đều FAIL.
 6. Mọi dòng khác (trống, heading `#` khác, text thường) bị bỏ qua khi parse — dùng tự do
    cho ghi chú dài, nhưng thông tin quan trọng (CTA, states, effect, ẩn/hiện, reduced)
    phải nằm trong metadata đúng khóa, cấm để trong dòng tự do.
@@ -111,6 +114,7 @@ Kiểu + behavior + effect/reduced/ref khóa theo 3 tài liệu sau (không tự
    là FAIL (kể cả sai chính tả nhỏ). Component mới chỉ vào khi convention cập nhật.
 8. Thuộc tính `data-wf-*` nào tree không khai thì HTML để rỗng/vắng — thừa
    thuộc tính không khai cũng là lệch (trừ `data-wf-behavior` tùy chọn).
+9. Khai gì hiện nấy: mọi giá trị đã khai (Kiểu, nhãn, states, effect, behavior, reduced, hide, visible-on, req) phải xuất hiện bằng chữ trong block wireframe tương ứng (thường là chip). `verify-pair.py` đối chiếu text — thiếu = FAIL.
 
 ## Chuẩn wireframe.html soạn tay (bắt buộc để `verify-pair.py` đọc được)
 
@@ -131,7 +135,7 @@ Kiểu + behavior + effect/reduced/ref khóa theo 3 tài liệu sau (không tự
 7. Trình bày visual (màu khung, độ lớn chữ, gợi ý hình khối theo Kiểu) do người soạn
    quyết — máy chỉ kiểm tra đối chiếu, cảm quan giao diện thuộc về designer (xem phân công).
 
-## Ví dụ tối thiểu (cặp đôi trong `2026-11-03-1430-pricing/`)
+## Ví dụ tối thiểu (cặp đôi trong `<suite>/pricing/`)
 
 `pricing-tree.md`:
 

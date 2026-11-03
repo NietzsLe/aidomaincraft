@@ -1,6 +1,6 @@
 # Schema data mẫu — wireframe-docs
 
-> 1 bản wireframe = 3 file cùng thư mục `YYYY-MM-DD-HHmm-<slug>/`:
+> 1 bản wireframe = 3 file cùng thư mục `<suite>/<slug>/`:
 > `<slug>-tree.md` (phạm vi) + `<slug>-data.json` (nội dung mẫu) +
 > `<slug>-wireframe.html` (thể hiện tay đúng cả 3).
 

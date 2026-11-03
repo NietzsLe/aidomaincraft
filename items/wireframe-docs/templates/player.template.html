@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Flow player — wireframe-docs</title>
+<!--
+  Mẫu player do build-flow.py sinh ra player.html (không sửa tay file sinh).
+  Chạy qua file:// — không fetch, không server. Dữ liệu nhúng ở FLOW_DATA.
+-->
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: sans-serif; background: #e4e4e7; color: #18181b; }
+  #topbar { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 2px solid #18181b; padding: 8px 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  #topbar button, .btn { border: 1px solid #18181b; background: #fff; padding: 6px 12px; font-size: 13px; cursor: pointer; }
+  #topbar button.on, .btn.on { background: #18181b; color: #fff; }
+  #topbar button:disabled { opacity: .4; cursor: default; }
+  #crumb { font-size: 13px; color: #52525b; }
+  .view { padding: 16px; max-width: 1400px; margin: 0 auto; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+  .card { background: #fff; border: 2px solid #18181b; cursor: pointer; }
+  .card:hover { background: #fafafa; }
+  .card .thumb { height: 200px; overflow: hidden; border-bottom: 1px solid #71717a; position: relative; }
+  .card .info { padding: 10px 12px; }
+  .card .info b { font-size: 14px; }
+  .card .info div { font-size: 12px; color: #52525b; margin-top: 2px; }
+  #stage-wrap { background: #fff; border: 2px solid #18181b; overflow-x: auto; }
+  #stage { transform-origin: top left; }
+  #stepbar { background: #fff; border: 2px solid #18181b; border-top: 0; padding: 10px 12px; font-size: 13px; }
+  #stepbar .act { background: #18181b; color: #fff; padding: 2px 8px; }
+  #typing { font-family: monospace; background: #18181b; color: #4ade80; padding: 4px 8px; margin-top: 6px; display: none; }
+  #choices { margin-top: 8px; display: none; gap: 8px; }
+  .wf-press { outline: 3px solid #18181b !important; filter: brightness(0.92); transition: none !important; }
+  #overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; align-items: center; justify-content: center; z-index: 100; }
+  #overlay .box { background: #fff; border: 2px solid #18181b; max-width: 520px; padding: 16px 20px; }
+  #overlay .box h3 { margin: 0 0 8px; }
+  #overlay .box dl { font-size: 13px; margin: 8px 0; }
+  #overlay .box dt { font-weight: bold; }
+  #overlay .box dd { margin: 0 0 4px 12px; color: #3f3f46; }
+  #constraints { position: fixed; right: 12px; bottom: 12px; z-index: 60; max-width: 340px; background: #fff; border: 2px solid #18181b; padding: 10px 12px; font-size: 12px; display: none; max-height: 60vh; overflow: auto; }
+  #constraints h4 { margin: 0 0 6px; }
+  #constraints code { background: #f4f4f5; padding: 0 4px; }
+  #endcard { text-align: center; padding: 40px 20px; background: #fff; border: 2px solid #18181b; }
+  .hidden { display: none !important; }
+</style>
+<style>/*__WIREFRAME_CSS__*/</style>
+</head>
+<body>
+<div id="topbar">
+  <button id="btn-list" title="Danh sách flow">☰ Flows</button>
+  <span id="crumb"></span>
+  <span style="flex:1"></span>
+  <span id="bps"></span>
+  <button id="btn-prev" title="Step trước">‹ Prev</button>
+  <button id="btn-auto" title="Tự chạy">▶ Auto</button>
+  <button id="btn-next" title="Step tiếp">Next ›</button>
+  <button id="btn-info" title="Ràng buộc step hiện tại">ⓘ Ràng buộc</button>
+</div>
+
+<div id="view-list" class="view"><h2>Flows</h2><div class="cards" id="flow-cards"></div></div>
+<div id="view-detail" class="view hidden"><h2 id="detail-title"></h2><div class="cards" id="step-cards"></div></div>
+<div id="view-play" class="view hidden">
+  <div id="stage-wrap"><div id="stage"></div></div>
+  <div id="stepbar"></div>
+  <div id="typing"></div>
+  <div id="choices" style="display:none"></div>
+</div>
+<div id="endcard" class="hidden"><h2 id="end-title">Kết thúc flow</h2><p id="end-desc"></p><button class="btn" id="btn-back-list">‹ Về danh sách</button></div>
+
+<div id="overlay"><div class="box" id="overlay-box"></div></div>
+<div id="constraints"><h4>Ràng buộc step hiện tại</h4><div id="constraints-body"></div></div>
+
+<script>
+"use strict";
+/*__FLOW_DATA__*/
+/*__FRAMES_DATA__*/
+/*__META_DATA__*/
+/*__DATA_DATA__*/
+var FLOWS = window.__FLOWS__ || [];
+var FRAMES = window.__FRAMES__ || {};   // page -> {bp: html}
+var META = window.__META__ || {};       // page -> {label: {type,note,states,effect,behavior,reduced,visible_on,req}}
+var DATA = window.__DATA__ || {};       // page -> {label: value|[values]}
+var BPS = ["sm", "md", "lg", "xl"];
+var state = { view: "list", flow: -1, step: 0, bp: "sm", auto: false, timer: null, history: [] };
+var KEY_DEFS = {
+  "states": "Các trạng thái component tồn tại (vd default, hover, focus, disabled).",
+  "effect": "Hiệu ứng khi chuyển state (catalog animations.md hoặc custom + ref).",
+  "reduced": "Cách thể hiện khi user bật giảm chuyển động: instant = hiện ngay trạng thái cuối, none = tắt hẳn.",
+  "behavior": "Hành vi đặc biệt: dialog, drawer, sheet, popover, menu, tabs, accordion, pagination, carousel, toast, tooltip, dropdown, sticky...",
+  "visible-on": "Chỉ hiện khi ở (các) state liệt kê (vd báo lỗi chỉ hiện khi có error).",
+  "req": "Mã yêu cầu trong brief.md mà component này thực hiện (vd REQ-01).",
+  "hide": "Ẩn ở (các) khổ màn hình liệt kê.",
+  "note": "Ghi chú cho designer/agent (không do máy kiểm tra nội dung)."
+};
+
+function $(id) { return document.getElementById(id); }
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+function frameHtml(page, bp) {
+  var p = FRAMES[page] || {};
+  return p[bp] || p["sm"] || "";
+}
+function thumb(html, w, h) {
+  var sc = Math.min(1, 300 / w);
+  return '<div style="width:300px;height:' + h + 'px;overflow:hidden;position:relative;background:#fff">'
+    + '<div style="transform:scale(' + sc + ');transform-origin:top left;width:' + w + 'px">' + html + "</div></div>";
+}
+function show(view) {
+  ["view-list", "view-detail", "view-play"].forEach(function (v) { $(v).classList.add("hidden"); });
+  $(view).classList.remove("hidden");
+  $("endcard").classList.add("hidden");
+  state.view = view.replace("view-", "");
+  stopAuto();
+}
+function renderList() {
+  var c = $("flow-cards"); c.innerHTML = "";
+  FLOWS.forEach(function (f, i) {
+    var first = f.steps[0] || {};
+    var d = document.createElement("div");
+    d.className = "card";
+    d.innerHTML = thumb(frameHtml(first.page || "", "sm"), 360, 200)
+      + '<div class="info"><b>' + esc(f.name) + '</b><div>' + f.steps.length + ' steps · entry: '
+      + esc(first.page || "?") + '</div><div>' + esc(f.desc || "") + "</div></div>";
+    d.onclick = function () { openFlow(i); };
+    c.appendChild(d);
+  });
+  $("crumb").textContent = FLOWS.length + " flow(s)";
+}
+function openFlow(i) {
+  state.flow = i; state.step = 0; state.history = [];
+  var f = FLOWS[i];
+  $("detail-title").textContent = "Flow: " + f.name;
+  var c = $("step-cards"); c.innerHTML = "";
+  f.steps.forEach(function (s, idx) {
+    var d = document.createElement("div");
+    d.className = "card";
+    d.innerHTML = thumb(frameHtml(s.page, state.bp), 360, 200)
+      + '<div class="info"><b>Step ' + (idx + 1) + ': ' + esc(s.title) + '</b><div>Page: '
+      + esc(s.page || "?") + (s.action ? " · " + esc(s.action[0] + " " + s.action[1]) : "")
+      + "</div><div>" + esc(s.expect || "") + "</div></div>";
+    d.onclick = function () { playStep(idx); };
+    c.appendChild(d);
+  });
+  show("view-detail");
+  $("crumb").textContent = "Flow: " + f.name;
+}
+function currentStep() { return FLOWS[state.flow].steps[state.step]; }
+function renderStage() {
+  var s = currentStep();
+  var html = frameHtml(s.page, state.bp);
+  $("stage").innerHTML = html;
+  var bar = "Step " + (state.step + 1) + "/" + FLOWS[state.flow].steps.length
+    + " · <b>" + esc(s.title) + "</b> · Page: " + esc(s.page) + " · " + state.bp;
+  if (s.action) bar += ' · <span class="act">' + esc(s.action[0] + " " + s.action[1]) + "</span>";
+  if (s.expect) bar += "<br>Expect: " + esc(s.expect);
+  $("stepbar").innerHTML = bar;
+  showConstraints(s);
+}
+function findTarget(label) {
+  var stage = $("stage");
+  var q = '[data-wf-component="' + label.replace(/"/g, "") + '"]';
+  var el = stage.querySelector(q + " input, " + q + " textarea, " + q + " select");
+  if (el) return { el: el, kind: "input" };
+  el = stage.querySelector(q + " .box, " + q + " .value");
+  if (el) return { el: el, kind: "text" };
+  el = stage.querySelector(q);
+  if (el) return { el: el, kind: "block" };
+  return null;
+}
+function typeInto(label, text, done) {
+  var t = findTarget(label);
+  var box = $("typing");
+  if (!t) {
+    box.style.display = "block";
+    box.textContent = "▸ [" + label + "] " + text + "  (không tìm thấy ô nhập trong frame — hiển thị chữ)";
+    setTimeout(done, 900);
+    return;
+  }
+  box.style.display = "none";
+  t.el.classList.add("wf-press");
+  var cur = t.kind === "input" ? t.el.value : t.el.textContent;
+  if (cur === text) {
+    setTimeout(function () { t.el.classList.remove("wf-press"); done(); }, 250);
+    return;
+  }
+  var i = 0;
+  if (t.kind === "input") { t.el.value = ""; t.el.focus(); }
+  else { t.el.setAttribute("data-orig", t.el.textContent); t.el.textContent = ""; }
+  var timer = setInterval(function () {
+    i++;
+    var cur = text.slice(0, i);
+    if (t.kind === "input") t.el.value = cur; else t.el.textContent = cur;
+    if (i >= text.length) {
+      clearInterval(timer);
+      setTimeout(function () { t.el.classList.remove("wf-press"); done(); }, 250);
+    }
+  }, 90);
+}
+function pressFlash(label, done) {
+  var t = findTarget(label);
+  if (t) {
+    t.el.classList.add("wf-press");
+    setTimeout(function () { t.el.classList.remove("wf-press"); done(); }, 350);
+  } else { done(); }
+}
+function execStep(flow, s, done) {
+  var iv = (s.inputs && s.inputs[0]) || null;
+  var goNext = function () {
+    if (s.action) {
+      pressFlash(s.action[1], function () { followGo(flow, s, done); });
+    } else { followGo(flow, s, done); }
+  };
+  if (iv) {
+    var vals = (DATA[s.page] && DATA[s.page][iv[1]]) || iv[1];
+    var text = Array.isArray(vals) ? vals[0] : String(vals);
+    typeInto(iv[0], text, goNext);
+  } else { goNext(); }
+}
+function findStepByPage(flow, page, fromIdx) {
+  for (var i = fromIdx; i < flow.steps.length; i++) {
+    if (flow.steps[i].page === page) return i;
+  }
+  for (var j = 0; j < flow.steps.length; j++) {
+    if (flow.steps[j].page === page) return j;
+  }
+  return -1;
+}
+function followGo(flow, s, done) {
+  var outs = [];
+  (s.go || []).forEach(function (g) { outs.push(g); });
+  (s.branches || []).forEach(function (b) {
+    var m = /go:\s*(.+)$/.exec(b);
+    if (m) outs.push(m[1].trim());
+  });
+  if (!outs.length) { done("end"); return; }
+  var g = outs[0], m;
+  if (/^back\b/i.test(g)) { done("back"); return; }
+  if ((m = /^page\s*:\s*(\S+)/.exec(g))) {
+    var idx = findStepByPage(flow, m[1], state.step + 1);
+    done(idx >= 0 ? { jump: idx } : "end");
+    return;
+  }
+  if ((m = /^(dialog|drawer)\s*:\s*(.+)$/.exec(g))) {
+    showOverlay(s, m[1], m[2]);
+    done("hold");
+    return;
+  }
+  done("end");
+}
+function showOverlay(s, kind, label) {
+  var box = $("overlay-box");
+  var meta = (META[s.page] && META[s.page][label]) || {};
+  var rows = [["Kiểu", meta.type || "?"], ["Trạng thái", (meta.states || []).join(", ") || "—"],
+    ["Hành vi", (meta.behavior || []).join(", ") || kind], ["Ghi chú", meta.note || "—"]];
+  var h = "<h3>" + esc(kind) + ": " + esc(label) + "</h3><dl>";
+  rows.forEach(function (r) { h += "<dt>" + r[0] + "</dt><dd>" + esc(String(r[1])) + "</dd>"; });
+  h += '</dl><button class="btn" id="ov-close">Đóng / quay lại (go: back)</button>';
+  box.innerHTML = h;
+  $("overlay").style.display = "flex";
+  $("ov-close").onclick = function () { $("overlay").style.display = "none"; doBack(); };
+}
+function showEnd(s) {
+  show("view-play");
+  $("stage").innerHTML = "";
+  $("stepbar").innerHTML = "Hoàn tất step cuối: <b>" + esc(s.title) + "</b>";
+  $("endcard").classList.remove("hidden");
+  $("end-title").textContent = "Kết thúc: " + (FLOWS[state.flow].terminal || "hết flow");
+  $("end-desc").textContent = s.expect || "";
+}
+function playStep(idx, push) {
+  stopAuto();
+  var flow = FLOWS[state.flow];
+  if (idx < 0 || idx >= flow.steps.length) return;
+  if (push !== false) state.history.push(state.step);
+  state.step = idx;
+  show("view-play");
+  renderStage();
+  var s = currentStep();
+  execStepNoGo(flow, s);
+  if (s.branches && s.branches.length) {
+    var box = $("choices");
+    box.style.display = "flex"; box.innerHTML = "";
+    s.branches.forEach(function (b) {
+      var btn = document.createElement("button");
+      btn.className = "btn"; btn.textContent = "➜ " + b.replace(/^If\s*:\s*|^Else\s*:?\s*/i, "");
+      btn.onclick = function () {
+        box.style.display = "none"; box.innerHTML = "";
+        var m = /go:\s*(.+)$/.exec(b);
+        if (!m) { playStep(state.step + 1); return; }
+        var g = m[1].trim(), mm;
+        if (/^back\b/i.test(g)) { doBack(); return; }
+        if ((mm = /^page\s*:\s*(\S+)/.exec(g))) {
+          var ni = findStepByPage(flow, mm[1], state.step + 1);
+          if (ni >= 0) playStep(ni); else showEnd(s);
+          return;
+        }
+        if ((mm = /^(dialog|drawer)\s*:\s*(.+)$/.exec(g))) { showOverlay(s, mm[1], mm[2]); return; }
+        playStep(state.step + 1);
+      };
+      box.appendChild(btn);
+    });
+    return;
+  }
+}
+function execStepNoGo(flow, s) {
+  var iv = (s.inputs && s.inputs[0]) || null;
+  if (!iv) return;
+  var vals = (DATA[s.page] && DATA[s.page][iv[1]]) || iv[1];
+  typeInto(iv[0], Array.isArray(vals) ? String(vals[0]) : String(vals), function () {});
+}
+function doNext() {
+  var flow = FLOWS[state.flow];
+  var s = currentStep();
+  execStep(flow, s, function (r) {
+    if (r === "hold") return;
+    if (r === "back") { doBack(); return; }
+    if (r && typeof r === "object" && r.jump != null) { playStep(r.jump); return; }
+    showEnd(s);
+  });
+}
+function advance(d) {
+  if (d > 0) { doNext(); return; }
+  doBack();
+}
+function doBack() {
+  var h = state.history;
+  if (h.length) playStep(h.pop(), false);
+}
+function stopAuto() {
+  state.auto = false;
+  if (state.timer) { clearInterval(state.timer); state.timer = null; }
+  $("btn-auto").textContent = "▶ Auto";
+  $("btn-auto").classList.remove("on");
+}
+function startAuto() {
+  state.auto = true;
+  $("btn-auto").textContent = "⏸ Auto";
+  $("btn-auto").classList.add("on");
+  var tick = function () {
+    var s = currentStep();
+    if (s.branches && s.branches.length) { stopAuto(); return; }
+    execStep(FLOWS[state.flow], s, function (r) {
+      if (!state.auto) return;
+      if (r === "hold") { stopAuto(); return; }
+      if (r === "back") { doBack(); }
+      else if (r && typeof r === "object" && r.jump != null) { state.history.push(state.step); state.step = -1; playStep(r.jump); }
+      else { showEnd(s); stopAuto(); return; }
+      if (state.auto) state.timer = setTimeout(tick, 1200);
+    });
+  };
+  tick();
+}
+function showConstraints() {
+  var s = currentStep();
+  var box = $("constraints-body");
+  var rows = [];
+  var meta = s.action ? (META[s.page] && META[s.page][s.action[1]]) : null;
+  var push = function (k, v) {
+    if (v && String(v).trim()) rows.push("<div><code>" + k + "</code>: " + esc(String(v)) + "<br><span style='color:#52525b'>" + esc(KEY_DEFS[k] || "") + "</span></div>");
+  };
+  if (meta) {
+    push("Kiểu", meta.type);
+    push("states", (meta.states || []).join(", "));
+    push("effect", (meta.effect || []).join(", "));
+    push("reduced", meta.reduced);
+    push("behavior", (meta.behavior || []).join(", "));
+    push("visible_on", (meta.visible_on || []).join(", "));
+    push("req", (meta.req || []).join(", "));
+    push("note", meta.note);
+  } else {
+    rows.push("<div>Step này không gắn component cụ thể.</div>");
+  }
+  var h = rows.join("<hr>");
+  box.innerHTML = h + "<hr><div><b>Quy ước đầy đủ:</b> xem <code>convention/constraints.md</code> trong item wireframe-docs.</div>";
+}
+document.addEventListener("DOMContentLoaded", function () {
+  var bp = $("bps");
+  ["sm", "md", "lg", "xl"].forEach(function (b) {
+    var btn = document.createElement("button");
+    btn.textContent = b; btn.dataset.bp = b;
+    if (b === state.bp) btn.className = "on";
+    btn.onclick = function () {
+      state.bp = b;
+      Array.prototype.forEach.call(bp.children, function (x) { x.className = (x.dataset.bp === b ? "on" : ""); });
+      if (state.view === "play") renderStage();
+    };
+    bp.appendChild(btn);
+  });
+  $("btn-list").onclick = function () { renderList(); show("view-list"); };
+  $("btn-prev").onclick = function () { if (state.view === "play") advance(-1); };
+  $("btn-next").onclick = function () { if (state.view === "play") advance(1); };
+  $("btn-auto").onclick = function () { if (state.auto) stopAuto(); else if (state.view === "play") startAuto(); };
+  $("btn-info").onclick = function () {
+    var c = $("constraints");
+    c.style.display = (c.style.display === "block" ? "none" : "block");
+  };
+  $("btn-back-list").onclick = function () { renderList(); show("view-list"); };
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      if ($("overlay").style.display === "flex") { $("overlay").style.display = "none"; doBack(); }
+    }
+  });
+  renderList();
+  show("view-list");
+});
+</script>
+</body>
+</html>

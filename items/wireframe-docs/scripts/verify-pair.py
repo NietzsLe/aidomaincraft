@@ -99,7 +99,8 @@ class PairHTML(HTMLParser):
                 else:
                     comps[label] = {"states": norm_set(a.get("data-wf-states", "")),
                                     "effect": norm_set(a.get("data-wf-effect", "")),
-                                    "reduced": (a.get("data-wf-reduced", "") or "").strip()}
+                                    "reduced": (a.get("data-wf-reduced", "") or "").strip(),
+                                    "visible_on": norm_set(a.get("data-wf-visible-on", ""))}
                     self.text.setdefault((frame, section, label), "")
         self.stack.append((tag, frame, section, label))
 
@@ -243,6 +244,12 @@ def verify(tree_path, html_path, data_path=None):
                                  "khai '%s'" % (bp, name, label,
                                                 got[label].get("reduced", ""),
                                                 want_reduced))
+                want_vis = want[label].get("visible_on", set()) or set()
+                if want_vis != got[label].get("visible_on", set()):
+                    fails.append("[%s] section '%s' component '%s' visible-on %s != "
+                                 "khai %s" % (bp, name, label,
+                                              sorted(got[label].get("visible_on", set())),
+                                              sorted(want_vis)))
                 if data is not None and label in data:
                     shown = norm_text(doc.text.get((bp, name, label), ""))
                     for val in data[label]:
@@ -250,6 +257,19 @@ def verify(tree_path, html_path, data_path=None):
                             fails.append("[%s] section '%s' component '%s' thieu "
                                          "gia tri data '%s' trong HTML"
                                          % (bp, name, label, val))
+                    tokens = ([want[label]["type"], label]
+                              + list(want[label].get("states", []))
+                              + sorted(want[label].get("effect", set()))
+                              + sorted(want[label].get("behavior", set())))
+                    if want[label].get("reduced"):
+                        tokens.append(want[label]["reduced"])
+                    tokens += sorted(want[label].get("visible_on", set()))
+                    tokens += sorted(want[label].get("req", set()))
+                    for tok in tokens:
+                        if norm_text(tok) not in shown:
+                            fails.append("[%s] section '%s' component '%s' khai "
+                                         "'%s' nhung khong hien thi"
+                                         % (bp, name, label, tok))
         for name in got_sections:
             if name not in {n for n, _m, _c in tree["sections"]}:
                 fails.append("[%s] thua section '%s'" % (bp, name))

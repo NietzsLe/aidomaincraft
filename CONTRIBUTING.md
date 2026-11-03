@@ -12,7 +12,7 @@
 3. **Self-review** lặp theo `VERIFY.md` mục E (+F6 cho item mới) tới hết FAIL; WARN ghi lý do 1 dòng (sẽ vào CHANGELOG).
 4. **Chạy máy**: `bash tests/test.sh` phải `fail=0`; item nội tại chạy thêm tài nguyên của nó (`check.py`/script tương đương) + ghi output vào CHANGELOG.
 5. **Ghi CHANGELOG**: entry version mới, kèm case đã thử + quyết định ở lượt 3 (VERIFY E).
-6. **Mở PR**: push nhánh, mở PR theo mẫu (`.github/PULL_REQUEST_TEMPLATE.md` tự hiện checklist); link relay session trong mô tả để reviewer đọc log không cần hỏi.
+6. **Mở PR**: push nhánh, mở PR theo mẫu (`.github/PULL_REQUEST_TEMPLATE.md` tự hiện checklist); link relay session trong mô tả để reviewer đọc log không cần hỏi. Làm việc từ project đã cài aidomaincraft? Xem `INSTALL.md` mục "Local clone" (`.aidomaincraft/src/`) để tham khảo + thử sửa local rồi PR ngược.
 
 ### Chuẩn PR (thiếu là yêu cầu sửa)
 - 1 PR = 1 việc; commit message `vX.Y: <gì> (<phạm vi>)`, vd `v10.1: item nội tại wireframe-docs + cặp UI`.
@@ -38,7 +38,7 @@
 3. **Self-review** per `VERIFY.md` section E (+F6 for new items) until zero FAILs; WARNs get a 1-line reason (goes to CHANGELOG).
 4. **Run machines**: `bash tests/test.sh` must print `fail=0`; intrinsic items additionally run their own resources + record output in CHANGELOG.
 5. **Write CHANGELOG**: new version entry with the tried case + pass-3 decision.
-6. **Open PR**: push, follow `.github/PULL_REQUEST_TEMPLATE.md` (auto checklist); link the relay session so reviewers read logs without asking.
+6. **Open PR**: push, follow `.github/PULL_REQUEST_TEMPLATE.md` (auto checklist); link the relay session so reviewers read logs without asking. Working from a project with aidomaincraft installed? See `INSTALL.md` "Local clone" (`.aidomaincraft/src/`) for reference + trial edits, then PR back.
 
 ### PR bar (missing = change requested)
 - 1 PR = 1 job; message `vX.Y: <what> (<scope>)`.

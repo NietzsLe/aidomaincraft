@@ -17,6 +17,7 @@ unknown breakpoint, bad width, structural errors.
 """
 import json
 import os
+import re
 import sys
 from html.parser import HTMLParser
 
@@ -28,6 +29,10 @@ from check import (  # noqa: E402
     eff_layout,
     parse,
 )
+
+
+PLACEHOLDER_RE = re.compile(
+    r"(?i)\blorem\b|\bxxx\b|\btodo\b|\[ghi chú\]|\[mô tả\]|\[xxx\]")
 
 
 def norm_set(value):
@@ -56,6 +61,13 @@ class PairHTML(HTMLParser):
         frame = parent_frame
         section = parent_section
         label = None
+        if tag == "input":
+            cur = self._cur()
+            if cur is not None:
+                for k in ("value", "placeholder"):
+                    v = (a.get(k) or "").strip()
+                    if v:
+                        self.text[cur] = self.text.get(cur, "") + " " + v
         if "data-wf-page" in a:
             self.pages.add(a["data-wf-page"].strip())
         if "data-wf-breakpoint" in a:
@@ -273,6 +285,20 @@ def verify(tree_path, html_path, data_path=None):
         for name in got_sections:
             if name not in {n for n, _m, _c in tree["sections"]}:
                 fails.append("[%s] thua section '%s'" % (bp, name))
+    flagged = set()
+    for (_bp, _name, label), text in doc.text.items():
+        if label not in flagged and PLACEHOLDER_RE.search(norm_text(text)):
+            flagged.add(label)
+            fails.append("placeholder trong block '%s' (viet noi dung that, "
+                         "cam lorem/xxx/todo)" % label)
+    if data is not None:
+        for label, vals in data.items():
+            for v in vals:
+                if (label, v) not in flagged and PLACEHOLDER_RE.search(
+                        norm_text(v)):
+                    flagged.add((label, v))
+                    fails.append("placeholder trong data '%s' (viet noi dung "
+                                 "that, cam lorem/xxx/todo)" % label)
     return fails
 
 

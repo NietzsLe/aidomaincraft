@@ -12,6 +12,7 @@ Chạy toàn bộ kiểm tra của suite và in báo cáo gộp:
 4. Đối chiếu REQ: mã tree cite mà brief không có = FAIL;
    REQ brief không trang nào cite = WARN; component không cite req = WARN.
 5. player.html tồn tại + mới hơn mọi nguồn (không thì WARN build lại).
+6. Link nội bộ trong *-wireframe.html trỏ file .html tồn tại (gãy = FAIL).
 
 Exit 0 khi không có FAIL (WARN không chặn). Không sửa file.
 """
@@ -20,11 +21,13 @@ import os
 import re
 import subprocess
 import sys
+from html.parser import HTMLParser
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from check import TreeError, parse as parse_tree  # noqa: E402
 
 REQ_RE = re.compile(r"^REQ-[A-Za-z0-9-]+$")
+HREF_RE = re.compile(r"""\s+href\s*=\s*["']([^"'#]+)["']""", re.IGNORECASE)
 
 
 def run(cmd):
@@ -128,7 +131,31 @@ def main(argv):
         if code != 0:
             fails.append("FAIL [flows]: check-flow FAIL")
 
-    # 5. player freshness
+    # 5. internal links inside wireframes
+    for root, _dirs, files in os.walk(suite):
+        for f in sorted(files):
+            if not f.endswith("-wireframe.html") and f != "tree.html":
+                continue
+            fp = os.path.join(root, f)
+            try:
+                with open(fp, encoding="utf-8") as fh:
+                    src = fh.read()
+            except OSError:
+                continue
+            for m in HREF_RE.finditer(src):
+                href = m.group(1).strip()
+                if not href or href.startswith(("http://", "https://",
+                                                "mailto:", "tel:", "//")):
+                    continue
+                target = href.split("#", 1)[0].split("?", 1)[0].strip()
+                if not target.endswith(".html"):
+                    continue
+                dest = os.path.normpath(os.path.join(root, target))
+                if not os.path.isfile(dest):
+                    fails.append("FAIL [link]: %s tro '%s' khong ton tai"
+                                  % (os.path.relpath(fp, suite), href))
+
+    # 6. player freshness
     player = os.path.join(suite, "player.html")
     if not os.path.isfile(player):
         warns.append("WARN [suite]: thieu player.html (chay build-flow.py)")
@@ -158,6 +185,8 @@ def main(argv):
                      "(chua lam hoac de quen)" % r)
 
     print("SUITE %s: %d FAIL, %d WARN" % (suite, len(fails), len(warns)))
+    for f in fails:
+        print(f)
     for w in warns:
         print(w)
     return 1 if fails else 0

@@ -17,6 +17,7 @@ h1{margin:0 0 4px;font-size:24px}.docnote{color:#52525b;margin:0 0 12px}
 .comp .t{font-family:monospace;font-size:11px;color:#52525b}
 .comp .l{font-weight:bold;margin:4px 0}
 .field .box{border:1px solid #71717a;background:#fff;height:28px}
+input.box,select.box{box-sizing:border-box;width:100%;font:inherit}
 .cta .box{background:#18181b;color:#fff;text-align:center;font-size:13px;padding:7px 0}
 .linklike .box{color:#1c1e21;font-size:13px;text-decoration:underline}
 .chip{display:inline-block;border:1px solid #a1a1aa;font-size:11px;padding:1px 6px;margin:6px 4px 0 0}
@@ -164,10 +165,10 @@ body.wf-review [data-wf-component]:hover > .wf-info, body.wf-ctrl .wf-info { dis
 <section class="wsec" data-wf-section="Thông tin" data-wf-layout="stack">
 <h3>Thông tin · stack</h3>
 <div class="comp field" data-wf-component="Email" data-wf-states="default, focus, error" data-wf-effect="focus-ring">
-<div class="t">Input</div><div class="l">Email</div><div class="box fx">ban@example.com</div>
+<div class="t">Input</div><div class="l">Email</div><input class="box fx" type="text" value="ban@example.com">
 <div><span class="chip">default</span><span class="chip">focus</span><span class="chip">error</span><span class="chip">fx: focus-ring</span><span class="chip">REQ-01</span></div></div>
 <div class="comp field" data-wf-component="Địa chỉ" data-wf-states="default, focus">
-<div class="t">Input</div><div class="l">Địa chỉ</div><div class="box">123 Nguyễn Huệ, Q.1, TP.HCM</div>
+<div class="t">Input</div><div class="l">Địa chỉ</div><input class="box" type="text" value="123 Nguyễn Huệ, Q.1, TP.HCM">
 <div><span class="chip">default</span><span class="chip">focus</span><span class="chip">REQ-01</span></div></div>
 </section>
 <section class="wsec" data-wf-section="Hành động" data-wf-layout="stack">
@@ -186,10 +187,10 @@ body.wf-review [data-wf-component]:hover > .wf-info, body.wf-ctrl .wf-info { dis
 <h3>Thông tin · grid-2 (Địa chỉ span 2)</h3>
 <div class="grid-2">
 <div class="comp field" data-wf-component="Email" data-wf-states="default, focus, error" data-wf-effect="focus-ring">
-<div class="t">Input</div><div class="l">Email</div><div class="box fx">ban@example.com</div>
+<div class="t">Input</div><div class="l">Email</div><input class="box fx" type="text" value="ban@example.com">
 <div><span class="chip">default</span><span class="chip">focus</span><span class="chip">error</span><span class="chip">fx: focus-ring</span><span class="chip">REQ-01</span></div></div>
 <div class="comp field span2" data-wf-component="Địa chỉ" data-wf-states="default, focus">
-<div class="t">Input</div><div class="l">Địa chỉ</div><div class="box">123 Nguyễn Huệ, Q.1, TP.HCM</div>
+<div class="t">Input</div><div class="l">Địa chỉ</div><input class="box" type="text" value="123 Nguyễn Huệ, Q.1, TP.HCM">
 <div><span class="chip">default</span><span class="chip">focus</span><span class="chip">REQ-01</span></div></div>
 </div>
 </section>
@@ -212,10 +213,10 @@ body.wf-review [data-wf-component]:hover > .wf-info, body.wf-ctrl .wf-info { dis
 <h3>Thông tin · grid-2 (Địa chỉ span 2)</h3>
 <div class="grid-2">
 <div class="comp field" data-wf-component="Email" data-wf-states="default, focus, error" data-wf-effect="focus-ring">
-<div class="t">Input</div><div class="l">Email</div><div class="box fx">ban@example.com</div>
+<div class="t">Input</div><div class="l">Email</div><input class="box fx" type="text" value="ban@example.com">
 <div><span class="chip">default</span><span class="chip">focus</span><span class="chip">error</span><span class="chip">fx: focus-ring</span><span class="chip">REQ-01</span></div></div>
 <div class="comp field span2" data-wf-component="Địa chỉ" data-wf-states="default, focus">
-<div class="t">Input</div><div class="l">Địa chỉ</div><div class="box">123 Nguyễn Huệ, Q.1, TP.HCM</div>
+<div class="t">Input</div><div class="l">Địa chỉ</div><input class="box" type="text" value="123 Nguyễn Huệ, Q.1, TP.HCM">
 <div><span class="chip">default</span><span class="chip">focus</span><span class="chip">REQ-01</span></div></div>
 </div>
 </section>
@@ -238,10 +239,10 @@ body.wf-review [data-wf-component]:hover > .wf-info, body.wf-ctrl .wf-info { dis
 <h3>Thông tin · grid-2 (Địa chỉ span 2)</h3>
 <div class="grid-2">
 <div class="comp field" data-wf-component="Email" data-wf-states="default, focus, error" data-wf-effect="focus-ring">
-<div class="t">Input</div><div class="l">Email</div><div class="box fx">ban@example.com</div>
+<div class="t">Input</div><div class="l">Email</div><input class="box fx" type="text" value="ban@example.com">
 <div><span class="chip">default</span><span class="chip">focus</span><span class="chip">error</span><span class="chip">fx: focus-ring</span><span class="chip">REQ-01</span></div></div>
 <div class="comp field span2" data-wf-component="Địa chỉ" data-wf-states="default, focus">
-<div class="t">Input</div><div class="l">Địa chỉ</div><div class="box">123 Nguyễn Huệ, Q.1, TP.HCM</div>
+<div class="t">Input</div><div class="l">Địa chỉ</div><input class="box" type="text" value="123 Nguyễn Huệ, Q.1, TP.HCM">
 <div><span class="chip">default</span><span class="chip">focus</span><span class="chip">REQ-01</span></div></div>
 </div>
 </section>

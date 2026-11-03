@@ -1,5 +1,11 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.15 — 2026-11-04 (wireframe-docs: element thật + link nội bộ + cấm placeholder)
+- Wireframe tương tác được như thật: form dùng `<input>`/`<select>`/`<button>` thật, nút dẫn trang dùng `<a href>` tương đối; `verify-pair.py` đọc `value`/`placeholder` của input như chữ hiển thị; `check-suite.py` FAIL khi link nội bộ gãy; cấm placeholder (`lorem`/`xxx`/`TODO`/`[ghi chú]`/`[mô tả]`) trong block và data — wireframe phải đầy đủ nội dung như trang cuối.
+- `tests/test.sh` §20 (input thật PASS + self-link PASS + link gãy FAIL + placeholder FAIL); `test.sh` 185 pass / 0 fail.
+- Self-review: lượt 1 đạt (element thật/link/cấm placeholder định nghĩa ngay convention lần đầu, ví dụ input mẫu điền sẵn); lượt 2 đạt (cơ chế khác: đọc DOM thật chứ không sinh text, link check quét file chứ không render, placeholder FAIL cứng chứ không WARN); lượt 3 đạt với case `soạn wireframe có nút bấm/link` → mở viewer bấm/gõ thật được ngay (<2 phút).
+- WARN giữ lại: (1) nút không có href (vd nút bấm mở dialog) chỉ kiểm tra được qua play, không kiểm tra tĩnh được; (2) chưa case dùng thật ngoài demo nội bộ.
+
 ## v10.14 — 2026-11-04 (viewport cuộn tự nhiên + typing luôn chạy animation)
 - Stage play chuyển từ `transform: scale` sang `zoom`: khung vẫn thu đúng tỉ lệ nhưng nội dung dài thì cuộn native được (trước đây bị cắt cứng); nhãn nổi tính lại bằng rect nên luôn bám đúng component khi cuộn; mở dialog tự cuộn để hộp thoại vào giữa khung nhìn thấy.
 - Gõ chữ luôn chạy animation từng ký tự (kể cả khi giá trị mẫu trùng chữ hiện có) để play đúng nghĩa "xem như video"; giữ nhánh `prefers-reduced-motion` (hiện chữ ngay, không animation).

@@ -260,6 +260,23 @@ grep -q 'Nhập ' "$root/items/wireframe-docs/templates/player.template.html" &&
 grep -q 'stage-overlay' "$root/items/wireframe-docs/templates/player.template.html" && ok "overlay in-stage" || bad "overlay missing"
 if grep -q 'id="overlay"' "$root/items/wireframe-docs/templates/player.template.html"; then bad "fixed overlay remains"; else ok "no fixed overlay"; fi
 
+# 20. wireframe-docs prototype that: real elements, internal links, no placeholders (v10.15)
+t11=$(mktemp -d)
+mkdir -p "$t11/suite/pg" "$t11/suite/flows"
+printf '# Brief: T\n\n## Muc tieu\n- x\n\n## Yeu cau\n- REQ-01: test\n' > "$t11/suite/brief.md"
+printf '# Page: P\n\n## Section: S\n- `Input` **Q** — note: x | states: default, focus | req: REQ-01\n- `Button` **Go** — note: y | states: default, focus | req: REQ-01\n' > "$t11/suite/pg/pg-tree.md"
+printf '{"page": "P", "values": {"Q": ["abc"], "Go": ["Đi"]}}' > "$t11/suite/pg/pg-data.json"
+printf '<div class="doc" data-wf-page="P">\n' > "$t11/suite/pg/pg-wireframe.html"
+for spec in "sm 360" "md 768" "lg 1366" "xl 1920"; do bp=${spec% *}; w=${spec#* }; printf '<div class="frame" data-wf-breakpoint="%s" data-wf-width="%s"><section class="wsec" data-wf-section="S" data-wf-layout="stack"><div class="comp" data-wf-component="Q" data-wf-states="default, focus"><div class="t">Input</div><div class="l">Q</div><input class="box" type="text" value="abc"><div><span class="chip">default</span> <span class="chip">focus</span> <span class="chip">REQ-01</span></div></div><div class="comp" data-wf-component="Go" data-wf-states="default, focus"><div class="t">Button</div><div class="l">Go</div><button class="box" type="button">Đi</button><div><span class="chip">default</span> <span class="chip">focus</span> <span class="chip">REQ-01</span></div></div><a href="pg-wireframe.html">tuong tu</a></section></div>\n' "$bp" "$w" >> "$t11/suite/pg/pg-wireframe.html"; done
+printf '</div>\n' >> "$t11/suite/pg/pg-wireframe.html"
+python3 "$root/items/wireframe-docs/scripts/verify-pair.py" "$t11/suite/pg/pg-tree.md" "$t11/suite/pg/pg-wireframe.html" "$t11/suite/pg/pg-data.json" >/dev/null 2>&1 && ok "real input value PASS" || bad "real input value FAIL"
+python3 "$root/items/wireframe-docs/scripts/check-suite.py" "$t11/suite" >/dev/null 2>&1 && ok "good self-link PASS" || bad "good self-link FAIL"
+sed -i 's|pg-wireframe.html|missing.html|g' "$t11/suite/pg/pg-wireframe.html"
+if python3 "$root/items/wireframe-docs/scripts/check-suite.py" "$t11/suite" 2>&1 | grep -qi 'link.*khong ton tai'; then ok "broken link FAIL"; else bad "broken link passed"; fi
+python3 -c "import json;p='$t11/suite/pg/pg-data.json';d=json.load(open(p));d['values']['Go']=['lorem ipsum'];json.dump(d,open(p,'w'))"
+if python3 "$root/items/wireframe-docs/scripts/verify-pair.py" "$t11/suite/pg/pg-tree.md" "$t11/suite/pg/pg-wireframe.html" "$t11/suite/pg/pg-data.json" >/dev/null 2>&1; then bad "placeholder passed"; else ok "placeholder FAIL"; fi
+rm -rf "$t11"
+
 rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t1.ver" "$t1.guide"
 echo "---"
 echo "pass=$pass fail=$fail"

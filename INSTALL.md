@@ -18,7 +18,7 @@ also copies an offline snapshot into `.aidomaincraft/` + `.gitignore`.
 |---|---|---|
 | `AGENTS.md` | Marker block added/updated | same |
 | `CLAUDE.md` | Marker block added/updated | same |
-| `.aidomaincraft/` | untouched | Snapshot (`domains/`, `items/`, `CHARTER.md`, `README.md`, `VERIFY.md`, `CHANGELOG.md`) + `install.json` (git-ignored) |
+| `.aidomaincraft/` | untouched | Snapshot (`domains/`, `items/`, `CHARTER.md`, `README.md`, `VERIFY.md`, `CHANGELOG.md`) + `install.json` (git-ignored). A living clone may be added manually at `.aidomaincraft/src/` (see "Local clone" section) |
 | `.gitignore` | untouched | Adds `.aidomaincraft/` |
 
 If `AGENTS.md` or `CLAUDE.md` does not exist, the installer creates a minimal
@@ -185,6 +185,39 @@ git -C "$TARGET" commit -m "chore: add aidomaincraft lookup"
 
 Never commit `.aidomaincraft/` (add it to `.gitignore`; the installer does this
 in `--vendor` mode).
+
+## Local clone for reference and edits (`.aidomaincraft/src/`)
+
+The vendor snapshot is static. For a living copy you can read offline, test
+edits in, and contribute back from, clone the repo inside the ignored folder:
+
+```bash
+TARGET=/path/to/project
+# read-only reference (shallow):
+git clone --depth 1 --branch main https://github.com/NietzsLe/aidomaincraft.git "$TARGET/.aidomaincraft/src"
+# to experiment or contribute (full history):
+git clone --branch main https://github.com/NietzsLe/aidomaincraft.git "$TARGET/.aidomaincraft/src"
+```
+
+Rules:
+
+- One ignore line covers everything: `.aidomaincraft/` (the installer adds it
+  in `--vendor` mode; for reference-only installs add it by hand).
+- Vendor refresh is safe: `upgrade --vendor` only rewrites the snapshot
+  entries (`CHARTER.md`, `domains/`, `items/`, ...), never the `src/` clone.
+- Update with `git -C "$TARGET/.aidomaincraft/src" pull`.
+- Compare the three modes before choosing:
+
+| Mode | Content | Update | Use when |
+|---|---|---|---|
+| Reference-only (default) | 2 marker blocks, needs network | `upgrade` (blocks only) | lightest; source fetched on demand |
+| `--vendor` snapshot | Static copy in `.aidomaincraft/` (git-ignored) | `upgrade --vendor --force` | pinned offline reading |
+| `src/` clone (manual) | Living git repo in `.aidomaincraft/src/` (git-ignored) | `git pull` inside `src/` | full-text reference, trial edits, PRs back |
+
+- Local edits must go back via PR (see `CONTRIBUTING.md` in the
+  `src/` clone) — never leave a diverged local copy as the "real" version.
+- `uninstall` moves the whole `.aidomaincraft/` aside (including `src/`);
+  nothing is deleted, but know where to fetch it back from.
 
 ## Manual fallback (if the script cannot run)
 

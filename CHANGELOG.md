@@ -1,5 +1,11 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.5 — 2026-11-03 (guide clone local `.aidomaincraft/src/`)
+- `INSTALL.md`: thêm mục "Local clone for reference and edits" — lệnh clone (`--depth 1` đọc / full clone để PR) vào `.aidomaincraft/src/`, ignore gộp 1 dòng `.aidomaincraft/`, bảng so sánh 3 chế độ (reference/vendor/clone), quy tắc sửa local phải đi PR + lưu ý `uninstall` move cả thư mục. Đã verify: clone thật vào target rỗng + `.aidomaincraft/` ignored đúng; đọc `install_vendor` xác nhận vendor refresh chỉ đụng từng entry `VENDOR_COPY`, không xóa `src/`.
+- `CONTRIBUTING.md` VI+EN: trỏ từ bước mở PR sang mục Local clone trong `INSTALL.md`.
+- Self-review: lượt 1 đạt (3 chế độ + lệnh + ignore định nghĩa ngay lần đầu, ví dụ lệnh đầy đủ); lượt 2 đạt (mỗi phần cơ chế khác: lệnh vs bảng vs quy tắc + lệnh chạy thật + ngưỡng tick + pitfalls theo mode); lượt 3 đạt với case `agent ở project đã cài muốn sửa 1 item` → clone src → thử sửa → PR kèm session (<3 phút tìm được đường đi).
+- WARN giữ lại: chưa có contributor ngoài dùng luồng này (mới ở mức guide) — bổ sung khi có PR đầu tiên từ src clone.
+
 ## v10.4 — 2026-11-03 (wireframe-docs: cặp tree định nghĩa + wireframe tay 4 khổ, bỏ build.py)
 - Đổi mô hình: tree chỉ định nghĩa phạm vi (không sinh gì), wireframe soạn tay 1 file đúng 4 khung `sm/md/lg/xl` (360/768/1366/1920) với thuộc tính đối chiếu `data-wf-page/section/component(/states/effect/breakpoint/width/layout)`. Xóa `scripts/build.py`; `check.py` độc lập (không import ngang) và FAIL khóa metadata lạ + layout/span/hide sai; thêm `scripts/verify-pair.py` đối chiếu cặp, báo 3 loại lệch (thiếu/thừa/sai states-effect-layout) cho designer quyết, cấm tự sửa ngầm. Sửa đồng bộ VI+EN ở `items/wireframe-docs/README.md` (Áp dụng, Cách hoạt động, Cốt lõi, Tùy chỉnh, Phân công, Định vị, Bản đồ phủ 5 usecase, Hồ sơ, Usecase 1–5, Bước chung, Prompt, Pitfalls, Tham khảo, Tài nguyên), `convention/tree-format.md`, `domains/ui/using-wireframe-docs.md` và `domains/ui/README.md` (routing, định vị, workflow).
 - Ví dụ mẫu thành cặp đôi thật: `examples/tree.md` thêm layout-md/lg/xl + span + effect + hide + `examples/tree.html` viết tay 4 khung gắn đủ `data-wf-*`. Verify đã chạy: `check.py` PASS (2 sections/4 components) + `verify-pair.py` PASS cặp mẫu + 3 case cây lỗi và 3 case cặp lệch (thiếu frame, sai layout, sai states) đều exit 1 đúng + `tests/test.sh` xanh.

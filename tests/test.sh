@@ -136,6 +136,20 @@ grep -q 'git check-ignore' "$root/items/wireframe-docs/README.md" && ok "wirefra
 grep -q '\.tmp/wireframes/' "$root/domains/ui/using-wireframe-docs.md" && ok "using tmp path" || bad "using tmp path missing"
 grep -qF '.tmp/' "$root/.gitignore" && ok "root gitignores tmp" || bad "root tmp not ignored"
 
+# 15. wireframe-docs pair model: no build.py, standalone check, verified pair (v10.4)
+[ ! -e "$root/items/wireframe-docs/scripts/build.py" ] && ok "no build.py" || bad "build.py still present"
+! grep -rn 'scripts/build\.py' "$root/items/wireframe-docs/" "$root/domains/ui/using-wireframe-docs.md" "$root/domains/ui/README.md" 2>/dev/null | grep -v __pycache__ && ok "no build.py invocations" || bad "stale build.py invocations"
+grep -q 'verify-pair' "$root/items/wireframe-docs/README.md" && ok "pair in item" || bad "pair missing in item"
+grep -q 'data-wf-' "$root/items/wireframe-docs/convention/tree-format.md" && ok "wireframe standard" || bad "wireframe standard missing"
+grep -q '4 breakpoints' "$root/items/wireframe-docs/README.md" && ok "4 breakpoints" || bad "4 breakpoints missing"
+python3 "$root/items/wireframe-docs/scripts/check.py" "$root/items/wireframe-docs/examples/tree.md" >/dev/null 2>&1 && ok "example tree PASS" || bad "example tree FAIL"
+python3 "$root/items/wireframe-docs/scripts/verify-pair.py" "$root/items/wireframe-docs/examples/tree.md" "$root/items/wireframe-docs/examples/tree.html" >/dev/null 2>&1 && ok "example pair PASS" || bad "example pair FAIL"
+t8=$(mktemp -d)
+printf '# Page: P\n\n## Section: S\n- `Button` **B** — note: n | states: default\n' > "$t8/t-tree.md"
+printf '<div data-wf-page="Q"><div data-wf-breakpoint="sm" data-wf-width="360"><section data-wf-section="S" data-wf-layout="stack"></section></div></div>' > "$t8/t-wire.html"
+if python3 "$root/items/wireframe-docs/scripts/verify-pair.py" "$t8/t-tree.md" "$t8/t-wire.html" >/dev/null 2>&1; then bad "drifting pair passed"; else ok "drifting pair FAIL"; fi
+rm -rf "$t8"
+
 rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t1.ver"
 echo "---"
 echo "pass=$pass fail=$fail"

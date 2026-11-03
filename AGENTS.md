@@ -17,6 +17,7 @@ Repo này là tra cứu theo usecase. `CHARTER.md` là luật, `VERIFY.md` là c
 - Self-review lặp đến khi đạt theo `VERIFY.md` mục E + F6: 1 FAIL là không merge; WARN phải ghi lý do.
 - Đóng góp bằng PR: xem `CONTRIBUTING.md` (luồng 6 bước + chuẩn PR).
 - Ghi `CHANGELOG.md` (kèm case đã thử + quyết định ở lượt 3).
+- Tiếng Việt có dấu đầy đủ trong mọi nội dung đọc được + commit message (CHARTER v10.9); chỉ code/lệnh/slug anchor/tên file giữ ASCII.
 - Cài sang repo/thư mục khác: `./scripts/install.sh --target /path/to/project --dry-run` rồi `--backup`; xem `INSTALL.md` (gỡ: `UNINSTALL.md`).
 
 Không commit log, token, PII.
@@ -38,6 +39,7 @@ Usability-first lookup repo. `CHARTER.md` is the law, `VERIFY.md` is the pass/fa
 - Iterative self-review per `VERIFY.md` sections E + F6: 1 FAIL blocks merge; WARNs need a recorded reason.
 - Contribute via PR: see `CONTRIBUTING.md` (6-step flow + PR bar).
 - Add a `CHANGELOG.md` entry (with the tried case + decision from pass 3).
+- Vietnamese fully accented in all readable content + commit messages (CHARTER v10.9); only code/commands/slug anchors/file names stay ASCII.
 
 Never commit logs, tokens, or PII.
 

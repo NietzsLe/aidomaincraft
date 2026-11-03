@@ -1,5 +1,11 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.9 — 2026-11-04 (luật tiếng Việt có dấu bắt buộc)
+- `CHARTER.md` bump v10 → v10.9: tiếng Việt có dấu đầy đủ trong mọi nội dung đọc được (docs, CHANGELOG, prompt mẫu, PR, commit message); chỉ code/lệnh/slug anchor/tên file giữ ASCII. Chạm §5 (khung item), §6 (index domain), §6b (using-doc), §7 checklist + mirror EN tương ứng.
+- `AGENTS.md` (mục Tạo mới VI+EN) + `CONTRIBUTING.md` (Chuẩn PR VI+EN: thiếu dấu = yêu cầu sửa) + `VERIFY.md` (mục D VI+EN: VI có dấu + VI/EN đồng nội dung) đồng bộ luật mới; không đụng `templates/` (giữ mẫu điền sạch).
+- Self-review: lượt 1 đạt (luật + phạm vi + ngoại lệ ASCII định nghĩa ngay lần đầu, ví dụ commit message có dấu); lượt 2 đạt (CHARTER giữ luật, AGENTS/CONTRIBUTING/VERIFY chỉ nhắc + link, không copy — đúng nguyên tắc 1 nguồn sự thật; lệnh/test không đổi); lượt 3 đạt với case `agent viết docs không dấu` → VERIFY D FAIL + CONTRIBUTING yêu cầu sửa (<3 phút phát hiện ở review).
+- WARN giữ lại: (1) không check máy tự động (grep không phân biệt văn xuôi không dấu với từ ASCII hợp lệ trong code — giữ ở mức review tay); (2) nội dung cũ chưa rà soát lại toàn bộ, áp dụng từ v10.9 trở đi.
+
 ## v10.8 — 2026-11-03 (wireframe-docs: suite + flow play được + rà soát DoD)
 - Suite thay thư mục ngày-giờ: `.aidomaincraft/.tmp/wireframes/<suite>/` chứa `brief.md` + các `<slug>/` + `flows/` + `player.html`; mỗi suite là 1 hệ độc lập đầy đủ. `convention/brief-template.md` (mẫu brief) + `convention/flows.md` (khuôn flow, DSL `go:`/`Input:`, luật verify) + `convention/constraints.md` (từ điển ràng buộc + checklist dễ sót: visible-on, req, toast, skeleton, empty...).
 - `scripts/check.py`: thêm key `req:` (format REQ-xx) + `visible-on:`; `scripts/verify-pair.py`: đối chiếu `data-wf-visible-on` + luật "khai gì hiện nấy" (mọi token khai báo phải xuất hiện bằng chữ trong block); `scripts/check-guidelines.py`: thêm WARN W-req.
@@ -21,6 +27,7 @@
 - Self-review: lượt 1 đạt (từ vựng/role/catalog/ref/data/schema định nghĩa ngay convention lần đầu, ví dụ checkout điền sẵn); lượt 2 đạt (UC7 cơ chế khác: đánh giá rule + SCORE, không soạn/không diff + lệnh đúng + ngưỡng SCORE 6/6 + pitfalls WARN-vs-FAIL + phân công); lượt 3 đạt với case `wireframe xong cần biết có đạt chuẩn guidelines không` → check-guidelines → SCORE + sửa FAIL (<3 phút).
 - Lượt 4+ (Phe đối thủ): "shadcn đổi tên component thì vocab pin thành nợ?" → đứng vững bằng luật mở rộng cùng commit + check.py đọc file convention (không hardcode) + test đếm ≥60 → PASS. Lượt 5 (Người giữ ngân sách): 0đ, stdlib, offline (ref chỉ check hình thức URL, không fetch) → PASS.
 - WARN giữ lại: (1) mapping role do mình diễn giải từ Radix/shadcn (không phải bảng chính chủ shadcn — ghi rõ nguồn suy luận); (2) chưa case dùng thật.
+ (v10.9: luật tiếng Việt có dấu bắt buộc (CHARTER + AGENTS + CONTRIBUTING + VERIFY))
 
 ## v10.6 — 2026-11-03 (wireframe-docs: output thư mục ngày-giờ + viewer 2 tầng)
 - Đổi vị trí output: `.tmp/wireframes/<slug>-*` → `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<slug>/` (giờ 24h local, trùng phút `-v2`; trùng gốc ignored với vendor/src, khỏi đụng `.gitignore` thêm). Sửa đồng bộ `items/wireframe-docs/README.md` VI+EN (Áp dụng, Cốt lõi thư mục bản + khóa số viewer, Bản đồ phủ Usecase 6, Usecase 6 mới, Bước chung, Prompt, Pitfalls viewer, Tham khảo, Tài nguyên), `convention/tree-format.md` (quy tắc thư mục + bảng biến thể sm/md/lg/xl làm nguồn cho viewer), `domains/ui/using-wireframe-docs.md` VI+EN, root `.gitignore` (thêm `.aidomaincraft/`, bỏ `.tmp/`), `tests/test.sh` §14 (check path mới + viewer tồn tại + số chuẩn khớp convention), `items/REGISTRY.md` (tài nguyên thêm `templates/`).

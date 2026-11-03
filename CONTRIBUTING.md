@@ -18,7 +18,7 @@
 - 1 PR = 1 việc; commit message `vX.Y: <gì> (<phạm vi>)`, vd `v10.1: item nội tại wireframe-docs + cặp UI`.
 - Không commit log, token, PII, file local (`.relay/`, `.test/`, `.aidomaincraft/` đã git-ignored — kiểm tra `git status` trước khi add).
 - Mọi khẳng định số (stars/installs/ngày đo) có nguồn + ngày; thiếu số ghi `chưa xác minh`, cấm đoán.
-- Reviewer merge khi: 0 FAIL theo VERIFY + test xanh + 3 chiều link sống + song ngữ đồng nội dung.
+- Reviewer merge khi: 0 FAIL theo VERIFY + test xanh + 3 chiều link sống + song ngữ đồng nội dung + tiếng Việt có dấu đầy đủ (docs/CHANGELOG/PR/commit message thiếu dấu = yêu cầu sửa).
 
 ### Quy tắc review
 - 1 FAIL là không merge; WARN giữ lại phải có lý do trong CHANGELOG.
@@ -44,7 +44,7 @@
 - 1 PR = 1 job; message `vX.Y: <what> (<scope>)`.
 - Never commit logs, tokens, PII, or local files (`.relay/`, `.test/`, `.aidomaincraft/` are git-ignored — check `git status` before adding).
 - Every number (stars/installs/dates) sourced + dated; missing numbers → `unverified`, never guessed.
-- Merge when: 0 VERIFY FAILs + green tests + live 3-way links + VI/EN in sync.
+- Merge when: 0 VERIFY FAILs + green tests + live 3-way links + VI/EN in sync + Vietnamese fully accented (missing accents in docs/CHANGELOG/PR/commit messages = change requested).
 
 ### Review rules
 - 1 FAIL blocks merge; kept WARNs need a CHANGELOG reason.

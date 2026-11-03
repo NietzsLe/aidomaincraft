@@ -136,8 +136,10 @@ Kiểu + behavior + effect/reduced/ref khóa theo 3 tài liệu sau (không tự
    quyết — máy chỉ kiểm tra đối chiếu, cảm quan giao diện thuộc về designer (xem phân công).
 8. Snippet review bắt buộc: copy nguyên khối trong `templates/review-snippet.html`
    vào `<head>` của wireframe (xem `examples/tree.html`). Khi file mở trong viewer
-   (iframe), hoặc URL có `?review`, snippet tự ẩn chips + cho click component để xem
-   card thông tin (đọc từ `data-wf-*`, không chiếm layout). Mở trực tiếp để soạn thì
+   (iframe), hoặc URL có `?review`/`?bp=<khổ>`, snippet tự ẩn chips + cho click
+   component để xem card thông tin (đọc từ `data-wf-*`, không chiếm layout).
+   `viewer.html` tự gắn `?bp=<khổ đang xem>` vào iframe nên chế độ xem đơn/lưới chỉ
+   hiện đúng khung khổ đó (thay vì chồng cả 4 khung). Mở trực tiếp để soạn thì
    chips vẫn hiện. Thiếu snippet = review xấu đi nhưng không FAIL máy (ghi vào
    pitfalls trình designer); `tests/test.sh` kiểm tra file mẫu có snippet.
 

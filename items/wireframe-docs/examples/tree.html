@@ -44,6 +44,7 @@ body.wf-review [data-wf-component]:hover{outline:2px dashed #71717a;outline-offs
       if (window !== window.top) return true;
     } catch (e) { return true; }
     if (/[?&]review\b/.test(location.search)) return true;
+    if (/[?&]bp=(sm|md|lg|xl)\b/.test(location.search)) return true;
     if (document.body && document.body.classList.contains("wf-review")) return true;
     return false;
   }
@@ -58,6 +59,16 @@ body.wf-review [data-wf-component]:hover{outline:2px dashed #71717a;outline-offs
   function closeCard() {
     var c = document.getElementById("wf-card");
     if (c) c.remove();
+  }
+  function filterBp() {
+    var m = /[?&]bp=(sm|md|lg|xl)\b/.exec(location.search);
+    if (!m) return;
+    var keep = m[1];
+    var frames = document.querySelectorAll("[data-wf-breakpoint]");
+    if (!frames.length) return;
+    Array.prototype.forEach.call(frames, function (fr) {
+      if (fr.getAttribute("data-wf-breakpoint") !== keep) fr.style.display = "none";
+    });
   }
   function openCard(el) {
     closeCard();
@@ -85,7 +96,9 @@ body.wf-review [data-wf-component]:hover{outline:2px dashed #71717a;outline-offs
     document.body.appendChild(card);
   }
   document.addEventListener("DOMContentLoaded", function () {
-    if (!reviewMode() || !document.body) return;
+    if (!document.body) return;
+    filterBp();
+    if (!reviewMode()) return;
     document.body.classList.add("wf-review");
     document.body.addEventListener("click", function (ev) {
       var el = ev.target.closest ? ev.target.closest("[data-wf-component]") : null;
@@ -99,6 +112,7 @@ body.wf-review [data-wf-component]:hover{outline:2px dashed #71717a;outline-offs
   });
 })();
 </script>
+
 </head>
 <body><div class="doc" data-wf-page="Checkout mẫu">
 <h1>Checkout mẫu</h1>

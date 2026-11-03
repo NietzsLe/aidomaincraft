@@ -108,10 +108,13 @@
 /*__FRAMES_DATA__*/
 /*__META_DATA__*/
 /*__DATA_DATA__*/
+/*__TITLE_DATA__*/
 var FLOWS = window.__FLOWS__ || [];
 var FRAMES = window.__FRAMES__ || {};   // page -> {bp: html}
 var META = window.__META__ || {};       // page -> {label: {type,note,states,effect,behavior,reduced,visible_on,req}}
 var DATA = window.__DATA__ || {};       // page -> {label: value|[values]}
+var TITLES = window.__PAGE_TITLES__ || {}; // page -> "# Page:" display name
+function pageTitle(p) { return TITLES[p] || p; }
 var BPS = ["sm", "md", "lg", "xl"];
 var BP_PX = { sm: 360, md: 768, lg: 1366, xl: 1920 };
 var state = { view: "list", flow: -1, step: 0, bp: "sm", auto: false, timer: null, history: [], page: null };
@@ -161,7 +164,7 @@ function renderList() {
     d.className = "card";
     d.innerHTML = thumb(frameHtml(first.page || "", "sm"), 360, 200)
       + '<div class="info"><b>' + esc(f.name) + '</b><div>' + f.steps.length + ' steps · entry: '
-      + esc(first.page || "?") + '</div><div>' + esc(f.desc || "") + "</div></div>";
+      + esc(pageTitle(first.page || "?")) + '</div><div>' + esc(f.desc || "") + "</div></div>";
     d.onclick = function () { openFlow(i); };
     c.appendChild(d);
   });
@@ -177,7 +180,7 @@ function openFlow(i) {
     d.className = "card";
     d.innerHTML = thumb(frameHtml(s.page, state.bp), BP_PX[state.bp] || 360, 200)
       + '<div class="info"><b>Step ' + (idx + 1) + ': ' + esc(s.title) + '</b><div>Page: '
-      + esc(s.page || "?") + (s.action ? " · " + esc(s.action[0] + " " + s.action[1]) : "")
+      + esc(pageTitle(s.page || "?")) + (s.action ? " · " + esc(s.action[0] + " " + s.action[1]) : "")
       + "</div><div>" + esc(s.expect || "") + "</div></div>";
     d.onclick = function () { playStep(idx); };
     c.appendChild(d);
@@ -195,28 +198,32 @@ function renderStage() {
   var w = BP_PX[state.bp] || 360, h = frameHeight(state.bp);
   var sc = fitBox($("stage-wrap"), stage, w, h);
   var bar = "Step " + (state.step + 1) + "/" + FLOWS[state.flow].steps.length
-    + ' · <b>' + esc(s.title) + "</b> · Page: " + esc(s.page) + " · " + state.bp
+    + ' · <b>' + esc(s.title) + "</b> · Page: " + esc(pageTitle(s.page)) + " · " + state.bp
     + " " + w + "px · thu " + Math.round(sc * 100) + "% (toàn trang)";
   if (s.action) bar += ' · <span class="act">' + esc(s.action[0] + " " + s.action[1]) + "</span>";
   if (s.expect) bar += "<br>Expect: " + esc(s.expect);
   $("stepbar").innerHTML = bar;
-  $("play-cap").textContent = "Page " + s.page + " · " + state.bp + " " + w + "px · frame ảo thu " + Math.round(sc * 100) + "% · click component để xem thông tin";
+  $("play-cap").textContent = "Page " + pageTitle(s.page) + " · " + state.bp + " " + w + "px · frame ảo thu " + Math.round(sc * 100) + "% · click component để xem thông tin";
   markAction(s, sc);
   showConstraints(s);
 }
 function markAction(s, sc) {
   document.querySelectorAll(".action-tag").forEach(function (t) { t.remove(); });
-  if (!s.action) return;
-  var t = findTarget(s.action[1]);
+  var spec = s.action ? { text: "▸ " + s.action[0] + " " + s.action[1], label: s.action[1] }
+    : (s.inputs && s.inputs[0]) ? { text: "▸ Nhập " + s.inputs[0][0], label: s.inputs[0][0] } : null;
+  if (!spec) return;
+  var t = findTarget(spec.label);
   if (!t) return;
   t.el.classList.add("wf-press");
   var x = 0, y = 0, el = t.el, stage = $("stage");
   while (el && el !== stage) { x += el.offsetLeft || 0; y += el.offsetTop || 0; el = el.offsetParent; }
   var tag = document.createElement("div");
   tag.className = "action-tag";
-  tag.textContent = "▸ " + s.action[0] + " " + s.action[1];
+  tag.textContent = spec.text;
+  var ty = y * sc - 28;
+  if (ty < 2) ty = (y + (t.el.offsetHeight || 24)) * sc + 4;
   tag.style.left = Math.max(4, x * sc) + "px";
-  tag.style.top = Math.max(4, y * sc - 28) + "px";
+  tag.style.top = ty + "px";
   $("stage-wrap").appendChild(tag);
 }
 function findTarget(label) {
@@ -346,7 +353,7 @@ function showOverlay(s, kind, label) {
   var rows = [["Kiểu", meta.type || "?"], ["Trạng thái", (meta.states || []).join(", ") || "—"],
     ["Hành vi", (meta.behavior || []).join(", ") || kind], ["Ghi chú", meta.note || "—"]];
   var h = "<h3>" + esc(kind) + ": " + esc(label) + "</h3>"
-    + '<p style="font-size:12px;color:#71717a;margin:0 0 6px">Trang nền "' + esc(s.page)
+    + '<p style="font-size:12px;color:#71717a;margin:0 0 6px">Trang nền "' + esc(pageTitle(s.page))
     + '" vẫn giữ nguyên phía sau — dialog phủ lên toàn trang.</p><dl>';
   rows.forEach(function (r) { h += "<dt>" + r[0] + "</dt><dd>" + esc(String(r[1])) + "</dd>"; });
   h += '</dl><button class="btn" id="ov-close">Đóng / quay lại (go: back)</button>';
@@ -453,7 +460,7 @@ function renderPages() {
     var d = document.createElement("div");
     d.className = "card";
     d.innerHTML = thumb(frameHtml(p, "sm"), 360, 200)
-      + '<div class="info"><b>' + esc(p) + '</b><div>' + bps.join(" · ")
+      + '<div class="info"><b>' + esc(pageTitle(p)) + '</b><div>' + bps.join(" · ")
       + " · toàn trang thu nhỏ</div></div>";
     d.onclick = function () { openPage(p); };
     c.appendChild(d);
@@ -463,10 +470,10 @@ function renderPages() {
 }
 function openPage(p) {
   state.page = p;
-  $("page-title").textContent = "Page: " + p;
+  $("page-title").textContent = "Page: " + pageTitle(p);
   renderPageDetail();
   show("view-pagedetail");
-  $("crumb").textContent = "Page: " + p;
+  $("crumb").textContent = "Page: " + pageTitle(p);
 }
 function renderPageDetail() {
   var p = state.page;
@@ -475,7 +482,7 @@ function renderPageDetail() {
   stage.innerHTML = html;
   var w = BP_PX[state.bp] || 360;
   var sc = fitBox($("page-wrap"), stage, w, frameHeight(state.bp));
-  $("page-cap").textContent = "Page " + p + " · " + state.bp + " " + w + "px · frame ảo thu "
+  $("page-cap").textContent = "Page " + pageTitle(p) + " · " + state.bp + " " + w + "px · frame ảo thu "
     + Math.round(sc * 100) + "% · click component để xem thông tin";
 }
 function showConstraints() {

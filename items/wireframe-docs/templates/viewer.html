@@ -119,7 +119,7 @@
     $("overview").hidden = true; $("stage").hidden = false; $("cap").hidden = false;
     var f = $("frame");
     var sc = fitScale(state.width);
-    f.src = file;
+    f.src = file + (file.indexOf("?") >= 0 ? "&" : "?") + "bp=" + state.type;
     f.style.width = state.width + "px"; f.style.height = FRAME_H + "px";
     f.style.transform = "scale(" + sc + ")";
     $("framebox").style.width = Math.floor(state.width * sc) + "px";
@@ -146,7 +146,7 @@
       var tag = document.createElement("div");
       tag.className = "tag"; tag.textContent = k + " · " + w + "px";
       var fr = document.createElement("iframe");
-      fr.title = k; fr.src = file;
+      fr.title = k; fr.src = file + (file.indexOf("?") >= 0 ? "&" : "?") + "bp=" + k;
       fr.style.width = w + "px"; fr.style.height = FRAME_H + "px";
       fr.style.transform = "scale(" + sc + ")";
       cell.appendChild(tag); cell.appendChild(fr);

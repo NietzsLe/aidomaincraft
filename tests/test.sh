@@ -231,6 +231,11 @@ if command -v node >/dev/null 2>&1; then
 fi
 grep -q 'review-snippet' "$root/items/wireframe-docs/convention/tree-format.md" && ok "convention snippet rule" || bad "convention rule missing"
 grep -q 'review-snippet' "$root/items/wireframe-docs/README.md" && ok "item docs snippet" || bad "item docs missing"
+grep -q 'bp=" + state.type\|bp=" + k' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewer bp param" || bad "viewer bp missing"
+grep -q 'data-wf-breakpoint' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet bp filter" || bad "snippet bp filter missing"
+grep -q '__TITLE_DATA__\|PAGE_TITLES' "$root/items/wireframe-docs/templates/player.template.html" && ok "player page titles" || bad "titles missing"
+grep -q 'TITLE_DATA' "$root/items/wireframe-docs/scripts/build-flow.py" && ok "build emits titles" || bad "build titles missing"
+grep -q 'Nhập ' "$root/items/wireframe-docs/templates/player.template.html" && ok "player input tag" || bad "input tag missing"
 
 rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t1.ver" "$t1.guide"
 echo "---"

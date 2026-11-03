@@ -18,9 +18,10 @@
 
 ### Áp dụng (không cài từ ngoài)
 - Điều kiện: Python 3.8+ (thư viện chuẩn only, không dependency).
-- Viết tree: copy `examples/tree.md`, sửa theo `convention/tree-format.md` (3 loại dòng: `# Page:`, `## Section:`, `- \`Kiểu\` **Nhãn** — note/states`).
-- Kiểm tra: `python3 scripts/check.py <tree.md>` (exit 0 + dòng PASS mới đạt).
-- Render: `python3 scripts/build.py <tree.md> -o <trang>.html` rồi mở browser xem.
+- Vị trí output: mọi tree/HTML nháp viết vào `.tmp/wireframes/` của dự án đích, không viết ra root để tránh commit nhầm. Tạo thư mục + đảm bảo ignored trước khi viết: `mkdir -p .tmp/wireframes`, kiểm tra `.gitignore` đã có dòng `.tmp/` chưa (thiếu thì thêm), verify bằng `git check-ignore -v .tmp/wireframes/<file>`.
+- Viết tree: copy `examples/tree.md` vào `.tmp/wireframes/<tên-trang>-tree.md`, sửa theo `convention/tree-format.md` (3 loại dòng: `# Page:`, `## Section:`, `- \`Kiểu\` **Nhãn** — note/states`).
+- Kiểm tra: `python3 scripts/check.py .tmp/wireframes/<tên-trang>-tree.md` (exit 0 + dòng PASS mới đạt).
+- Render: `python3 scripts/build.py .tmp/wireframes/<tên-trang>-tree.md -o .tmp/wireframes/<tên-trang>.html` rồi mở browser xem.
 - Kiểm tra đã chạy 03/11/2026: `check.py examples/tree.md` → `PASS: page 'Checkout mẫu' · 2 sections · 4 components`; `build.py` → `examples/tree.html` (mở được, đủ số thứ tự + states); 3 case lỗi (thiếu section, section rỗng, component trước section) đều exit 1 đúng.
 
 ### Cách item hoạt động
@@ -65,9 +66,9 @@
 - Khi dùng: có brief cấu trúc (page/sections/components) cần đóng thành tree.
 - Khi bỏ qua: tree đã có chỉ cần check/render → Usecase 2/3; cấu trúc đã chốt cần build chi tiết → hallmark.
 - Cơ chế khác các usecase khác ở đâu: duy nhất soạn markdown theo convention, chưa chạy script nào; các usecase khác chạy `check.py`/`build.py` hoặc đọc để build.
-- Lệnh copy-paste: `cp items/wireframe-docs/examples/tree.md my-page-tree.md` rồi sửa theo `convention/tree-format.md`.
+- Lệnh copy-paste: `mkdir -p .tmp/wireframes && cp items/wireframe-docs/examples/tree.md .tmp/wireframes/my-page-tree.md` rồi sửa theo `convention/tree-format.md`.
 - Ngưỡng số cần đạt: đúng 1 `# Page:`, ≥1 section, mỗi section ≥1 component đúng cú pháp `- \`Kiểu\` **Nhãn**`.
-- Ví dụ input-output (minh họa): input "trang Pricing 3 gói" → output `pricing-tree.md` (`# Page: Pricing` + 2 sections + 5 components có states).
+- Ví dụ input-output (minh họa): input "trang Pricing 3 gói" → output `.tmp/wireframes/pricing-tree.md` (`# Page: Pricing` + 2 sections + 5 components có states).
 - Pitfalls riêng: dùng heading lạ (`###`) cho section (parser bỏ qua → section mất — phải `## Section:`); quên backtick/bold ở component (dòng bị bỏ qua im lặng).
 - Phân công usecase này: agent chính soạn tree (shortlist cấu trúc, user pick mới chốt); chưa cần claude; verify bằng đọc lại + sang Usecase 2.
 
@@ -75,43 +76,43 @@
 - Khi dùng: tree đã soạn cần kiểm tra trước khi trình.
 - Khi bỏ qua: chỉ đọc để build (tin tree cũ đã PASS) → Usecase 4.
 - Cơ chế khác các usecase khác ở đâu: duy nhất chạy `check.py` lấy PASS/FAIL, không sinh file mới.
-- Lệnh copy-paste: `python3 scripts/check.py my-page-tree.md` (chạy trong `items/wireframe-docs/`).
+- Lệnh copy-paste: `python3 scripts/check.py .tmp/wireframes/my-page-tree.md` (chạy trong `items/wireframe-docs/`).
 - Ngưỡng số cần đạt: exit 0 + dòng `PASS: page '...' · N sections · M components`; exit 1 = FAIL, sửa theo error rồi chạy lại.
-- Ví dụ input-output (minh họa): input `examples/tree.md` → output `PASS: page 'Checkout mẫu' · 2 sections · 4 components · types: Button, Link, TextInput`.
-- Pitfalls riêng: tưởng cảnh báo là PASS (chỉ exit 0 mới đạt); check file sai đường dẫn (báo file not found — kiểm tra cwd).
+- Ví dụ input-output (minh họa): input `.tmp/wireframes/my-page-tree.md` (copy từ `examples/tree.md`) → output `PASS: page 'Checkout mẫu' · 2 sections · 4 components · types: Button, Link, TextInput`.
+- Pitfalls riêng: tưởng cảnh báo là PASS (chỉ exit 0 mới đạt); check file sai đường dẫn (báo file not found — kiểm tra cwd); viết tree ngoài `.tmp/wireframes/` (rơi vào git — phải chuyển vào `.tmp/wireframes/`).
 - Phân công usecase này: agent chính chạy + trình dòng PASS; không cần claude; verify bằng exit code.
 
 ### Usecase con 3: render HTML review
 - Khi dùng: tree đã PASS cần cho designer/mắt người xem.
 - Khi bỏ qua: chỉ cần agent đọc → Usecase 4 (không cần render).
 - Cơ chế khác các usecase khác ở đâu: duy nhất sinh file HTML từ tree; các usecase khác không sinh file.
-- Lệnh copy-paste: `python3 scripts/build.py my-page-tree.md -o my-page.html` rồi mở browser.
+- Lệnh copy-paste: `python3 scripts/build.py .tmp/wireframes/my-page-tree.md -o .tmp/wireframes/my-page.html` rồi mở browser.
 - Ngưỡng số cần đạt: file HTML mở được + đủ số thứ tự liên tục + states hiển thị dạng chip + footer đếm đúng sections/components.
-- Ví dụ input-output (minh họa): input `examples/tree.md` → output `examples/tree.html` (2 fieldset section, 4 box đánh số 01–04).
-- Pitfalls riêng: sửa HTML render thay vì sửa tree (FAIL cốt lõi — render lại là mất); mở file bằng viewer không chạy CSS ngoài (HTML self-contained, không cần server).
+- Ví dụ input-output (minh họa): input `.tmp/wireframes/my-page-tree.md` (copy từ `examples/tree.md`) → output `.tmp/wireframes/my-page.html` (2 fieldset section, 4 box đánh số 01–04).
+- Pitfalls riêng: sửa HTML render thay vì sửa tree (FAIL cốt lõi — render lại là mất); mở file bằng viewer không chạy CSS ngoài (HTML self-contained, không cần server); render HTML ra ngoài `.tmp/wireframes/` (rơi vào git — phải giữ trong `.tmp/` đã ignored).
 - Phân công usecase này: agent chính render + mở kiểm tra kỹ thuật; giao claude nhận xét bố cục/nhãn (kèm file HTML + brief); verify bằng HTML + ý kiến reviewer.
 
 ### Usecase con 4: agent đọc tree để build
 - Khi dùng: tree đã chốt, agent khác (hoặc lượt sau) build UI chi tiết từ tree.
 - Khi bỏ qua: cấu trúc chưa chốt → quay Usecase 1.
 - Cơ chế khác các usecase khác ở đâu: không chạy script nào — đọc `tree.md` trực tiếp (markdown là tài liệu agent-đọc-được sẵn).
-- Lệnh copy-paste: đọc file `my-page-tree.md` (parser bỏ qua dòng nào thì agent cũng bỏ qua dòng đó).
+- Lệnh copy-paste: đọc file `.tmp/wireframes/my-page-tree.md` (parser bỏ qua dòng nào thì agent cũng bỏ qua dòng đó).
 - Ngưỡng số cần đạt: nêu được page + đủ sections + components kèm states/note; không nêu được = tree thiếu, quay về Usecase 1.
-- Ví dụ input-output (minh họa): input `examples/tree.md` → output "page Checkout mẫu, 2 sections, CTA `Button Đặt hàng` states default/hover/disabled" rồi sang hallmark build.
+- Ví dụ input-output (minh họa): input `.tmp/wireframes/my-page-tree.md` (copy từ `examples/tree.md`) → output "page Checkout mẫu, 2 sections, CTA `Button Đặt hàng` states default/hover/disabled" rồi sang hallmark build.
 - Pitfalls riêng: đọc HTML render thay vì tree (mất note/states đầy đủ); tree ghi chú mập mờ trong dòng tự do mà agent bỏ qua (thông tin quan trọng phải vào note:/states:).
 - Phân công usecase này: agent chính đọc + tóm cấu trúc (user xác nhận trước khi build); giao claude khi cần đối chiếu visual; verify bằng tóm tắt khớp tree.
 
 ### Các bước chung
 1. Shortlist cấu trúc (page/sections/components) qua question tool, user pick mới viết tree.
-2. Viết `tree.md` theo convention → `check.py` tới PASS → `build.py` render (nếu cần mắt người).
+2. Tạo `.tmp/wireframes/` + đảm bảo `.gitignore` đã có `.tmp/` (thiếu thì thêm, verify `git check-ignore -v`), rồi viết `tree.md` theo convention → `check.py` tới PASS → `build.py` render (nếu cần mắt người).
 3. Trình tree + PASS + HTML; visual giao claude nhận xét.
 4. Chốt tree rồi mới sang build chi tiết (hallmark) — tree đổi thì render lại, không sửa HTML.
 
 ### Prompt mẫu
-- "Viết tree.md cho trang Pricing 3 gói theo wireframe-docs (2 sections, CTA có đủ states), chạy check.py tới PASS."
-- "Render examples/tree.md ra HTML và cho biết đủ 4 components đánh số + states không."
-- "Đọc my-page-tree.md, tóm cấu trúc (page/sections/CTA/states) để tao xác nhận trước khi build hallmark."
-- Ví dụ điền sẵn: "Viết tree cho trang Checkout (Form + Hành động, CTA `Button Đặt hàng` states default/hover/disabled), check PASS rồi render HTML."
+- "Viết tree.md cho trang Pricing 3 gói theo wireframe-docs vào `.tmp/wireframes/pricing-tree.md` (2 sections, CTA có đủ states), chạy check.py tới PASS."
+- "Render `.tmp/wireframes/my-page-tree.md` ra HTML trong `.tmp/wireframes/` và cho biết đủ 4 components đánh số + states không."
+- "Đọc `.tmp/wireframes/my-page-tree.md`, tóm cấu trúc (page/sections/CTA/states) để tao xác nhận trước khi build hallmark."
+- Ví dụ điền sẵn: "Viết tree cho trang Checkout vào `.tmp/wireframes/checkout-tree.md` (Form + Hành động, CTA `Button Đặt hàng` states default/hover/disabled), check PASS rồi render HTML."
 
 ### Pitfalls
 - Sửa HTML render thay vì sửa tree (render lại là mất — FAIL cốt lõi).
@@ -119,6 +120,7 @@
 - Component thiếu backtick/bold (dòng bị bỏ qua, check vẫn PASS nhưng thiếu món).
 - Thông tin quan trọng để trong dòng tự do (agent + parser đều bỏ qua — phải đưa vào note:/states:).
 - Trình tree chưa qua `check.py` (không có dòng PASS = chưa dùng hệ).
+- Viết tree/HTML ngoài `.tmp/wireframes/` hoặc quên kiểm tra `.gitignore` (file nháp rơi vào git — phải giữ trong `.tmp/` đã ignored, verify `git check-ignore -v`).
 
 ### Tham khảo sử dụng (bằng chứng nội bộ — item nội tại v0)
 - Relay log session `opencode-261103-071445-d82` (03/11/2026): `check.py` PASS + `build.py` render `examples/tree.html` + 3 case lỗi exit 1 đúng → xác nhận tài nguyên chạy được.
@@ -162,9 +164,10 @@
 
 ### Apply (nothing installed from outside)
 - Prerequisite: Python 3.8+ (stdlib only, zero dependencies).
-- Write a tree: copy `examples/tree.md`, follow `convention/tree-format.md` (3 line kinds).
-- Check: `python3 scripts/check.py <tree.md>` (exit 0 + PASS line bar).
-- Render: `python3 scripts/build.py <tree.md> -o <page>.html`, open in a browser.
+- Output location: write every draft tree/HTML under the target project's `.tmp/wireframes/`, never at the repo root to avoid accidental commits. Create + ensure ignored first: `mkdir -p .tmp/wireframes`, check `.gitignore` already lists `.tmp/` (add it when missing), verify with `git check-ignore -v .tmp/wireframes/<file>`.
+- Write a tree: copy `examples/tree.md` to `.tmp/wireframes/<page>-tree.md`, follow `convention/tree-format.md` (3 line kinds).
+- Check: `python3 scripts/check.py .tmp/wireframes/<page>-tree.md` (exit 0 + PASS line bar).
+- Render: `python3 scripts/build.py .tmp/wireframes/<page>-tree.md -o .tmp/wireframes/<page>.html`, open in a browser.
 - Verified 03/11/2026: `check.py` PASS (2 sections, 4 components); `build.py` wrote valid HTML; 3 invalid cases exit 1 correctly.
 
 ### How the item works
@@ -207,49 +210,50 @@
 
 ### Sub-usecase 1: write a new tree.md
 - When to use: a structure brief needs freezing into a tree. Skip: tree exists → 2/3; structure settled → hallmark.
-- Copy-paste: `cp items/wireframe-docs/examples/tree.md my-page-tree.md`, edit per `convention/tree-format.md`.
+- Copy-paste: `mkdir -p .tmp/wireframes && cp items/wireframe-docs/examples/tree.md .tmp/wireframes/my-page-tree.md`, edit per `convention/tree-format.md`.
 - Numeric bar: exactly one `# Page:`, ≥1 section, each ≥1 component in ``- `Type` **Label**`` syntax.
-- Input-output example (illustrative): "3-tier Pricing page" → `pricing-tree.md` (1 page + 2 sections + 5 stateful components).
-- Own pitfalls: `###` headings for sections (silently ignored — must be `## Section:`).
+- Input-output example (illustrative): "3-tier Pricing page" → `.tmp/wireframes/pricing-tree.md` (1 page + 2 sections + 5 stateful components).
+- Own pitfalls: `###` headings for sections (silently ignored — must be `## Section:`); writing the tree outside `.tmp/wireframes/` (leaks into git — keep it under ignored `.tmp/`).
 - Work split: main agent drafts (user picks structure); verify by re-read → Sub-usecase 2.
 
 ### Sub-usecase 2: validate tree.md
-- Copy-paste: `python3 scripts/check.py my-page-tree.md` (inside `items/wireframe-docs/`).
+- Copy-paste: `python3 scripts/check.py .tmp/wireframes/my-page-tree.md` (inside `items/wireframe-docs/`).
 - Numeric bar: exit 0 + `PASS: page '...' · N sections · M components`.
-- Example: `examples/tree.md` → `PASS: page 'Checkout mẫu' · 2 sections · 4 components`.
-- Own pitfalls: mistaking warnings for PASS (only exit 0 counts).
+- Example: `.tmp/wireframes/my-page-tree.md` (copied from `examples/tree.md`) → `PASS: page 'Checkout mẫu' · 2 sections · 4 components`.
+- Own pitfalls: mistaking warnings for PASS (only exit 0 counts); wrong path (file not found — check cwd); tree written outside `.tmp/wireframes/` (leaks into git).
 - Work split: main agent runs + presents; no claude needed.
 
 ### Sub-usecase 3: render HTML for review
-- Copy-paste: `python3 scripts/build.py my-page-tree.md -o my-page.html`, open in browser.
+- Copy-paste: `python3 scripts/build.py .tmp/wireframes/my-page-tree.md -o .tmp/wireframes/my-page.html`, open in browser.
 - Numeric bar: opens + continuous numbering + state chips + correct footer counts.
-- Example: `examples/tree.md` → `examples/tree.html` (2 fieldsets, boxes 01–04).
-- Own pitfalls: editing rendered HTML instead of the tree (core FAIL — re-renders wipe it).
+- Example: `.tmp/wireframes/my-page-tree.md` (copied from `examples/tree.md`) → `.tmp/wireframes/my-page.html` (2 fieldsets, boxes 01–04).
+- Own pitfalls: editing rendered HTML instead of the tree (core FAIL — re-renders wipe it); rendering outside `.tmp/wireframes/` (leaks into git — keep it under ignored `.tmp/`).
 - Work split: main agent renders + technical check; claude judges layout/labels.
 
 ### Sub-usecase 4: agent reads the tree to build
-- No scripts run — read `tree.md` directly (stray lines ignored by agents too).
+- No scripts run — read `.tmp/wireframes/my-page-tree.md` directly (stray lines ignored by agents too).
 - Numeric bar: state page + sections + components with states/notes; otherwise back to Sub-usecase 1.
-- Example: `examples/tree.md` → "Checkout mẫu, 2 sections, CTA `Button Đặt hàng` default/hover/disabled" → hallmark build.
+- Example: `.tmp/wireframes/my-page-tree.md` (copied from `examples/tree.md`) → "Checkout mẫu, 2 sections, CTA `Button Đặt hàng` default/hover/disabled" → hallmark build.
 - Own pitfalls: reading rendered HTML instead of the tree (notes/states lost); key info in free prose (must be in note:/states:).
 - Work split: main agent reads + summarizes (user confirms before building).
 
 ### Shared steps
 1. Shortlist structure via question tool; write only after user picks.
-2. Write per convention → `check.py` to PASS → `build.py` when human eyes needed.
+2. Create `.tmp/wireframes/` + ensure `.gitignore` lists `.tmp/` (add when missing, verify `git check-ignore -v`), then write per convention → `check.py` to PASS → `build.py` when human eyes needed.
 3. Present tree + PASS + HTML; visuals go to claude.
 4. Settle the tree before detail builds; re-render on tree change, never edit HTML.
 
 ### Sample prompts
-- "Write a tree.md for a 3-tier Pricing page per wireframe-docs, check.py to PASS."
-- "Render examples/tree.md and confirm 4 numbered components + states."
-- "Read my-page-tree.md, summarize structure for my confirmation before the hallmark build."
+- "Write a tree.md for a 3-tier Pricing page per wireframe-docs into `.tmp/wireframes/pricing-tree.md`, check.py to PASS."
+- "Render `.tmp/wireframes/my-page-tree.md` under `.tmp/wireframes/` and confirm 4 numbered components + states."
+- "Read `.tmp/wireframes/my-page-tree.md`, summarize structure for my confirmation before the hallmark build."
 
 ### Pitfalls
 - Editing rendered HTML instead of the tree (core FAIL).
 - `###` sections, backtick/bold-less components (silently skipped lines).
 - Key info in free prose (invisible to parser + agents).
 - Presenting an unchecked tree (no PASS = not used).
+- Writing trees/HTML outside `.tmp/wireframes/` or skipping the `.gitignore` check (drafts leak into git — keep them under ignored `.tmp/`, verify `git check-ignore -v`).
 
 ### Usage references (internal evidence — v0 intrinsic item)
 - Relay session `opencode-261103-071445-d82` (03/11/2026): PASS + render + 3 invalid cases exit 1 → resources run.

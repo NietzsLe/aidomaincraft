@@ -130,6 +130,12 @@ while IFS= read -r line; do
   esac
 done < "$reg"
 
+# 14. wireframe-docs drafts stay under ignored .tmp/wireframes (v10.3)
+grep -q '\.tmp/wireframes/' "$root/items/wireframe-docs/README.md" && ok "wireframe tmp path" || bad "wireframe tmp path missing"
+grep -q 'git check-ignore' "$root/items/wireframe-docs/README.md" && ok "wireframe gitignore check" || bad "wireframe gitignore check missing"
+grep -q '\.tmp/wireframes/' "$root/domains/ui/using-wireframe-docs.md" && ok "using tmp path" || bad "using tmp path missing"
+grep -qF '.tmp/' "$root/.gitignore" && ok "root gitignores tmp" || bad "root tmp not ignored"
+
 rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t1.ver"
 echo "---"
 echo "pass=$pass fail=$fail"

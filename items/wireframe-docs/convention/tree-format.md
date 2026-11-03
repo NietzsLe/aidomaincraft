@@ -26,15 +26,17 @@
 
 ## Bốn khổ màn hình khóa cứng
 
-| Mã | Khổ | Rộng tham chiếu |
-|---|---|---|
-| `sm` | mobile | 360 |
-| `md` | tablet | 768 |
-| `lg` | desktop thường (laptop) | 1366 |
-| `xl` | desktop lớn (PC để bàn) | 1920 |
+| Mã | Khổ | Rộng tham chiếu | Cao viewport |
+|---|---|---|---|
+| `sm` | mobile | 360 | 740 |
+| `md` | tablet | 768 | 1024 |
+| `lg` | desktop thường (laptop) | 1366 | 768 |
+| `xl` | desktop lớn (PC để bàn) | 1920 | 1080 |
 
 Không tự đặt mã khổ khác. Mỗi khung trong wireframe gắn `data-wf-breakpoint`
-và `data-wf-width` đúng số trên.
+và `data-wf-width` đúng số trên. Cao viewport là chiều cao khung ảo khi review
+(viewer/player thu vừa màn hình theo đúng tỉ lệ này); nội dung wireframe vẫn
+soạn tự do theo chiều dọc, canvas co lại (`max-width:100%`) chứ không cắt.
 
 ## Biến thể preview theo khổ (cho `templates/viewer.html`)
 
@@ -136,8 +138,15 @@ Kiểu + behavior + effect/reduced/ref khóa theo 3 tài liệu sau (không tự
    quyết — máy chỉ kiểm tra đối chiếu, cảm quan giao diện thuộc về designer (xem phân công).
 8. Snippet review bắt buộc: copy nguyên khối trong `templates/review-snippet.html`
    vào `<head>` của wireframe (xem `examples/tree.html`). Khi file mở trong viewer
-   (iframe), hoặc URL có `?review`/`?bp=<khổ>`, snippet tự ẩn chips + cho click
-   component để xem card thông tin (đọc từ `data-wf-*`, không chiếm layout).
+   (iframe), hoặc URL có `?review`/`?bp=<khổ>`, snippet tự ẩn chips + caption Kiểu
+   (`.t`) + tiêu đề khung (`h2` theo khổ) + tiêu đề và đoạn mô tả file (`h1`,
+   `.docnote` — chỉ là chú thích soạn, không thuộc viewport), dựng tiêu đề
+   section thành legend nổi trên viền (viền section + viền khung chuyển trong suốt
+   ở chế độ review để nội dung tràn full viewport như UI thật), gắn badge icon SVG
+   vào từng component (hiện khi hover) + chế độ Ctrl+Click (giữ Ctrl/Cmd hiện viền
+   riêng, Ctrl+Click mở card; click thường không làm gì). Mở trực tiếp để soạn thì
+   mọi thứ hiện như cũ. Thiếu snippet = review xấu đi nhưng không FAIL máy (ghi vào
+   pitfalls trình designer); `tests/test.sh` kiểm tra file mẫu có snippet.
    `viewer.html` tự gắn `?bp=<khổ đang xem>` vào iframe nên chế độ xem đơn/lưới chỉ
    hiện đúng khung khổ đó (thay vì chồng cả 4 khung); canvas co lại vừa màn hình
    (`max-width:100%` ở chế độ review) nên không cắt nội dung. Mở trực tiếp để soạn thì

@@ -21,7 +21,7 @@
 - Soạn wireframe 4 khổ theo tree rồi kiểm tra cặp: copy `examples/tree.html` thành `.aidomaincraft/.tmp/wireframes/<suite>/my-page/my-page-wireframe.html` làm khung xương, sửa tay theo tree, rồi `python3 scripts/verify-pair.py .aidomaincraft/.tmp/wireframes/<suite>/my-page/my-page-tree.md .aidomaincraft/.tmp/wireframes/<suite>/my-page/my-page-wireframe.html` — xem [Usecase con 3](../../items/wireframe-docs/README.md#usecase-con-3-soan-wireframe-tay-4-kho) + [Usecase con 4](../../items/wireframe-docs/README.md#usecase-con-4-kiem-tra-bo-ba-tree-data-wireframe).
 - Review nhanh: copy `templates/viewer.html` vào cùng thư mục bản, mở `viewer.html?file=my-page-wireframe.html` (frame ảo thu vừa màn hình, caption ghi rộng thật + % thu; click component xem card) — xem [Usecase con 6](../../items/wireframe-docs/README.md#usecase-con-6-review-nhanh-bang-viewer).
 - Xem mọi trang không theo flow: mở `player.html` → nút `▦ Pages` (lưới toàn trang thu nhỏ, bấm vào xem chi tiết từng khổ) — xem [Usecase con 8](../../items/wireframe-docs/README.md#usecase-con-8-soan-va-play-flow).
-- Soạn + play flow: viết `flows/<ten>.md` theo khuôn + `Entry:` + `go:`/`Input:`/`If:`/`Else:` (`convention/flows.md`), rồi `python3 scripts/check-flow.py .aidomaincraft/.tmp/wireframes/<suite>` + `python3 scripts/build-flow.py .aidomaincraft/.tmp/wireframes/<suite>` → mở `player.html` (list/detail/play toàn trang thu vừa màn hình + chọn khổ + rẽ nhánh + gõ Input + panel ràng buộc; tab `▦ Pages` xem mọi trang độc lập flow) — xem [Usecase con 8](../../items/wireframe-docs/README.md#usecase-con-8-soan-va-play-flow).
+- Soạn + play flow: viết `flows/<ten>.md` theo khuôn + `Entry:` + `go:`/`Input:`/`If:`/`Else:` (`convention/flows.md`), rồi `python3 scripts/check-flow.py .aidomaincraft/.tmp/wireframes/<suite>` + `python3 scripts/build-flow.py .aidomaincraft/.tmp/wireframes/<suite>` → mở `player.html` (list/detail/play toàn trang khung vuông đúng W×H + chọn khổ + rẽ nhánh + gõ Input + panel ràng buộc; dialog render đúng block + nút icon xem meta; tab `▦ Pages` xem mọi trang độc lập flow; badge/Ctrl+Click xem card) — xem [Usecase con 8](../../items/wireframe-docs/README.md#usecase-con-8-soan-va-play-flow).
 - Rà soát suite: `python3 scripts/check-suite.py .aidomaincraft/.tmp/wireframes/<suite>` (brief + mọi trang + mọi flow + REQ + player tươi; exit 0 = DoD đạt) — xem [Usecase con 9](../../items/wireframe-docs/README.md#usecase-con-9-ra-soat-suite-truoc-khi-trinhchot).
 
 ### Lưu ý riêng cho UI
@@ -43,6 +43,11 @@
 - Gốc: `../../items/wireframe-docs/README.md` (Nguồn gốc / Áp dụng / Cốt lõi / Usecase 1-9 / Pitfalls / Tài nguyên).
 - Index domain: `./README.md` (hàng wireframe-docs ở điều hướng + định vị + chồng lấn).
 - Được liệt kê ngược tại: `../../items/wireframe-docs/README.md#duoc-dung-o-dau`.
+
+### Tái tạo trên runtime khác
+- Mọi thao tác đều trung lập runtime: `git` CLI + Python stdlib + mở file HTML bằng browser (`file://`, offline); `node --check` là tùy chọn (có node mới chạy).
+- Muốn làm lại đúng kết quả ở runtime khác (OpenCode/Claude Code/Cursor/Copilot...): cài cùng skill + version ghi trong CHANGELOG, đọc quyết định đã ghi (Picks/stamp/commit message — không nằm trong log local `.relay/` vốn bị git-ignore), chạy `tests/test.sh` phải `fail=0`.
+- Verify mắt người: runtime nào cũng làm được — mở `viewer.html`/`player.html` build từ demo và đối chiếu checklist trong CHANGELOG; không phụ thuộc tool điều khiển browser riêng.
 
 ---
 
@@ -67,7 +72,7 @@ UI-only deltas for wireframe-docs. Origin lives at `../../items/wireframe-docs/R
 - Author the 4-frame wireframe per the tree, then check the pair: copy `examples/tree.html` to `.aidomaincraft/.tmp/wireframes/<suite>/my-page/my-page-wireframe.html` as a skeleton, hand-edit per the tree, then `python3 scripts/verify-pair.py .aidomaincraft/.tmp/wireframes/<suite>/my-page/my-page-tree.md .aidomaincraft/.tmp/wireframes/<suite>/my-page/my-page-wireframe.html`.
 - Quick review: copy `templates/viewer.html` into the same version folder, open `viewer.html?file=my-page-wireframe.html` (scaled-to-fit virtual frame, caption shows real width + scale %; click a component for its card) — see [Sub-usecase 6](../../items/wireframe-docs/README.md#sub-usecase-6-quick-review-with-the-viewer).
 - Browse every page outside flows: open `player.html` → `▦ Pages` button (thumbnail grid, click through per-breakpoint detail) — see [Sub-usecase 8](../../items/wireframe-docs/README.md#sub-usecase-8-author-and-play-flows).
-- Author + play flows: write `flows/<name>.md` per the `convention/flows.md` schema (`Entry:` + `## Step:` with `Page/Action/go:/Input:/If:/Else:`), then `python3 scripts/check-flow.py .aidomaincraft/.tmp/wireframes/<suite>` + `python3 scripts/build-flow.py .aidomaincraft/.tmp/wireframes/<suite>` → open `player.html` (full-page list/detail/play scaled to fit + breakpoint picker + branch choices + typing + constraints panel; `▦ Pages` tab browses every page outside flows) — see [Sub-usecase 8](../../items/wireframe-docs/README.md#sub-usecase-8-author-and-play-flows).
+- Author + play flows: write `flows/<name>.md` per the `convention/flows.md` schema (`Entry:` + `## Step:` with `Page/Action/go:/Input:/If:/Else:`), then `python3 scripts/check-flow.py .aidomaincraft/.tmp/wireframes/<suite>` + `python3 scripts/build-flow.py .aidomaincraft/.tmp/wireframes/<suite>` → open `player.html` (square full-page list/detail/play at canonical W×H + breakpoint picker + branch choices + typing + constraints panel; dialog renders the real block + icon button for meta; `▦ Pages` tab browses every page outside flows; badge/Ctrl+Click shows cards) — see [Sub-usecase 8](../../items/wireframe-docs/README.md#sub-usecase-8-author-and-play-flows).
 - Gate the suite: `python3 scripts/check-suite.py .aidomaincraft/.tmp/wireframes/<suite>` (brief + every page + every flow + REQ cross-check + player freshness; exit 0 = DoD met) — see [Sub-usecase 9](../../items/wireframe-docs/README.md#sub-usecase-9-suite-review-gate).
 
 ### Domain-specific notes
@@ -81,3 +86,8 @@ UI-only deltas for wireframe-docs. Origin lives at `../../items/wireframe-docs/R
 
 ### Links to origin (3-way)
 - Origin: `../../items/wireframe-docs/README.md`. Index: `./README.md`. Backlisted at origin `#where-used`.
+
+### Reproduce on another runtime
+- Everything is runtime-neutral: `git` CLI + stdlib Python + opening HTML files in a browser (`file://`, offline); `node --check` is optional (runs only when node exists).
+- To redo the same result on another runtime (OpenCode/Claude Code/Cursor/Copilot...): install the same skill + version recorded in CHANGELOG, read the recorded decisions (Picks/stamp/commit message — never the local `.relay/` log, which is git-ignored), run `tests/test.sh` until `fail=0`.
+- Human visual check works on any runtime: open the demo-built `viewer.html`/`player.html` and compare against the checklist in CHANGELOG; no dependency on any browser-driving tool.

@@ -1,5 +1,35 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.14 — 2026-11-04 (viewport cuộn tự nhiên + typing luôn chạy animation)
+- Stage play chuyển từ `transform: scale` sang `zoom`: khung vẫn thu đúng tỉ lệ nhưng nội dung dài thì cuộn native được (trước đây bị cắt cứng); nhãn nổi tính lại bằng rect nên luôn bám đúng component khi cuộn; mở dialog tự cuộn để hộp thoại vào giữa khung nhìn thấy.
+- Gõ chữ luôn chạy animation từng ký tự (kể cả khi giá trị mẫu trùng chữ hiện có) để play đúng nghĩa "xem như video"; giữ nhánh `prefers-reduced-motion` (hiện chữ ngay, không animation).
+- E2E claude (MutationObserver bắt đủ 21 lần đổi DOM khi gõ; cuộn wrap 0→300→600, nhãn bám đúng; dialog gọn trong khung; console sạch).
+
+## v10.13 — 2026-11-04 (viewport hiện rõ như tab browser + card gap kín + review ẩn chữ soạn)
+- Thanh tab kiểu browser trên mọi khung ảo (3 chấm + tiêu đề trang + cỡ W×H): viewer đơn + lưới 4 ô + player play/detail — khung tách khỏi nền chung rõ ràng, đúng ẩn dụ "ảo hóa như tab browser".
+- Card thumbnail/viewer: khung vuông lùi vào trong với gap 12px (viewer) / padding 10px + co giãn theo card + căn giữa (player); không còn chạm sát viền.
+- Review ẩn toàn bộ chữ soạn thảo khỏi layout: chips + caption Kiểu + tiêu đề khung `h2` + tiêu đề/mô tả file (`h1`/`.docnote`, chỉ viewer thấy vì nằm ngoài khung) — chỉ còn UI thật + legend nổi; mở file trực tiếp vẫn hiện đủ để soạn.
+- Gọn padding shell (topbar/view/desc/caption) + bỏ hẳn padding body wireframe mẫu.
+- `tests/test.sh` 180 pass / 0 fail (tabstrip + fr-fit + snippet rules); E2E claude (tab hiện đúng tên trang + W×H, không tràn, console sạch); `.canvas` ép `border-box` trong review nên hết tràn ngang (scrollWidth = clientWidth mọi khổ).
+
+## v10.12 — 2026-11-04 (wireframe-docs: review như UI thật — badge icon + Ctrl+Click + dialog markup + legend + khung vuông + cao viewport)
+- Review render như UI thật: snippet + player ẩn caption Kiểu (`.t`) cùng chips; tiêu đề section thành legend nổi đè viền (kiểu fieldset); mô tả chỉ mở qua badge icon SVG (hover mới hiện, tuyệt đối góc phải, không chiếm layout) hoặc Ctrl/Cmd+Click (giữ Ctrl hiện viền riêng + cursor help; click thường không làm gì).
+- Dialog overlay render đúng block component (clone markup, strip id + badge thừa) + nút icon SVG mở card meta; không tìm thấy block khớp nhãn mới fallback bảng meta cũ.
+- Frame ảo cạnh vuông (bỏ bo tròn ở khung đơn/lưới/stage) + cao viewport theo màn hình thực (sm 360×740, md 768×1024, lg 1366×768, xl 1920×1080); caption ghi W×H thật; bảng khổ trong `convention/tree-format.md` thêm cột cao.
+- `tests/test.sh` §18–§19 (badge/ctrl/dialog-icon/viewport/convention); `test.sh` 167+ pass / 0 fail; E2E claude (click thường im lặng, badge/Ctrl mở card, dialog render đúng UI, caption W×H).
+- Self-review: lượt 1 đạt (badge/ctrl/dialog-markup/legend/khung vuông/W×H định nghĩa ngay UC6/UC8 lần đầu); lượt 2 đạt (badge khác click-cả-block: chỉ điểm gọi, không chiếm sự kiện; dialog markup khác bảng meta: đọc visual, fallback khi thiếu block; lệnh build/test không đổi + ngưỡng E2E + pitfalls snippet thiếu); lượt 3 đạt với case `designer muốn xem wireframe như UI thật` → review sạch chữ thừa, card chỉ mở khi gọi (<2 phút).
+- WARN giữ lại: (1) legend absolute đè viền có thể che nội dung sát mép trên section ở khổ hẹp (chấp nhận, designer duyệt visual); (2) visual do claude chụp, chưa qua mắt người trên máy thật.
+
+## v10.11 — 2026-11-04 (Hallmark restyle viewer/player: dark devtool Console)
+- Restyle hệ thống (giữ layout + wiring): `templates/viewer.html` + `templates/player.template.html` theo theme Console (deal 1/3, `console: graphite`): nền graphite 3 nấc, chữ Host Grotesk → **Space Grotesk**, số đo Atkinson Mono → **IBM Plex Mono** (cả 2 face gốc không có subset `vietnamese` — đã verify qua Google Fonts API — nên swap, kèm fallback system, offline vẫn chạy); panel hairline không shadow, nút primary amber, số đo mono tabular, `:focus-visible` mọi control + card bấm được bằng phím, `overflow-x: clip`, tôn trọng `prefers-reduced-motion` (gõ chữ hiện ngay).
+- Copy: bỏ `—`/`·`/`‹ ›` trong UI theo gate 19/63 (dấu hai chấm/phẩy/thẻ đo mono thay thế); card overlay/dialog giữ nguyên chữ.
+- Sweep: `sloplint` 98 FAIL → 0 FAIL/0 WARN; `tests/test.sh` 167 pass / 0 fail (thêm scope-CSS + input DSL); player build từ demo chạy thật, `SUITE 0 FAIL`.
+- Contrast quét bằng số (oklch→luminance→WCAG): `--muted` 71%→80% (2.80→4.83:1), `--rule` 31%→36%; chữ nhỏ (caption/tag/crumb/desc) lên `ink-2`.
+- Sửa lỗi lem CSS: CSS wireframe nhúng vào player không scope nên rule `body` của wireframe đè body shell (chữ sáng trên nền sáng + chữ tối trùng nền tối) — `build-flow.py` giờ scope mọi selector vào `#stage, #page-stage, .wf-frame` (`body`/`html`/`:root` thành vô hiệu đúng thiết kế); overlay `.box` đổi tên `.ov-box` tránh chạm class wireframe; `convention/flows.md` ghi quy tắc scope.
+- `domains/ui/using-wireframe-docs.md`: thêm mục Tái tạo trên runtime khác (skill version + quyết định trong repo + `test.sh` + verify mắt người trung lập).
+- Self-review: lượt 1 đạt (tokens Console + faces swap + focus/motion định nghĩa ngay lần đầu); lượt 2 đạt (restyle khác polish/full: chỉ system, không đụng layout/wiring; lệnh build/test không đổi + ngưỡng sloplint 0 FAIL + pitfalls font offline); lượt 3 đạt với case `mở repo ở runtime khác` → đọc CHANGELOG + skill version → làm lại được (xem `using-wireframe-docs.md` mục Tái tạo).
+- WARN giữ lại: (1) font web cần mạng lần đầu (có fallback system, offline vẫn đủ); (2) visual do claude chụp, chưa qua mắt người trên máy thật.
+
 ## v10.10 — 2026-11-04 (wireframe-docs: review shell đẹp + tab Pages + click-card + frame ảo)
 - Shell review mới: `templates/viewer.html` + `templates/player.template.html` restyle cùng ngôn ngữ (topbar gọn, thẻ card, caption rộng thật + % thu); mọi chế độ xem đơn luôn thu vừa màn hình (frame ảo, không còn iframe pixel thật tràn màn hình); lưới 4 khung giữ nguyên cơ chế scale.
 - Tab `▦ Pages` trong player: lưới thumbnail toàn trang + xem chi tiết từng khổ, độc lập flow (tận dụng `FRAMES`/`META` đã nhúng, không script mới, không artifact mới).

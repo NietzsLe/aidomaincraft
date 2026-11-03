@@ -3,12 +3,12 @@
 <head><meta charset="utf-8">
 <title>Checkout mẫu — wireframe</title>
 <style>
-body{font-family:sans-serif;background:#f4f4f5;color:#18181b;margin:0;padding:32px}
+body{font-family:sans-serif;background:#f4f4f5;color:#18181b;margin:0;padding:0}
 .doc{max-width:1200px;margin:0 auto}
-h1{margin:0 0 4px;font-size:24px}.docnote{color:#52525b;margin:0 0 24px}
-.frame{border:2px solid #18181b;background:#fff;margin:0 0 24px}
+h1{margin:0 0 4px;font-size:24px}.docnote{color:#52525b;margin:0 0 12px}
+.frame{border:2px solid #18181b;background:#fff;margin:0 0 16px}
 .frame>h2{margin:0;padding:10px 16px;background:#18181b;color:#fff;font-size:14px}
-.canvas{padding:16px;overflow-x:auto}
+.canvas{padding:12px;overflow-x:auto}
 .wsec{border:2px dashed #a1a1aa;padding:12px;margin:0 0 12px}
 .wsec>h3{margin:0 0 8px;font-size:13px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -23,23 +23,33 @@ h1{margin:0 0 4px;font-size:24px}.docnote{color:#52525b;margin:0 0 24px}
 .fx{border-style:dashed}
 </style>
 <!--WF_REVIEW_SNIPPET (copy từ templates/review-snippet.html — cấm sửa tay, sửa gốc rồi copy lại)-->
-<style>
-body.wf-review .chip{display:none!important}
-body.wf-review .canvas{max-width:100%!important}
-body.wf-review [data-wf-component]{cursor:pointer}
-body.wf-review [data-wf-component]:hover{outline:2px dashed #71717a;outline-offset:2px}
-#wf-card{position:fixed;top:16px;right:16px;z-index:9999;width:320px;max-height:80vh;overflow:auto;background:#fff;border:1px solid #e4e4e7;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:16px 18px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;color:#18181b}
-#wf-card h4{margin:0 0 2px;font-size:15px}
-#wf-card .sub{color:#71717a;font-size:12px;margin-bottom:10px}
-#wf-card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px}
-#wf-card dt{color:#71717a;white-space:nowrap}
-#wf-card dd{margin:0;word-break:break-word}
-#wf-card button{margin-top:12px;width:100%;padding:8px;border:1px solid #e4e4e7;border-radius:8px;background:#fafafa;cursor:pointer;font-size:13px}
-#wf-card button:hover{background:#f4f4f5}
+<style data-wf-review>
+body.wf-review .chip, body.wf-review .t { display: none !important; }
+body.wf-review .frame > h2, body.wf-review .doc > h1, body.wf-review .docnote { display: none !important; }
+body.wf-review .canvas { max-width:100% !important; box-sizing: border-box; }
+body.wf-review .wsec { position: relative; margin-top: 14px; border-color: transparent; }
+body.wf-review .frame { border-color: transparent; }
+body.wf-review .wsec > h3 { position: absolute; top: -11px; left: 10px; margin: 0; font-size: 11px; font-weight: 600; line-height: 1.6; padding: 0 10px; background: rgba(255,255,255,.93); border: 1px solid #a1a1aa; border-radius: 999px; color: #3f3f46; white-space: nowrap; }
+body.wf-review [data-wf-component] { position: relative; }
+body.wf-review [data-wf-component]:hover { outline: none; }
+body.wf-ctrl [data-wf-component]:hover { outline: 2px solid #4f46e5; outline-offset: 2px; cursor: help; }
+.wf-info { position: absolute; top: 4px; right: 4px; z-index: 20; display: none; width: 22px; height: 22px; padding: 0; border: 1px solid #a1a1aa; border-radius: 50%; background: rgba(255,255,255,.95); color: #3f3f46; cursor: pointer; align-items: center; justify-content: center; }
+body.wf-review [data-wf-component]:hover > .wf-info, body.wf-ctrl .wf-info { display: inline-flex; }
+.wf-info:hover { border-color: #4f46e5; color: #4f46e5; }
+.wf-info svg { display: block; }
+#wf-card { position: fixed; top: 16px; right: 16px; z-index: 9999; width: 320px; max-height: 80vh; overflow: auto; background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.18); padding: 16px 18px; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 13px; color: #18181b; }
+#wf-card h4 { margin: 0 0 2px; font-size: 15px; }
+#wf-card .sub { color: #71717a; font-size: 12px; margin-bottom: 10px; }
+#wf-card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; }
+#wf-card dt { color: #71717a; white-space: nowrap; }
+#wf-card dd { margin: 0; word-break: break-word; }
+#wf-card button.wf-close { margin-top: 12px; width: 100%; padding: 8px; border: 1px solid #e4e4e7; border-radius: 8px; background: #fafafa; cursor: pointer; font-size: 13px; }
+#wf-card button.wf-close:hover { background: #f4f4f5; }
 </style>
 <script>
 (function () {
   "use strict";
+  var INFO_SVG = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="8" cy="8" r="6.6" fill="none" stroke="currentColor" stroke-width="1.6"/><text x="8" y="11.6" text-anchor="middle" font-size="9.5" font-weight="bold" fill="currentColor" font-family="sans-serif">i</text></svg>';
   function reviewMode() {
     try {
       if (window !== window.top) return true;
@@ -48,6 +58,16 @@ body.wf-review [data-wf-component]:hover{outline:2px dashed #71717a;outline-offs
     if (/[?&]bp=(sm|md|lg|xl)\b/.test(location.search)) return true;
     if (document.body && document.body.classList.contains("wf-review")) return true;
     return false;
+  }
+  function filterBp() {
+    var m = /[?&]bp=(sm|md|lg|xl)\b/.exec(location.search);
+    if (!m) return;
+    var keep = m[1];
+    var frames = document.querySelectorAll("[data-wf-breakpoint]");
+    if (!frames.length) return;
+    Array.prototype.forEach.call(frames, function (fr) {
+      if (fr.getAttribute("data-wf-breakpoint") !== keep) fr.style.display = "none";
+    });
   }
   function labelOf(el, sel) {
     var n = el.querySelector(sel);
@@ -61,58 +81,76 @@ body.wf-review [data-wf-component]:hover{outline:2px dashed #71717a;outline-offs
     var c = document.getElementById("wf-card");
     if (c) c.remove();
   }
-  function filterBp() {
-    var m = /[?&]bp=(sm|md|lg|xl)\b/.exec(location.search);
-    if (!m) return;
-    var keep = m[1];
-    var frames = document.querySelectorAll("[data-wf-breakpoint]");
-    if (!frames.length) return;
-    Array.prototype.forEach.call(frames, function (fr) {
-      if (fr.getAttribute("data-wf-breakpoint") !== keep) fr.style.display = "none";
-    });
-  }
   function openCard(el) {
     closeCard();
     var rows = [
       ["Kiểu", labelOf(el, ":scope > .t")],
       ["Section", sectionOf(el)],
-      ["Trạng thái", el.getAttribute("data-wf-states") || "—"],
-      ["Hiệu ứng", el.getAttribute("data-wf-effect") || "—"],
-      ["Hành vi", el.getAttribute("data-wf-behavior") || "—"],
-      ["Giảm chuyển động", el.getAttribute("data-wf-reduced") || "—"],
+      ["Trạng thái", el.getAttribute("data-wf-states") || "không có"],
+      ["Hiệu ứng", el.getAttribute("data-wf-effect") || "không có"],
+      ["Hành vi", el.getAttribute("data-wf-behavior") || "không có"],
+      ["Giảm chuyển động", el.getAttribute("data-wf-reduced") || "không có"],
       ["Chỉ hiện khi", el.getAttribute("data-wf-visible-on") || "luôn hiện"],
-      ["Ẩn ở khổ", el.getAttribute("data-wf-hide") || "—"],
-      ["Yêu cầu", el.getAttribute("data-wf-req") || "—"],
-      ["Ghi chú", el.getAttribute("data-wf-note") || "—"]
+      ["Ẩn ở khổ", el.getAttribute("data-wf-hide") || "không có"],
+      ["Yêu cầu", el.getAttribute("data-wf-req") || "không có"],
+      ["Ghi chú", el.getAttribute("data-wf-note") || "không có"]
     ];
     var card = document.createElement("div");
     card.id = "wf-card";
     var h = "<h4>" + el.getAttribute("data-wf-component") + "</h4>"
-      + '<div class="sub">Click component để xem · không chiếm layout wireframe</div><dl>';
+      + '<div class="sub">Badge hoặc Ctrl+Click để xem, không chiếm layout wireframe</div><dl>';
     rows.forEach(function (r) {
       h += "<dt>" + r[0] + "</dt><dd>" + r[1].replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</dd>";
     });
-    card.innerHTML = h + '</dl><button type="button">Đóng (Esc)</button>';
-    card.querySelector("button").onclick = closeCard;
+    card.innerHTML = h + '</dl><button type="button" class="wf-close">Đóng (Esc)</button>';
+    card.querySelector(".wf-close").onclick = closeCard;
     document.body.appendChild(card);
   }
+  function addBadges() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-wf-component]"), function (el) {
+      if (el.querySelector(":scope > .wf-info")) return;
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "wf-info";
+      b.title = "Xem mô tả component";
+      b.setAttribute("aria-label", "Xem mô tả " + el.getAttribute("data-wf-component"));
+      b.innerHTML = INFO_SVG;
+      b.addEventListener("click", function (ev) { ev.preventDefault(); ev.stopPropagation(); openCard(el); });
+      el.appendChild(b);
+    });
+  }
+  function setCtrl(on) { document.body.classList.toggle("wf-ctrl", !!on); }
   document.addEventListener("DOMContentLoaded", function () {
     if (!document.body) return;
     filterBp();
     if (!reviewMode()) return;
     document.body.classList.add("wf-review");
+    addBadges();
     document.body.addEventListener("click", function (ev) {
+      if (!document.body.classList.contains("wf-review")) return;
+      if (ev.target.closest && ev.target.closest(".wf-info")) return;
       var el = ev.target.closest ? ev.target.closest("[data-wf-component]") : null;
-      if (!el || !document.body.classList.contains("wf-review")) return;
-      ev.preventDefault();
-      openCard(el);
+      if (!el) return;
+      if (ev.ctrlKey || ev.metaKey) { ev.preventDefault(); openCard(el); }
     });
     document.addEventListener("keydown", function (ev) {
-      if (ev.key === "Escape") closeCard();
+      if (ev.key === "Escape") { setCtrl(false); closeCard(); }
+      if (ev.key === "Control" || ev.key === "Meta") setCtrl(true);
     });
+    document.addEventListener("keyup", function (ev) {
+      if (ev.key === "Control" || ev.key === "Meta") setCtrl(false);
+    });
+    window.addEventListener("blur", function () { setCtrl(false); });
   });
 })();
 </script>
+
+
+
+
+
+
+
 
 
 </head>

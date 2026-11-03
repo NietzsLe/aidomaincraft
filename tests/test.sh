@@ -202,6 +202,8 @@ python3 "$root/items/wireframe-docs/scripts/check-flow.py" "$t10/suite" >/dev/nu
 python3 "$root/items/wireframe-docs/scripts/build-flow.py" "$t10/suite" >/dev/null 2>&1 && ok "player built" || bad "player build FAIL"
 [ -f "$t10/suite/player.html" ] && ok "player.html exists" || bad "player.html missing"
 grep -q '"inputs": \[\["Email", "Email"\]\]' "$t10/suite/player.html" && ok "input DSL embedded" || bad "input DSL missing"
+grep -q '#stage .frame' "$t10/suite/player.html" && ok "wireframe CSS scoped" || bad "CSS not scoped"
+if grep -q '}body{' "$t10/suite/player.html"; then bad "wireframe body leaks to shell"; else ok "no body leak"; fi
 if command -v node >/dev/null 2>&1; then
   python3 -c "import re;s=open('$t10/suite/player.html',encoding='utf-8').read();m=re.search(r'<script>(.*)</script>',s,re.S);open('$t10/p.js','w',encoding='utf-8').write(m.group(1))" && node --check "$t10/p.js" >/dev/null 2>&1 && ok "player JS valid" || bad "player JS invalid"
 fi
@@ -238,6 +240,20 @@ grep -q '\[hidden\]' "$root/items/wireframe-docs/templates/viewer.html" && ok "v
 grep -q 'ov-inner' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewer grid wrapper" || bad "grid wrapper missing"
 grep -q 'data-wf-breakpoint' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet bp filter" || bad "snippet bp filter missing"
 grep -q 'max-width:100%' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet canvas fit" || bad "canvas fit missing"
+grep -q 'frame > h2' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet hides frame titles" || bad "frame titles visible"
+grep -q 'docnote' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet hides doc header" || bad "doc header visible"
+grep -q 'border-color: transparent' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet hides guides" || bad "guides visible"
+grep -q 'wf-info' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet badge" || bad "snippet badge missing"
+grep -q 'wf-ctrl' "$root/items/wireframe-docs/templates/review-snippet.html" && ok "snippet ctrl mode" || bad "ctrl mode missing"
+grep -q 'BP_H' "$root/items/wireframe-docs/templates/player.template.html" && grep -q 'h: 740' "$root/items/wireframe-docs/templates/viewer.html" && ok "viewport heights" || bad "viewport heights missing"
+grep -q 'fr-fit' "$root/items/wireframe-docs/templates/viewer.html" && ok "grid gap wrapper" || bad "grid gap missing"
+grep -q '| Khổ |.*| Cao viewport |' "$root/items/wireframe-docs/convention/tree-format.md" && ok "convention heights" || bad "heights missing in convention"
+grep -q 'ov-info' "$root/items/wireframe-docs/templates/player.template.html" && ok "dialog icon button" || bad "dialog icon missing"
+grep -q 'inner.style.zoom' "$root/items/wireframe-docs/templates/player.template.html" && ok "zoom scroll" || bad "zoom missing"
+grep -q 'tabstrip' "$root/items/wireframe-docs/templates/viewer.html" && grep -q 'tabstrip' "$root/items/wireframe-docs/templates/player.template.html" && ok "tab strip chrome" || bad "tab strip missing"
+if grep -q 'ⓘ' "$root/items/wireframe-docs/templates/player.template.html" "$root/items/wireframe-docs/templates/review-snippet.html"; then bad "text-circle-i remains"; else ok "no text-circle-i"; fi
+grep -q 'position: sticky; bottom: 0' "$root/items/wireframe-docs/templates/player.template.html" && ok "sticky card close" || bad "close not sticky"
+! grep -q 'body.wf-review' "$t10/suite/player.html" && ok "no snippet CSS leak" || bad "snippet CSS leaked"
 grep -q '__TITLE_DATA__\|PAGE_TITLES' "$root/items/wireframe-docs/templates/player.template.html" && ok "player page titles" || bad "titles missing"
 grep -q 'TITLE_DATA' "$root/items/wireframe-docs/scripts/build-flow.py" && ok "build emits titles" || bad "build titles missing"
 grep -q 'Nhập ' "$root/items/wireframe-docs/templates/player.template.html" && ok "player input tag" || bad "input tag missing"

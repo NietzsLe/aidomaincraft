@@ -15,6 +15,7 @@ Repo này là tra cứu theo usecase. `CHARTER.md` là luật, `VERIFY.md` là c
 - Thêm cặp item-domain mới (item đã có, dùng cho domain mới): copy `templates/domain-using-template.md` thành `domains/<d>/using-<x>.md`. Chỉ viết phần RIÊNG domain + link về đúng section item gốc, cấm copy nguyên đoạn. Cập nhật `domains/<d>/README.md` + mục `Được dùng ở đâu` trong item gốc trong cùng commit.
 - Thêm domain mới: copy `templates/domain-index-template.md`. Mỗi cặp trong domain mới đều cần using-doc.
 - Self-review lặp đến khi đạt theo `VERIFY.md` mục E + F6: 1 FAIL là không merge; WARN phải ghi lý do.
+- Đóng góp bằng PR: xem `CONTRIBUTING.md` (luồng 6 bước + chuẩn PR).
 - Ghi `CHANGELOG.md` (kèm case đã thử + quyết định ở lượt 3).
 - Cài sang repo/thư mục khác: `./scripts/install.sh --target /path/to/project --dry-run` rồi `--backup`; xem `INSTALL.md` (gỡ: `UNINSTALL.md`).
 
@@ -35,6 +36,7 @@ Usability-first lookup repo. `CHARTER.md` is the law, `VERIFY.md` is the pass/fa
 - New item-domain pair (existing item, new domain use): copy `templates/domain-using-template.md` to `domains/<d>/using-<x>.md`. Domain-only deltas + links to exact item sections, never copied paragraphs. Update `domains/<d>/README.md` + the item's `Where used` in the same commit.
 - New domain: copy `templates/domain-index-template.md`. Every pair in it needs a using-doc.
 - Iterative self-review per `VERIFY.md` sections E + F6: 1 FAIL blocks merge; WARNs need a recorded reason.
+- Contribute via PR: see `CONTRIBUTING.md` (6-step flow + PR bar).
 - Add a `CHANGELOG.md` entry (with the tried case + decision from pass 3).
 
 Never commit logs, tokens, or PII.

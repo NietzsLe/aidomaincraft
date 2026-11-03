@@ -1,5 +1,12 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.2 — 2026-11-03 (hướng dẫn đóng góp: CONTRIBUTING + mẫu PR)
+- Mới `CONTRIBUTING.md` (song ngữ): ai đóng góp được (mọi runtime + lưu ý Plan mode/relay) + luồng PR 6 bước (nhánh → CHARTER → self-review E → test xanh → CHANGELOG → mở PR kèm relay session) + chuẩn PR + luật review (1 FAIL không merge).
+- Mới `.github/PULL_REQUEST_TEMPLATE.md`: checklist tự hiện (template/khung, song ngữ, 3 chiều link, test xanh + output tài nguyên, CHANGELOG, không secret, relay session, log self-review).
+- Móc link từ root `AGENTS.md` + `README.md` VI+EN. Không đụng install blocks (quyết định ở plan).
+- Self-review: lượt 1 đạt (6 bước + chuẩn PR định nghĩa ngay lần đầu, không thuật ngữ treo); lượt 2 đạt (mỗi phần cơ chế khác: luồng vs chuẩn vs luật review + lệnh khớp `test.sh`/git + ngưỡng tick-hết + pitfalls theo runtime); lượt 3 đạt với case `agent Cursor mới muốn sửa 1 using-doc` → đọc CONTRIBUTING mở nhánh → E → test → PR kèm session (<3 phút tìm được đường đi).
+- WARN giữ lại: chưa có PR thật chạy qua mẫu này (template mới) — bổ sung khi PR đầu tiên dùng.
+
 ## v10.1 — 2026-11-03 (item nội tại đầu tiên: wireframe-docs + cặp UI)
 - Thêm `items/wireframe-docs/` (nội tại, tree markdown → HTML wireframe + component tree cho agent/designer, Python stdlib 0đ offline): `README.md` khung nội tại (`Nguồn gốc` + `Áp dụng` + cốt lõi/tree-duy-nhất + tùy chỉnh + phân công) + `scripts/build.py` + `scripts/check.py` + `convention/tree-format.md` (chuẩn 3 loại dòng) + `examples/tree.md` + `examples/tree.html` (render thật đã verify). Verify đã chạy: `check.py` PASS (2 sections/4 components) + `build.py` ra HTML hợp lệ + 3 case lỗi exit 1 đúng.
 - Thêm `domains/ui/using-wireframe-docs.md` + cập nhật `domains/ui/README.md` VI+EN (hàng routing, dòng phân biệt, định vị, ma trận thêm cột + 3 hàng hỗ trợ, workflow, using-doc list; sửa luôn dòng EN `One React effect` thiếu cột guidelines có từ trước). `items/REGISTRY.md` thêm dòng wireframe-docs (nội tại). test.sh §13 xanh nhánh nội tại.

@@ -23,7 +23,7 @@
 | Xem gốc 1 tool (cài đặt, cơ chế, giá, review) | `items/<tool>/` |
 | Lĩnh vực khác (sau này: hardware, backend...) | thêm thư mục ngang `domains/<mới>/`, không đổi khung |
 
-**Cách dùng cho agent:** xem `AGENTS.md`.
+**Cách dùng cho agent:** xem `AGENTS.md`. **Đóng góp:** xem `CONTRIBUTING.md`.
 
 ---
 
@@ -50,4 +50,4 @@
 | One tool's origin (install, mechanism, price, reviews) | `items/<tool>/` |
 | Other domains (later: hardware, backend...) | add a sibling of `domains/<new>/`, do not change the skeleton |
 
-**Agent workflow:** see `AGENTS.md`.
+**Agent workflow:** see `AGENTS.md`. **Contributing:** see `CONTRIBUTING.md`.

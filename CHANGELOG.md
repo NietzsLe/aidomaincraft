@@ -1,5 +1,11 @@
 # CHANGELOG.md — aidomaincraft
 
+## v10.9 — 2026-11-04 (luật tiếng Việt có dấu bắt buộc)
+- `CHARTER.md` bump v10 → v10.9: tiếng Việt có dấu đầy đủ trong mọi nội dung đọc được (docs, CHANGELOG, prompt mẫu, PR, commit message); chỉ code/lệnh/slug anchor/tên file giữ ASCII. Chạm §5 (khung item), §6 (index domain), §6b (using-doc), §7 checklist + mirror EN tương ứng.
+- `AGENTS.md` (mục Tạo mới VI+EN) + `CONTRIBUTING.md` (Chuẩn PR VI+EN: thiếu dấu = yêu cầu sửa) + `VERIFY.md` (mục D VI+EN: VI có dấu + VI/EN đồng nội dung) đồng bộ luật mới; không đụng `templates/` (giữ mẫu điền sạch).
+- Self-review: lượt 1 đạt (luật + phạm vi + ngoại lệ ASCII định nghĩa ngay lần đầu, ví dụ commit message có dấu); lượt 2 đạt (CHARTER giữ luật, AGENTS/CONTRIBUTING/VERIFY chỉ nhắc + link, không copy — đúng nguyên tắc 1 nguồn sự thật; lệnh/test không đổi); lượt 3 đạt với case `agent viết docs không dấu` → VERIFY D FAIL + CONTRIBUTING yêu cầu sửa (<3 phút phát hiện ở review).
+- WARN giữ lại: (1) không check máy tự động (grep không phân biệt văn xuôi không dấu với từ ASCII hợp lệ trong code — giữ ở mức review tay); (2) nội dung cũ chưa rà soát lại toàn bộ, áp dụng từ v10.9 trở đi.
+
 ## v10.6 — 2026-11-03 (wireframe-docs: output thư mục ngày-giờ + viewer 2 tầng)
 - Đổi vị trí output: `.tmp/wireframes/<slug>-*` → `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<slug>/` (giờ 24h local, trùng phút `-v2`; trùng gốc ignored với vendor/src, khỏi đụng `.gitignore` thêm). Sửa đồng bộ `items/wireframe-docs/README.md` VI+EN (Áp dụng, Cốt lõi thư mục bản + khóa số viewer, Bản đồ phủ Usecase 6, Usecase 6 mới, Bước chung, Prompt, Pitfalls viewer, Tham khảo, Tài nguyên), `convention/tree-format.md` (quy tắc thư mục + bảng biến thể sm/md/lg/xl làm nguồn cho viewer), `domains/ui/using-wireframe-docs.md` VI+EN, root `.gitignore` (thêm `.aidomaincraft/`, bỏ `.tmp/`), `tests/test.sh` §14 (check path mới + viewer tồn tại + số chuẩn khớp convention), `items/REGISTRY.md` (tài nguyên thêm `templates/`).
 - Mới `items/wireframe-docs/templates/viewer.html` (JS thuần, `file://`): bấm loại (sm 360/md 768/lg 1366/xl 1920) → biến thể (sm 320–430, md 768–834, lg 1280–1440, xl 1600–2560) → gập panel (✕/Esc/nút) → lưới 4 khung scale vừa màn hình (bấm khung drill-down). Verify: `node --check` JS hợp lệ + số viewer khớp convention.

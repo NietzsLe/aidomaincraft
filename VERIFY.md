@@ -3,13 +3,14 @@
 ## Tiếng Việt
 
 ### A. Tồn tại (thiếu là FAIL)
-- [ ] Item đủ khung v9: Dùng khi / Bỏ qua khi / Cài đặt / Cách item hoạt động (3 phần) / Cốt lõi bất biến / Phần tùy chỉnh / Phân công ai làm gì / Định vị khác biệt / Bản đồ phủ usecase (★ + trung bình + không hỗ trợ) / Usecase con 6 field / Bước chung / Prompt mẫu / Pitfalls / Tham khảo sử dụng (review sâu + số trung bình có trọng số) / Tham khảo / Được dùng ở đâu (link domain) / Quay lại index.
+- [ ] Item đủ khung v9 (nội tại: khung v10 §5d — `Nguồn gốc` thay `Tổ chức đứng sau`, `Áp dụng` thay `Cài đặt`): Dùng khi / Bỏ qua khi / Cài đặt-Áp dụng / Cách item hoạt động (3 phần) / Cốt lõi bất biến / Phần tùy chỉnh / Phân công ai làm gì / Định vị khác biệt / Bản đồ phủ usecase (★ + trung bình + không hỗ trợ) / Usecase con 6 field / Bước chung / Prompt mẫu / Pitfalls / Tham khảo sử dụng (review sâu + số trung bình có trọng số; nội tại: bằng chứng nội bộ) / Tham khảo / Được dùng ở đâu (link domain) / Quay lại index.
 - [ ] Index domain đủ: mục đích 1 dòng / điều hướng (cho phép NHIỀU item chính 1 việc + tiêu chí phân biệt) / định vị / chồng lấn / workflow / danh sách item.
 - [ ] Mỗi cặp item-domain có `domains/<d>/using-<x>.md` đủ khung: usecase trong domain / lệnh mẫu / lưu ý riêng / điểm mạnh CHO domain / phân công CHO domain / link về item gốc đúng section.
 - [ ] Song ngữ VI trước EN sau, đủ cả 2.
 
 ### B. Chính xác có nguồn (thiếu nguồn là FAIL)
-- [ ] `Tổ chức đứng sau` có link repo/registry + license + số liệu (stars/installs).
+- [ ] `Tổ chức đứng sau` có link repo/registry + license + số liệu (stars/installs). Item nội tại: mục `Nguồn gốc` (tác giả + commit khai sinh + link về chính repo) + được ghi `N/A` cho stars/installs kèm lý do 1 dòng.
+- [ ] Mọi item khai nguồn gốc khớp `items/REGISTRY.md` (ngoại nhập | nội tại); tài nguyên nội tại đã khai đều tồn tại + chạy được.
 - [ ] Mỗi lệnh copy-paste đã mở docs/source kiểm tra (ghi tên file check: `SKILL.md`, `package.json`, trang install/MCP, script).
 - [ ] Mỗi ngưỡng số có nguồn (ví dụ 84px/52px/container 1440/gutter 64 từ `layout.md`; 4 biến thể từ README React Bits; Floor gate có số).
 - [ ] Không chép mô tả marketing nguyên văn.
@@ -26,7 +27,7 @@
 - [ ] Link 3 chiều sống: index → using-doc → item gốc (đúng section, vd `../../items/skillry/README.md#...`), và item mục `Được dùng ở đâu` link ngược lại từng using-doc.
 - [ ] Không trùng lặp: using-doc chỉ viết phần RIÊNG domain + link, cấm copy nguyên đoạn cài đặt/cơ chế/giá từ item. Trùng lặp = FAIL.
 - [ ] Mỗi khẳng định kỹ thuật trong using-doc phải link về đúng section item gốc.
-- [ ] Không item/cặp mồ côi (item không using-doc, using-doc không index), không link gãy, VI/EN cùng nội dung.
+- [ ] Không item/cặp mồ côi (item không using-doc, using-doc không index; item nội tại thiếu tài nguyên đã khai trong REGISTRY), không link gãy, VI/EN cùng nội dung.
 - [ ] Sửa 3 tầng trong cùng commit + `CHANGELOG.md`.
 
 ### Thang điểm
@@ -118,13 +119,14 @@ Mục này dạy *cách hỏi*, không chỉ *mục cần có*. Áp dụng nguy�
 ## English
 
 ### A. Existence (missing = FAIL)
-- [ ] Item has the full v9 frame: When/skip / Install / How it works (3 parts) / Invariant core / Customizable surface / Work split / Differentiation / Coverage map (★ + medium + unsupported) / 6-field sub-usecases / Shared steps / Prompts / Pitfalls / Usage references (deep + weighted averages) / References / Where used (domain links) / Back to index.
+- [ ] Item has the full v9 frame (intrinsic: v10 §5d frame — `Origin` replaces `Backing organization`, `Apply` replaces `Install`): When/skip / Install-Apply / How it works (3 parts) / Invariant core / Customizable surface / Work split / Differentiation / Coverage map (★ + medium + unsupported) / 6-field sub-usecases / Shared steps / Prompts / Pitfalls / Usage references (deep + weighted averages; intrinsic: internal evidence) / References / Where used (domain links) / Back to index.
 - [ ] Domain index has: 1-line purpose / routing (MULTIPLE primaries per job allowed + distinguishing rule) / positioning / overlap / combined workflow / item list.
 - [ ] Every item-domain pair has `domains/<d>/using-<x>.md` with: usecases in this domain / concrete commands / domain-specific notes / core strengths FOR this domain / work split FOR this domain / links to exact item sections.
 - [ ] Bilingual VI first EN second, both present.
 
 ### B. Sourced accuracy (unsourced = FAIL)
-- [ ] Backing org has repo/registry link + license + numbers (stars/installs).
+- [ ] Backing org has repo/registry link + license + numbers (stars/installs). Intrinsic items: an `Origin` section (author + birth commit + link to this repo) + `N/A` for stars/installs with a 1-line reason.
+- [ ] Every item declares an origin matching `items/REGISTRY.md` (imported | intrinsic); declared intrinsic resources all exist + run.
 - [ ] Every copy-paste command checked against docs/source (record which file: `SKILL.md`, `package.json`, install/MCP page, script).
 - [ ] Every numeric bar sourced (e.g. 84px/52px/container 1440/gutter 64 from `layout.md`; 4 flavors from React Bits README; numbered Floor gates).
 - [ ] No verbatim marketing copy.
@@ -141,7 +143,7 @@ Mục này dạy *cách hỏi*, không chỉ *mục cần có*. Áp dụng nguy�
 - [ ] Live 3-way links: index → using-doc → item origin (exact section, e.g. `../../items/skillry/README.md#...`), and the item's `Where used` links back to each using-doc.
 - [ ] No duplication: using-doc holds domain-only deltas + links, never copied install/mechanism/price paragraphs. Duplication = FAIL.
 - [ ] Every technical claim in a using-doc links to the exact item section.
-- [ ] No orphan items/pairs (item without using-doc, using-doc without index), no broken links, VI/EN in sync.
+- [ ] No orphan items/pairs (item without using-doc, using-doc without index; intrinsic item missing a REGISTRY-declared resource), no broken links, VI/EN in sync.
 - [ ] All 3 layers changed in the same commit + `CHANGELOG.md`.
 
 ### E. Iterative self-review loop until pass (required)

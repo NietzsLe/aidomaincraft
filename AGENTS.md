@@ -5,13 +5,13 @@
 Repo này là tra cứu theo usecase. `CHARTER.md` là luật, `VERIFY.md` là checklist chấm đạt/rớt, `templates/` là mẫu điền.
 
 ### Tra cứu (dùng cho dự án khác)
-1. Đọc `CHARTER.md` (hiện tại: v9).
+1. Đọc `CHARTER.md` (hiện tại: v10).
 2. Đọc root `README.md` để chọn domain (`domains/<d>/`).
 3. Đọc `domains/<d>/README.md` (điều hướng + định vị + chồng lấn, cho phép nhiều item chính 1 việc) để chọn item + cách dùng.
 4. Đọc `domains/<d>/using-<x>.md` để lấy lệnh mẫu + lưu ý RIÊNG cho domain, rồi theo link về `items/<x>/README.md` (nguồn sự thật duy nhất) để đọc cơ chế + ngưỡng chi tiết, làm theo lệnh trong đó.
 
 ### Tạo mới (thêm item / thêm cặp item-domain)
-- Thêm item mới: copy `templates/item-template.md` thành `items/<x>/README.md`. Thẩm tra nguồn (repo/docs/registry + ít nhất 1 file nguồn). Viết đủ khung v7: `Cách item hoạt động` + `Định vị khác biệt` + `Bản đồ phủ usecase (★)` + usecase 6 field + `Tham khảo sử dụng (review sâu + số có trọng số)` + `Được dùng ở đâu` + song ngữ.
+- Thêm item mới: khai `Nguồn gốc: ngoại nhập | nội tại` trước (CHARTER v10 §4b; nội tại theo `templates/intrinsic-item-template.md` + cập nhật `items/REGISTRY.md`). Copy `templates/item-template.md` thành `items/<x>/README.md`. Thẩm tra nguồn (repo/docs/registry + ít nhất 1 file nguồn). Viết đủ khung v7: `Cách item hoạt động` + `Định vị khác biệt` + `Bản đồ phủ usecase (★)` + usecase 6 field + `Tham khảo sử dụng (review sâu + số có trọng số)` + `Được dùng ở đâu` + song ngữ.
 - Thêm cặp item-domain mới (item đã có, dùng cho domain mới): copy `templates/domain-using-template.md` thành `domains/<d>/using-<x>.md`. Chỉ viết phần RIÊNG domain + link về đúng section item gốc, cấm copy nguyên đoạn. Cập nhật `domains/<d>/README.md` + mục `Được dùng ở đâu` trong item gốc trong cùng commit.
 - Thêm domain mới: copy `templates/domain-index-template.md`. Mỗi cặp trong domain mới đều cần using-doc.
 - Self-review lặp đến khi đạt theo `VERIFY.md` mục E + F6: 1 FAIL là không merge; WARN phải ghi lý do.
@@ -25,13 +25,13 @@ Không commit log, token, PII.
 Usability-first lookup repo. `CHARTER.md` is the law, `VERIFY.md` is the pass/fail checklist, `templates/` holds fill-in blanks.
 
 ### Lookup (for other projects)
-1. Read `CHARTER.md` (current: v7).
+1. Read `CHARTER.md` (current: v10).
 2. Read root `README.md` to pick a domain (`domains/<d>/`).
 3. Read `domains/<d>/README.md` (routing + positioning + overlap, multiple primaries allowed) to pick the item + way.
 4. Read `domains/<d>/using-<x>.md` for domain-specific commands + notes, then follow links to `items/<x>/README.md` (single source of truth) for mechanism + bars, and follow its commands.
 
 ### Authoring (add item / add item-domain pair)
-- New item: copy `templates/item-template.md` to `items/<x>/README.md`. Verify sources first. Fill the full v7 frame: `How it works` + `Differentiation` + `Coverage map (★)` + 6-field sub-usecases + `Usage references (deep + weighted)` + `Where used` + bilingual.
+- New item: declare `Origin: imported | intrinsic` first (CHARTER v10 §4b; intrinsic follows `templates/intrinsic-item-template.md` + updates `items/REGISTRY.md`). Copy `templates/item-template.md` to `items/<x>/README.md`. Verify sources first. Fill the full v7 frame: `How it works` + `Differentiation` + `Coverage map (★)` + 6-field sub-usecases + `Usage references (deep + weighted)` + `Where used` + bilingual.
 - New item-domain pair (existing item, new domain use): copy `templates/domain-using-template.md` to `domains/<d>/using-<x>.md`. Domain-only deltas + links to exact item sections, never copied paragraphs. Update `domains/<d>/README.md` + the item's `Where used` in the same commit.
 - New domain: copy `templates/domain-index-template.md`. Every pair in it needs a using-doc.
 - Iterative self-review per `VERIFY.md` sections E + F6: 1 FAIL blocks merge; WARNs need a recorded reason.

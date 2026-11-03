@@ -1,6 +1,6 @@
-# templates/item-template.md — mẫu điền item (CHARTER v9, khung item v7 + bộ 3 cốt lõi/tùy chỉnh/phân công)
+# templates/item-template.md — mẫu điền item NGOẠI NHẬP (CHARTER v10, khung item v7 + bộ 3 cốt lõi/tùy chỉnh/phân công)
 
-> Copy file này thành `items/<solution>/README.md`, điền vào chỗ `[...]`, xóa dòng hướng dẫn `>` khi xong. Giữ song ngữ VI trước EN sau. Chi tiết gốc sống ở đây; domain chỉ link về, không copy.
+> Copy file này thành `items/<solution>/README.md`, điền vào chỗ `[...]`, xóa dòng hướng dẫn `>` khi xong. Giữ song ngữ VI trước EN sau. Chi tiết gốc sống ở đây; domain chỉ link về, không copy. Item NỘI TẠI dùng `intrinsic-item-template.md` thay (CHARTER v10 §5d). Khai nguồn gốc ở `items/REGISTRY.md` trong cùng commit.
 
 ## Tiếng Việt
 

@@ -8,7 +8,7 @@
 - `items/` = kho item trung lập domain (1 tool = 1 item, vd `items/hallmark/`). Chi tiết gốc sống ở đây.
 - `domains/` = hướng dẫn theo lĩnh vực (vd `domains/ui/`, `domains/media/`). Mỗi cặp item-domain có `using-<item>.md` viết phần RIÊNG cho domain + link về item gốc. Một việc có thể có NHIỀU item chính (mỗi cái 1 cách).
 - Link 3 chiều bắt buộc: domain index → using-doc → item gốc (đúng section), và ngược lại.
-- Luật cấu trúc và version nằm ở `CHARTER.md` (hiện tại v9). Agent và người đều phải tuân thủ.
+- Luật cấu trúc và version nằm ở `CHARTER.md` (hiện tại v10). Agent và người đều phải tuân thủ.
 - Cài sang repo/thư mục khác: `./scripts/install.sh --target /path/to/project --dry-run` rồi `--backup` (xem `INSTALL.md`; gỡ: `UNINSTALL.md`). Mặc định reference-only, agent tự clone nguồn khi cần.
 
 **Bảng chọn:**
@@ -35,7 +35,7 @@
 - `items/` = domain-neutral item store (1 tool = 1 item, e.g. `items/hallmark/`). Origin details live here.
 - `domains/` = field guides (e.g. `domains/ui/`, `domains/media/`). Each item-domain pair has `using-<item>.md` with domain-only deltas + links to the item origin. One job may have MULTIPLE primary items (each a different way).
 - Mandatory 3-way links: domain index → using-doc → item origin (exact section), and back.
-- Structure and versioning rules live in `CHARTER.md` (current v9).
+- Structure and versioning rules live in `CHARTER.md` (current v10).
 - Install into another repo/dir: `./scripts/install.sh --target /path/to/project --dry-run` then `--backup` (see `INSTALL.md`; remove: `UNINSTALL.md`). Reference-only by default.
 
 **Routing:**

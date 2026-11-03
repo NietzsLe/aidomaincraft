@@ -63,7 +63,7 @@ if $setup install --target "$t5" >/dev/null 2>&1; then bad "unbalanced accepted"
 $setup version --target "$t1" > "$t1.ver"
 grep -q 'installer 1.1.0' "$t1.ver" && ok "version installer" || bad "version installer"
 grep -q 'template agents-block.md: v5' "$t1.ver" && ok "version template" || bad "version template"
-grep -q 'source CHARTER: v9' "$t1.ver" && ok "version charter" || bad "version charter"
+grep -q 'source CHARTER: v10' "$t1.ver" && ok "version charter" || bad "version charter"
 grep -q 'AGENTS.md: block v5' "$t1.ver" && ok "version installed" || bad "version installed"
 
 # 10. check-update up-to-date, then flags a stale v1 block
@@ -105,6 +105,30 @@ t7=$(mktemp -d); $setup install --target "$t7" --vendor >/dev/null
 echo STALE > "$t7/.aidomaincraft/CHARTER.md"
 $setup upgrade --target "$t7" >/dev/null
 grep -q STALE "$t7/.aidomaincraft/CHARTER.md" && bad "vendor snapshot not refreshed" || ok "vendor snapshot refreshed"
+
+# 13. REGISTRY in sync with items/ (CHARTER v10 §4b)
+reg="$root/items/REGISTRY.md"
+[ -f "$reg" ] && ok "registry exists" || bad "registry missing"
+for d in "$root"/items/*/; do
+  n=$(basename "$d")
+  [ "$n" = "REGISTRY.md" ] && continue
+  grep -q "| \`$n\` " "$reg" && ok "registry has $n" || bad "registry missing $n"
+done
+while IFS= read -r line; do
+  case "$line" in
+    "| \`"*)
+      n=$(printf '%s' "$line" | sed 's/^| `\([^`]*\)`.*/\1/')
+      [ -d "$root/items/$n" ] && ok "registry row live: $n" || bad "registry orphan row: $n"
+      origin=$(printf '%s' "$line" | awk -F'|' '{print $3}')
+      case "$origin" in
+        *nội\ tại*)
+          grep -q 'Nguồn gốc' "$root/items/$n/README.md" && ok "$n has Nguon goc" || bad "$n missing Nguon goc"
+          grep -q 'Áp dụng' "$root/items/$n/README.md" && ok "$n has Ap dung" || bad "$n missing Ap dung"
+          ;;
+      esac
+      ;;
+  esac
+done < "$reg"
 
 rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t1.ver"
 echo "---"

@@ -16,6 +16,7 @@
 <style>
   :root { color-scheme: light; }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: #fafafa; color: #18181b; }
   #topbar { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid #e4e4e7; padding: 10px 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   #topbar .title { font-weight: 700; font-size: 14px; margin-right: 4px; }
@@ -34,7 +35,8 @@
   #framebox { background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
   #framebox iframe { border: 0; display: block; transform-origin: top left; }
   #cap { text-align: center; font-size: 12px; color: #71717a; padding: 0 24px 28px; }
-  #overview { display: flex; gap: 16px; align-items: flex-start; justify-content: center; padding: 24px; flex-wrap: nowrap; overflow-x: auto; }
+  #overview { text-align: center; padding: 24px; overflow-x: auto; }
+  #ov-inner { display: inline-flex; gap: 16px; align-items: flex-start; vertical-align: top; text-align: left; }
   .cell { background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; overflow: hidden; cursor: pointer; flex: none; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
   .cell:hover { border-color: #a1a1aa; }
   .cell .tag { font-size: 11px; font-weight: 600; color: #52525b; padding: 8px 12px; border-bottom: 1px solid #f4f4f5; }
@@ -131,7 +133,9 @@
   }
   function grid() {
     $("stage").hidden = true; $("cap").hidden = true;
-    var ov = $("overview"); ov.hidden = false; ov.innerHTML = "";
+    var ov = $("overview"); ov.hidden = false;
+    ov.innerHTML = '<div id="ov-inner"></div>';
+    var inner = $("ov-inner");
     var total = Object.keys(TYPES).reduce(function (s, k) { return s + TYPES[k].base; }, 0) + 3 * 16;
     var avail = Math.max(320, ov.clientWidth || document.documentElement.clientWidth - 48);
     var sc = Math.min(1, avail / total);
@@ -151,7 +155,7 @@
       fr.style.transform = "scale(" + sc + ")";
       cell.appendChild(tag); cell.appendChild(fr);
       (function (kk) { cell.onclick = function () { selectType(kk); }; })(k);
-      ov.appendChild(cell);
+      inner.appendChild(cell);
     });
     $("hint").textContent = "lưới 4 khung · thu " + Math.round(sc * 100) + "%";
   }

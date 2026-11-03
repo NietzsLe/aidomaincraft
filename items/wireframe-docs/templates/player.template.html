@@ -220,10 +220,8 @@ function markAction(s, sc) {
   var tag = document.createElement("div");
   tag.className = "action-tag";
   tag.textContent = spec.text;
-  var ty = y * sc - 28;
-  if (ty < 2) ty = (y + (t.el.offsetHeight || 24)) * sc + 4;
   tag.style.left = Math.max(4, x * sc) + "px";
-  tag.style.top = ty + "px";
+  tag.style.top = ((y + (t.el.offsetHeight || 24)) * sc + 6) + "px";
   $("stage-wrap").appendChild(tag);
 }
 function findTarget(label) {

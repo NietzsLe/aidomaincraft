@@ -136,10 +136,12 @@
     var ov = $("overview"); ov.hidden = false;
     ov.innerHTML = '<div id="ov-inner"></div>';
     var inner = $("ov-inner");
-    var total = Object.keys(TYPES).reduce(function (s, k) { return s + TYPES[k].base; }, 0) + 3 * 16;
+    var keys = Object.keys(TYPES);
+    var bases = keys.reduce(function (s, k) { return s + TYPES[k].base; }, 0);
+    var gaps = (keys.length - 1) * 16;
     var avail = Math.max(320, ov.clientWidth || document.documentElement.clientWidth - 48);
-    var sc = Math.min(1, avail / total);
-    Object.keys(TYPES).forEach(function (k) {
+    var sc = Math.min(1, (avail - gaps) / bases);
+    keys.forEach(function (k) {
       var w = TYPES[k].base;
       var cell = document.createElement("div");
       cell.className = "cell";

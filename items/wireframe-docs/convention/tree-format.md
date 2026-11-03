@@ -12,9 +12,13 @@
    responsive. `scripts/check.py` PASS nghĩa là cấu trúc đã rõ, không nghĩa là đã có wireframe.
 2. `*-wireframe.html`: soạn tay (HTML/CSS self-contained, không mạng, không build ngoài),
    1 file chứa đúng 4 khung khổ màn hình, mỗi khung vẽ lại toàn bộ trang ở khổ đó.
-3. Tên cặp đôi trong `.tmp/wireframes/`: `<slug>-tree.md` đi với `<slug>-wireframe.html`
-   (ví dụ `pricing-tree.md` + `pricing-wireframe.html`). Trình review luôn trình cả cặp
-   + dòng PASS của `check.py` + dòng PASS của `verify-pair.py`.
+3. Tên cặp đôi trong thư mục bản `.aidomaincraft/.tmp/wireframes/YYYY-MM-DD-HHmm-<slug>/`:
+   `<slug>-tree.md` đi với `<slug>-wireframe.html`
+   (ví dụ `2026-11-03-1430-pricing/pricing-tree.md` +
+   `2026-11-03-1430-pricing/pricing-wireframe.html`). Giờ 24h local; slug
+   viết thường-gạch-ngang-không-dấu; trùng phút thì thêm `-v2`, `-v3`.
+   Trình review luôn trình cả cặp + dòng PASS của `check.py` + dòng PASS
+   của `verify-pair.py`.
 
 ## Bốn khổ màn hình khóa cứng
 
@@ -27,6 +31,21 @@
 
 Không tự đặt mã khổ khác. Mỗi khung trong wireframe gắn `data-wf-breakpoint`
 và `data-wf-width` đúng số trên.
+
+## Biến thể preview theo khổ (cho `templates/viewer.html`)
+
+Rộng chuẩn (in đậm) đúng bảng trên; biến thể là các rộng xem thêm khi review,
+không cần soạn khung riêng (nội dung reflow tự nhiên).
+
+| Khổ | Biến thể (px, chuẩn in đậm) |
+|---|---|
+| `sm` | 320, **360**, 390, 412, 430 |
+| `md` | **768**, 800, 834 |
+| `lg` | 1280, **1366**, 1440 |
+| `xl` | 1600, **1920**, 2560 |
+
+Danh sách này là nguồn sự thật cho viewer; `viewer.html` mirror cứng đúng
+các số trên — lệch là FAIL review (kiểm tra ở `tests/test.sh` §14).
 
 ## Cú pháp tree (3 loại dòng, còn lại bỏ qua)
 
@@ -82,7 +101,7 @@ và `data-wf-width` đúng số trên.
 7. Trình bày visual (màu khung, độ lớn chữ, gợi ý hình khối theo Kiểu) do người soạn
    quyết — máy chỉ kiểm tra đối chiếu, cảm quan giao diện thuộc về designer (xem phân công).
 
-## Ví dụ tối thiểu (cặp đôi)
+## Ví dụ tối thiểu (cặp đôi trong `2026-11-03-1430-pricing/`)
 
 `pricing-tree.md`:
 
@@ -94,7 +113,7 @@ và `data-wf-width` đúng số trên.
 - `Button` **Chọn Pro** — note: CTA duy nhất | states: default, hover, disabled | hide: sm
 ```
 
-`pricing-wireframe.html`: 1 file, 4 khung `sm/md/lg/xl`; khung `sm` vẽ section Gói dạng
+`pricing-wireframe.html` (cùng thư mục bản): 1 file, 4 khung `sm/md/lg/xl`; khung `sm` vẽ section Gói dạng
 `stack` và vắng nút Chọn Pro; 3 khung còn lại vẽ dạng `grid-3` đủ 2 component;
 mọi block gắn đủ `data-wf-*` như mục chuẩn trên.
 

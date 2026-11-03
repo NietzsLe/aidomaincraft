@@ -354,6 +354,7 @@ function closeStageOverlay() {
 }
 function showOverlay(s, kind, label) {
   closeStageOverlay();
+  document.querySelectorAll(".action-tag").forEach(function (t) { t.remove(); });
   var meta = (META[s.page] && META[s.page][label]) || {};
   var rows = [["Kiểu", meta.type || "?"], ["Trạng thái", (meta.states || []).join(", ") || "—"],
     ["Hành vi", (meta.behavior || []).join(", ") || kind], ["Ghi chú", meta.note || "—"]];

@@ -63,7 +63,7 @@ if $setup install --target "$t5" >/dev/null 2>&1; then bad "unbalanced accepted"
 $setup version --target "$t1" > "$t1.ver"
 grep -q 'installer 1.1.0' "$t1.ver" && ok "version installer" || bad "version installer"
 grep -q 'template agents-block.md: v5' "$t1.ver" && ok "version template" || bad "version template"
-grep -q 'source CHARTER: v10' "$t1.ver" && ok "version charter" || bad "version charter"
+grep -q 'source CHARTER: v11' "$t1.ver" && ok "version charter" || bad "version charter"
 grep -q 'AGENTS.md: block v5' "$t1.ver" && ok "version installed" || bad "version installed"
 
 # 10. check-update up-to-date, then flags a stale v1 block
@@ -106,7 +106,7 @@ echo STALE > "$t7/.aidomaincraft/CHARTER.md"
 $setup upgrade --target "$t7" >/dev/null
 grep -q STALE "$t7/.aidomaincraft/CHARTER.md" && bad "vendor snapshot not refreshed" || ok "vendor snapshot refreshed"
 
-# 13. REGISTRY in sync with items/ (CHARTER v10 §4b)
+# 13. REGISTRY in sync with items/ (CHARTER v11 §4b)
 reg="$root/items/REGISTRY.md"
 [ -f "$reg" ] && ok "registry exists" || bad "registry missing"
 for d in "$root"/items/*/; do
@@ -136,7 +136,44 @@ grep -qF '.aidomaincraft/' "$root/.gitignore" && ok "root gitignores aidomaincra
 [ ! -e "$root/domains/ui/using-wireframe-docs.md" ] && ok "using-doc removed" || bad "using-doc still present"
 if git -C "$root" ls-files | grep -v '^CHANGELOG.md$' | grep -v '^tests/test.sh$' | xargs grep -l 'wireframe-docs\|wireframe_docs' 2>/dev/null | grep -q .; then bad "stale wireframe-docs references"; else ok "no wireframe-docs references"; fi
 
-rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t1.ver" "$t1.guide"
+# 15. vendor snapshot CHARTER staleness + installer drift (v10.39)
+t8=$(mktemp -d); $setup install --target "$t8" --vendor >/dev/null
+cv=$(sed -n 's/.*CHARTER\.md — aidomaincraft — v\([0-9][0-9]*\).*/\1/p' "$root/CHARTER.md")
+grep -q "\"charter\": $cv" "$t8/.aidomaincraft/install.json" && ok "manifest records charter v$cv" || bad "manifest charter missing"
+$setup doctor --target "$t8" >/dev/null && ok "doctor vendor charter OK" || bad "doctor vendor charter"
+python3 - "$t8/.aidomaincraft/install.json" <<'PYEOF'
+import json, sys
+p = sys.argv[1]
+d = json.load(open(p)); d["charter"] = 1
+json.dump(d, open(p, "w"), indent=2, sort_keys=True)
+PYEOF
+if $setup doctor --target "$t8" >/dev/null 2>&1; then bad "doctor missed stale snapshot"; else ok "doctor flags stale snapshot"; fi
+if $setup check-update --target "$t8" >/dev/null 2>&1; then bad "check-update missed stale snapshot"; else ok "check-update flags stale snapshot"; fi
+$setup upgrade --target "$t8" >/dev/null
+grep -q "\"charter\": $cv" "$t8/.aidomaincraft/install.json" && ok "upgrade refreshes snapshot charter" || bad "snapshot charter not refreshed"
+$setup check-update --target "$t8" >/dev/null && ok "clean after snapshot refresh" || bad "still stale after refresh"
+python3 - "$t8/.aidomaincraft/install.json" <<'PYEOF'
+import json, sys
+p = sys.argv[1]
+d = json.load(open(p)); d["version"] = "0.0.0"
+json.dump(d, open(p, "w"), indent=2, sort_keys=True)
+PYEOF
+if $setup doctor --target "$t8" >/dev/null 2>&1; then bad "doctor missed installer drift"; else ok "doctor flags installer drift"; fi
+$setup upgrade --target "$t8" >/dev/null
+$setup doctor --target "$t8" >/dev/null && ok "clean after drift refresh" || bad "drift persists"
+
+# 16. aidomaincraft router skill (v11 skills layer)
+sk="$root/skills/aidomaincraft/SKILL.md"
+[ -f "$sk" ] && ok "skill exists" || bad "skill missing"
+grep -q '^name: aidomaincraft' "$sk" && ok "skill frontmatter name" || bad "skill name"
+grep -q '^description: ' "$sk" && ok "skill frontmatter description" || bad "skill description"
+grep -q 'CHARTER.md' "$sk" && ok "skill points to CHARTER" || bad "skill no CHARTER"
+grep -q 'VERIFY.md' "$sk" && ok "skill points to VERIFY" || bad "skill no VERIFY"
+grep -q 'REGISTRY.md' "$sk" && ok "skill points to REGISTRY" || bad "skill no REGISTRY"
+grep -q 'using-<x>.md' "$sk" && ok "skill points to using-doc" || bad "skill no using-doc"
+if grep -q '<!-- BEGIN aidomaincraft -->' "$sk"; then bad "skill embeds install block"; else ok "skill has no embedded block"; fi
+
+rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t8" "$t1.ver" "$t1.guide"
 echo "---"
 echo "pass=$pass fail=$fail"
 [ "$fail" = "0" ]

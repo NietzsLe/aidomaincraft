@@ -1,5 +1,17 @@
 # CHANGELOG.md — aidomaincraft
 
+## v11 — 2026-11-05 (CHARTER: chuẩn đóng góp item nội tại + tầng skills)
+- CHARTER v10.9 → v11 (§9 mới: nhận item 5 ý — proposal/chuẩn hóa/runtime/duy trì/skills; §3 ghi nhận tầng `skills/` thuộc tooling).
+- `templates/intrinsic-item-template.md` có checklist nhận item; `VERIFY.md` mục B thêm check case test + using-doc + suite runtime; `CONTRIBUTING.md` thêm luồng PR item nội tại 5 bước (song ngữ).
+- Skill router `skills/aidomaincraft/SKILL.md` (chuẩn Agent Skills mở, opencode/claude/codex dùng chung): trigger khi nhắc aidomaincraft, điều hướng 4 bước tra cứu + thêm item + verify/duy trì, chỉ link không copy lệnh; `tests/test.sh` §16 (frontmatter + trỏ CHARTER/VERIFY/REGISTRY/using-doc + cấm nhúng install block).
+- Self-review: case thử `repo khác thêm tool riêng` → đọc §9 + template mất <3 phút → quyết định nhận được vì đủ 5 ý đo được (không phải taste cảm tính).
+- `bash tests/test.sh` 99 pass / 0 fail.
+
+## v10.39 — 2026-11-05 (tooling: phát hiện snapshot CHARTER cũ + installer drift)
+- `install.json` ghi thêm `charter` (CHARTER nguồn lúc snapshot); `doctor` + `check-update` báo snapshot cũ (`snapshot CHARTER vX, source is vY`) và installer lệch (`installed by installer X, current Y`); `upgrade` refresh cả hai.
+- `tests/test.sh` §15 mới (manifest ghi charter + doctor/check-update bắt snapshot cũ + upgrade refresh + bắt installer drift + sạch sau refresh); `INSTALL.md` ghi rõ cách đọc báo stale.
+- `bash tests/test.sh` 91 pass / 0 fail.
+
 ## v10.16 — 2026-11-04 (xóa item wireframe-docs, không hỗ trợ nữa)
 - Xóa hẳn `items/wireframe-docs/` (README + convention + scripts + templates + examples) và `domains/ui/using-wireframe-docs.md`; không hỗ trợ hệ wireframe tay nữa vì nặng chi phí duy trì.
 - Đồng bộ `items/REGISTRY.md` (bỏ 1 dòng), `domains/ui/README.md` VI+EN (bỏ 3 hàng routing + 1 hàng định vị + 1 cột ma trận + câu workflow + bullet using-doc mỗi ngôn ngữ, vá 2 dòng phân cách ma trận về 8 cột), `tests/test.sh` (bỏ §14–§20, thêm §14 guard quét tham chiếu sót qua `git ls-files` trừ `CHANGELOG.md`), `CONTRIBUTING.md` + `.github/PULL_REQUEST_TEMPLATE.md` (ví dụ sang `item-dembrandt` / `v9.4` có thật trong lịch sử).

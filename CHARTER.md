@@ -1,4 +1,4 @@
-# CHARTER.md — aidomaincraft — v10.9
+# CHARTER.md — aidomaincraft — v11
 
 ## Tiếng Việt
 
@@ -9,11 +9,11 @@ Tổng hợp kinh nghiệm dùng AI theo lĩnh vực, dưới dạng chỉ dẫn
 - Có: chỉ dẫn usecase, prompt mẫu, pitfalls, tham chiếu tới tool/skill/repo ngoài + đánh giá sử dụng.
 - Không: copy nguyên code/tool ngoài vào đây; lưu log, token, dữ liệu khách hàng.
 
-### 3. Tổ chức (v10: thêm phân loại nguồn gốc item; giữ bộ 3 v9, tooling v8; v10.9: tiếng Việt có dấu bắt buộc)
+### 3. Tổ chức (v10: thêm phân loại nguồn gốc item; giữ bộ 3 v9, tooling v8; v10.9: tiếng Việt có dấu bắt buộc; v11: chuẩn đóng góp item nội tại + tầng skills)
 - Tầng chung (mỏng): root `README.md`, `AGENTS.md`, `CHARTER.md`, `CHANGELOG.md`.
 - Tầng `items/`: 1 item = 1 thư mục, kiến thức TRUNG LẬP domain của 1 công cụ/giải pháp. `items/<x>/README.md` chứa: là gì, ai làm, cài đặt mọi OS, cơ chế core, **cốt lõi bất biến / phần tùy chỉnh / phân công ai làm gì (bắt buộc từ v9)**, định vị vs đối thủ viral, giá/license, pitfalls chung, bản đồ phủ usecase (mạnh ★ / trung bình / không hỗ trợ + thay thế), tham khảo sử dụng (review sâu + số trung bình có trọng số), được dùng ở domain nào (link ngược).
 - Tầng `domains/`: 1 domain = 1 thư mục lĩnh vực (`domains/ui/`, `domains/media/`...). Mỗi domain có `README.md` làm index chọn item theo usecase (cho phép NHIỀU item cùng phục vụ 1 usecase, mỗi cái 1 cách, kèm tiêu chí phân biệt) + 1 file `using-<item>.md` cho MỖI cặp item-domain (usecase trong domain này, lệnh mẫu cụ thể, lưu ý riêng, điểm mạnh cốt lõi của item CHO domain đó, link về đúng section item gốc).
-- Tầng tooling (không phải kiến thức, không tính là tầng nội dung): `scripts/install.sh` + `scripts/uninstall.sh` + `scripts/aidomaincraft_setup.py`, `templates/agents-block.md` + `templates/claude-block.md` + `templates/VERSIONS`, `INSTALL.md` + `UNINSTALL.md`, `tests/test.sh`. Mặc định cài reference-only (chỉ chèn block vào `AGENTS.md`/`CLAUDE.md` của đích); `--vendor` mới copy snapshot vào `.aidomaincraft/` (git-ignored).
+- Tầng tooling (không phải kiến thức, không tính là tầng nội dung): `scripts/install.sh` + `scripts/uninstall.sh` + `scripts/aidomaincraft_setup.py`, `templates/agents-block.md` + `templates/claude-block.md` + `templates/VERSIONS`, `INSTALL.md` + `UNINSTALL.md`, `tests/test.sh`. Skill gọi được sống ở `skills/<slug>/SKILL.md` (thuộc tầng tooling; docs tra cứu vẫn ở `items/`/`domains/`, skill chỉ link, cấm copy lệnh/ngưỡng). Mặc định cài reference-only (chỉ chèn block vào `AGENTS.md`/`CLAUDE.md` của đích); `--vendor` mới copy snapshot vào `.aidomaincraft/` (git-ignored).
 - Không tạo tầng kiến thức khác trừ khi bump CHARTER.
 
 ### 4. Quy ước đặt tên
@@ -76,6 +76,13 @@ Tổng hợp kinh nghiệm dùng AI theo lĩnh vực, dưới dạng chỉ dẫn
 - Mọi thay đổi qua `VERIFY.md` vòng self-review lặp đến hết FAIL (mục E): 1 FAIL là không merge.
 - Đổi cấu trúc: bump `CHARTER.md` lên vN+1 + ghi `CHANGELOG.md`.
 
+### 9. Đóng góp item nội tại (từ v11: nhận tool riêng thành item + chuẩn runtime + tầng skills)
+- Nhận item: 1 tool = 1 proposal — tên kebab-case tiếng Anh; tác giả + commit khai sinh + lý do ra đời; tài nguyên tự sở hữu trong `items/<x>/` (README + scripts/templates/assets/data), cấm copy code ngoài vào (giữ §2) + verify được (chạy thử/`--help`/test) + gọn nhẹ (lõi nhỏ, lớn tách repo riêng).
+- Chuẩn hóa: copy `templates/intrinsic-item-template.md` thành `items/<x>/README.md`, đủ khung §5d song ngữ VI trước EN sau; khai 1 dòng `items/REGISTRY.md`; mỗi cặp item-domain có `domains/<d>/using-<x>.md` + cập nhật index 2 đầu trong cùng commit.
+- Chuẩn runtime: suite sống ở `.aidomaincraft/<item>/<suite>/` (git-ignored, không commit); tài nguyên stdlib, không deps nặng; mọi quan sát UI bằng browser thật; review trước khi build; log relay đầy đủ (`start`/`note`/`end`); không log/token/PII.
+- Duy trì: mọi sửa self-review VERIFY tới 0 FAIL + `tests/test.sh` xanh + `CHANGELOG.md`; 1 tool/1 proposal; xung đột do user quyết, cấm agent tự dung hòa.
+- Tầng `skills/` (từ v11): artifact gọi được cho agent (`SKILL.md` + scripts); docs tra cứu vẫn sống ở `items/`/`domains/`; skill chỉ link về item gốc, cấm copy lệnh/ngưỡng.
+
 ---
 
 ## English
@@ -87,11 +94,11 @@ Collect hands-on AI experience by field as usecase-first guides, reusable when s
 - In: usecase guides, sample prompts, pitfalls, references to external tools/skills/repos + usage reviews.
 - Out: vendored external code/tools; logs, tokens, customer data.
 
-### 3. Organization (v10: item origin classification added; v9 triad kept, tooling stays v8; v10.9: Vietnamese accents required)
+### 3. Organization (v10: item origin classification added; v9 triad kept, tooling stays v8; v10.9: Vietnamese accents required; v11: intrinsic contribution bar + skills layer)
 - Common layer (thin): root `README.md`, `AGENTS.md`, `CHARTER.md`, `CHANGELOG.md`.
 - `items/` layer: 1 item = 1 folder, DOMAIN-NEUTRAL knowledge of one tool/solution. `items/<x>/README.md` holds: what it is, who builds it, install on every OS, core mechanism, **invariant core / customizable surface / work split (required since v9)**, differentiation vs viral opponents, price/license, shared pitfalls, usecase-coverage map (strong ★ / medium / unsupported + replacement), usage references (deep reviews + weighted averages), where-used backlinks.
 - `domains/` layer: 1 domain = 1 field folder (`domains/ui/`, `domains/media/`...). Each domain has an index `README.md` (usecase → item(s), MULTIPLE items may serve one usecase in different ways with a distinguishing rule) + one `using-<item>.md` per item-domain pair (usecases in this domain, concrete commands, domain-specific notes, core strengths FOR this domain, links to the exact item sections).
-- Tooling layer (not knowledge): `scripts/install.sh` + `scripts/uninstall.sh` + `scripts/aidomaincraft_setup.py`, `templates/agents-block.md` + `templates/claude-block.md` + `templates/VERSIONS`, `INSTALL.md` + `UNINSTALL.md`, `tests/test.sh`. Default install is reference-only (blocks in target `AGENTS.md`/`CLAUDE.md`); `--vendor` copies a git-ignored `.aidomaincraft/` snapshot.
+- Tooling layer (not knowledge): `scripts/install.sh` + `scripts/uninstall.sh` + `scripts/aidomaincraft_setup.py`, `templates/agents-block.md` + `templates/claude-block.md` + `templates/VERSIONS`, `INSTALL.md` + `UNINSTALL.md`, `tests/test.sh`. Callable skills live under `skills/<slug>/SKILL.md` (tooling layer; lookup docs stay in `items/`/`domains/`, skills link only, never copy commands/bars). Default install is reference-only (blocks in target `AGENTS.md`/`CLAUDE.md`); `--vendor` copies a git-ignored `.aidomaincraft/` snapshot.
 - No other knowledge levels without a CHARTER bump.
 
 ### 4. Naming
@@ -153,3 +160,10 @@ Collect hands-on AI experience by field as usecase-first guides, reusable when s
 - Edit install blocks: edit `templates/agents-block.md` / `templates/claude-block.md`, run `python3 scripts/aidomaincraft_setup.py bump-blocks --to vN` (syncs stamps + `templates/VERSIONS`), run `./tests/test.sh`, add a `CHANGELOG.md` entry.
 - Every change passes `VERIFY.md` iterative self-review until zero FAIL (section E): 1 FAIL blocks merge.
 - Structural change: bump `CHARTER.md` to vN+1 with a `CHANGELOG.md` entry.
+
+### 9. Intrinsic item contributions (since v11: own-tool intake + runtime bar + skills layer)
+- Intake: 1 tool = 1 proposal — English kebab-case name; author + birth commit + why; self-owned resources under `items/<x>/` (README + scripts/templates/assets/data), never copy outside code in (per §2) + verifiable (test run/`--help`/tests) + lightweight (small core, large extras get their own repo).
+- Normalize: copy `templates/intrinsic-item-template.md` to `items/<x>/README.md`, full §5d frame, bilingual VI first EN second; declare one line in `items/REGISTRY.md`; every item-domain pair gets `domains/<d>/using-<x>.md` + both index ends updated in the same commit.
+- Runtime bar: suites live under git-ignored `.aidomaincraft/<item>/<suite>/`, never committed; stdlib resources, no heavy deps; all UI observations in a real browser; review before build; full relay logs (`start`/`note`/`end`); no logs/tokens/PII.
+- Maintenance: every change passes VERIFY self-review to 0 FAILs + green `tests/test.sh` + `CHANGELOG.md`; 1 tool/1 proposal; conflicts decided by the user.
+- `skills/` layer (since v11): callable agent artifacts (`SKILL.md` + scripts); lookup docs stay in `items/`/`domains/`; skills link to item origins, never copy commands/bars.

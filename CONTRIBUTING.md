@@ -20,6 +20,13 @@
 - Mọi khẳng định số (stars/installs/ngày đo) có nguồn + ngày; thiếu số ghi `chưa xác minh`, cấm đoán.
 - Reviewer merge khi: 0 FAIL theo VERIFY + test xanh + 3 chiều link sống + song ngữ đồng nội dung + tiếng Việt có dấu đầy đủ (docs/CHANGELOG/PR/commit message thiếu dấu = yêu cầu sửa).
 
+### Đóng góp item nội tại (CHARTER v11 §9)
+1. **Proposal**: 1 tool = 1 đề xuất — tên kebab-case tiếng Anh, tác giả, lý do ra đời, tài nguyên tự sở hữu (cấm copy code ngoài vào).
+2. **Chuẩn hóa**: copy `templates/intrinsic-item-template.md` → `items/<x>/README.md` đủ khung §5d song ngữ; khai 1 dòng `items/REGISTRY.md`; using-doc + index 2 đầu trong cùng commit.
+3. **Thử runtime**: suite ở `.aidomaincraft/<item>/` (git-ignored, không commit); script stdlib chạy được (`--help`/demo PASS); quan sát UI bằng browser thật; log relay đầy đủ.
+4. **Verify**: self-review VERIFY tới 0 FAIL + `bash tests/test.sh` xanh (thêm case tài nguyên + demo + FAIL đúng mã) + CHANGELOG (case đã thử + quyết định).
+5. **PR**: 1 tool = 1 PR theo luồng 6 bước trên; xung đột khung/luật → sửa CHARTER trước.
+
 ### Quy tắc review
 - 1 FAIL là không merge; WARN giữ lại phải có lý do trong CHANGELOG.
 - Tranh chấp khung/luật → sửa CHARTER (bump version) trước, rồi mới sửa nội dung theo luật mới.
@@ -45,6 +52,13 @@
 - Never commit logs, tokens, PII, or local files (`.relay/`, `.test/`, `.aidomaincraft/` are git-ignored — check `git status` before adding).
 - Every number (stars/installs/dates) sourced + dated; missing numbers → `unverified`, never guessed.
 - Merge when: 0 VERIFY FAILs + green tests + live 3-way links + VI/EN in sync + Vietnamese fully accented (missing accents in docs/CHANGELOG/PR/commit messages = change requested).
+
+### Intrinsic item contributions (CHARTER v11 §9)
+1. **Proposal**: 1 tool = 1 proposal — English kebab-case name, author, why, self-owned resources (never copy outside code in).
+2. **Normalize**: copy `templates/intrinsic-item-template.md` → `items/<x>/README.md` (§5d frame, bilingual); one `items/REGISTRY.md` line; using-doc + both index ends in the same commit.
+3. **Trial runtime**: suite under git-ignored `.aidomaincraft/<item>/` (never commit); stdlib scripts run (`--help`/demo PASS); UI observations in a real browser; full relay logs.
+4. **Verify**: VERIFY self-review to 0 FAILs + green `bash tests/test.sh` (resource + demo + right-code FAIL cases) + CHANGELOG (tried case + decision).
+5. **PR**: 1 tool = 1 PR following the 6 steps above; frame/law disputes → amend CHARTER first.
 
 ### Review rules
 - 1 FAIL blocks merge; kept WARNs need a CHANGELOG reason.

@@ -162,6 +162,17 @@ if $setup doctor --target "$t8" >/dev/null 2>&1; then bad "doctor missed install
 $setup upgrade --target "$t8" >/dev/null
 $setup doctor --target "$t8" >/dev/null && ok "clean after drift refresh" || bad "drift persists"
 
+# 16. aidomaincraft router skill (v11 skills layer)
+sk="$root/skills/aidomaincraft/SKILL.md"
+[ -f "$sk" ] && ok "skill exists" || bad "skill missing"
+grep -q '^name: aidomaincraft' "$sk" && ok "skill frontmatter name" || bad "skill name"
+grep -q '^description: ' "$sk" && ok "skill frontmatter description" || bad "skill description"
+grep -q 'CHARTER.md' "$sk" && ok "skill points to CHARTER" || bad "skill no CHARTER"
+grep -q 'VERIFY.md' "$sk" && ok "skill points to VERIFY" || bad "skill no VERIFY"
+grep -q 'REGISTRY.md' "$sk" && ok "skill points to REGISTRY" || bad "skill no REGISTRY"
+grep -q 'using-<x>.md' "$sk" && ok "skill points to using-doc" || bad "skill no using-doc"
+if grep -q '<!-- BEGIN aidomaincraft -->' "$sk"; then bad "skill embeds install block"; else ok "skill has no embedded block"; fi
+
 rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t8" "$t1.ver" "$t1.guide"
 echo "---"
 echo "pass=$pass fail=$fail"

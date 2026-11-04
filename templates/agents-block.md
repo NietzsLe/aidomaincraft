@@ -1,5 +1,5 @@
 <!-- BEGIN aidomaincraft -->
-<!-- aidomaincraft agents-block v6 -->
+<!-- aidomaincraft agents-block v7 -->
 ## Aidomaincraft — usecase lookup
 
 This project can use **aidomaincraft** (usecase-first lookup for UI + media work).
@@ -25,13 +25,22 @@ Item details live in the source repo — never copy commands/bars into this proj
   missing instead of guessing commands.
 - Single source: commands, numeric bars and detailed steps live only in
   `items/*/README.md`; `domains/<d>/using-<x>.md` holds domain-only deltas.
+- System runtime vs in-runtime intake (`CHARTER.md` §10 — know which mode
+  you are in): system runtime only reads/uses (blocks + `doctor` /
+  `check-update` / `upgrade` + 4-step source lookup); when no source item
+  covers the job, draft a candidate under git-ignored
+  `.aidomaincraft/drafts/<x>/` from `templates/runtime-draft-template.md` +
+  one line in `.aidomaincraft/drafts/REGISTRY.local.md` (never touch source
+  `items/REGISTRY.md`, never commit `.aidomaincraft/`); a draft passing
+  `VERIFY.md` H promotes back via a `src/` clone + PR, never as the local
+  truth.
 - Agent-first versions (the user only talks, you run the commands):
   - At session start, when the task touches UI/media: run
     `python3 ~/.cache/aidomaincraft/scripts/aidomaincraft_setup.py doctor --target .`
     and `.../aidomaincraft_setup.py check-update --target .` yourself
     (read-only, no need to ask; fallback `/tmp/aidomaincraft` when HOME is not
-    writable), then report in one plain line, e.g. "lookup blocks v5, up to
-    date" or "blocks v5 installed, v6 available — upgrade?".
+    writable), then report in one plain line, e.g. "lookup blocks v7, up to
+    date" or "blocks v6 installed, v7 available — upgrade?".
   - When the user asks in plain words, map and run (no need to explain flags):
     "which version / đang dùng bản nào" → `version --target .`;
     "any update / có bản mới không" → `check-update --target .` (+ `--remote`

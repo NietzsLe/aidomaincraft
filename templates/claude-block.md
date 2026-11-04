@@ -1,5 +1,5 @@
 <!-- BEGIN aidomaincraft -->
-<!-- aidomaincraft claude-block v6 -->
+<!-- aidomaincraft claude-block v7 -->
 ## Aidomaincraft — usecase lookup
 
 This project can use **aidomaincraft** (UI + media lookup). The full rules live
@@ -15,6 +15,10 @@ file is absent).
   `git clone --depth 1 --branch main https://github.com/NietzsLe/aidomaincraft.git ~/.cache/aidomaincraft`
   (fallback `/tmp/aidomaincraft`); offline → use local `.aidomaincraft/` if
   present, else say missing instead of guessing.
+- System runtime vs in-runtime intake (same rule as `AGENTS.md`, `CHARTER.md`
+  §10): runtime only reads/uses; uncovered jobs become drafts under
+  git-ignored `.aidomaincraft/drafts/<x>/` + local index (never source
+  `items/REGISTRY.md`, never commit), promoted back via `src/` + PR.
 - Agent-first versions (user only talks, you run the commands): session start
   on a UI/media task → run the same `doctor` + `check-update` as `AGENTS.md`
   yourself, report one plain line; plain asks map to `version` /

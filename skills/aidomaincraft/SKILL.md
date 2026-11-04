@@ -28,7 +28,7 @@ https://github.com/NietzsLe/aidomaincraft.git ~/.cache/aidomaincraft`
 
 ## Luồng tra cứu (4 bước, khớp `AGENTS.md` repo nguồn)
 
-1. Đọc `CHARTER.md` (luật, bản hiện tại: v11) + root `README.md` để chọn
+1. Đọc `CHARTER.md` (luật, bản hiện tại: v12) + root `README.md` để chọn
    domain (`domains/<d>/`).
 2. Đọc `domains/<d>/README.md` (điều hướng + định vị + chồng lấn, cho phép
    nhiều item chính 1 việc) để chọn item + cách dùng.
@@ -38,13 +38,25 @@ https://github.com/NietzsLe/aidomaincraft.git ~/.cache/aidomaincraft`
 4. Xong việc nêu artifact đã tái dùng (slug prompt / variant / skill slug /
    gates đã pass) — không nêu được nghĩa là chưa thực sự dùng hệ.
 
-## Thêm item mới (CHARTER v11 §9)
+## Thêm item mới (CHARTER v12 §9: làm ở repo nguồn)
 
 - Ngoại nhập: copy `templates/item-template.md` → `items/<x>/README.md`.
 - Nội tại: copy `templates/intrinsic-item-template.md` → `items/<x>/README.md`
   (proposal 1 tool/1 đề xuất; tài nguyên tự sở hữu, cấm copy code ngoài).
 - Mọi item: khai 1 dòng `items/REGISTRY.md` + using-doc
   `domains/<d>/using-<x>.md` + cập nhật index 2 đầu, tất cả trong cùng commit.
+
+## Runtime của hệ vs thêm item trong runtime (CHARTER v12 §10: làm ở repo đã cài)
+
+- Runtime của hệ = chỉ đọc/dùng: block đã cài + `doctor`/`check-update`/
+  `upgrade` + tra cứu 4 bước về nguồn; offline dùng snapshot
+  `.aidomaincraft/`, thiếu nguồn thì báo, cấm đoán.
+- Thêm item trong runtime = soạn draft để sau promote: copy
+  `templates/runtime-draft-template.md` → `.aidomaincraft/drafts/<x>/`
+  (git-ignored, cấm commit) + khai 1 dòng
+  `.aidomaincraft/drafts/REGISTRY.local.md` (cấm đụng `items/REGISTRY.md`
+  nguồn). Cây quyết định: việc nguồn đã phủ → tra cứu + dùng; việc chưa
+  ai phủ → soạn draft; draft đạt VERIFY H → promote qua clone `src/` + PR.
 
 ## Sửa + verify + duy trì
 

@@ -15,14 +15,14 @@ t1=$(mktemp -d)
 $setup install --target "$t1" >/dev/null
 [ "$(grep -cF '<!-- BEGIN aidomaincraft -->' "$t1/AGENTS.md")" = "1" ] && ok "agents block count 1" || bad "agents block count"
 [ "$(grep -cF '<!-- BEGIN aidomaincraft -->' "$t1/CLAUDE.md")" = "1" ] && ok "claude block count 1" || bad "claude block count"
-grep -q 'aidomaincraft agents-block v5' "$t1/AGENTS.md" && ok "agents stamp v5" || bad "agents stamp"
-grep -q 'aidomaincraft claude-block v5' "$t1/CLAUDE.md" && ok "claude stamp v5" || bad "claude stamp"
+grep -q 'aidomaincraft agents-block v6' "$t1/AGENTS.md" && ok "agents stamp v6" || bad "agents stamp"
+grep -q 'aidomaincraft claude-block v6' "$t1/CLAUDE.md" && ok "claude stamp v6" || bad "claude stamp"
 [ ! -e "$t1/.aidomaincraft" ] && ok "no vendor dir by default" || bad "vendor dir leaked"
 [ ! -e "$t1/.gitignore" ] && ok "no gitignore by default" || bad "gitignore leaked"
 
 # 2. idempotent reinstall
 out=$($setup install --target "$t1")
-echo "$out" | grep -q 'unchanged (already v5)' && ok "idempotent" || bad "idempotent: $out"
+echo "$out" | grep -q 'unchanged (already v6)' && ok "idempotent" || bad "idempotent: $out"
 
 # 3. custom source/ref renders into block
 t2=$(mktemp -d)
@@ -62,19 +62,22 @@ if $setup install --target "$t5" >/dev/null 2>&1; then bad "unbalanced accepted"
 # 9. version prints 3 axes (installer + template + CHARTER + installed)
 $setup version --target "$t1" > "$t1.ver"
 grep -q 'installer 1.1.0' "$t1.ver" && ok "version installer" || bad "version installer"
-grep -q 'template agents-block.md: v5' "$t1.ver" && ok "version template" || bad "version template"
+grep -q 'template agents-block.md: v6' "$t1.ver" && ok "version template" || bad "version template"
 grep -q 'source CHARTER: v11' "$t1.ver" && ok "version charter" || bad "version charter"
-grep -q 'AGENTS.md: block v5' "$t1.ver" && ok "version installed" || bad "version installed"
+grep -q 'AGENTS.md: block v6' "$t1.ver" && ok "version installed" || bad "version installed"
 
 # 10. check-update up-to-date, then flags a stale v1 block
 $setup check-update --target "$t1" >/dev/null && ok "check-update clean" || bad "check-update clean"
 t6=$(mktemp -d); $setup install --target "$t6" >/dev/null
-sed -i 's/aidomaincraft agents-block v5/aidomaincraft agents-block v1/; s/aidomaincraft claude-block v5/aidomaincraft claude-block v1/' "$t6/AGENTS.md" "$t6/CLAUDE.md"
+sed -i 's/aidomaincraft agents-block v6/aidomaincraft agents-block v1/; s/aidomaincraft claude-block v6/aidomaincraft claude-block v1/' "$t6/AGENTS.md" "$t6/CLAUDE.md"
 if $setup check-update --target "$t6" >/dev/null 2>&1; then bad "check-update missed stale"; else ok "check-update flags stale"; fi
 $setup check-update --target "$t6" 2>&1 | grep -q 'UPDATE AVAILABLE' && ok "suggests update" || bad "no update suggestion"
 $setup doctor --target "$t6" >/dev/null 2>&1 && bad "doctor missed stale" || ok "doctor flags stale"
 grep -q 'Agent-first versions' "$t1/AGENTS.md" && ok "block has agent-first mapping" || bad "block missing agent-first mapping"
 grep -q 'ask for confirmation first' "$t1/AGENTS.md" && ok "block asks before upgrade" || bad "block missing ask-first rule"
+grep -q 'Router skill' "$t1/AGENTS.md" && ok "block router skill" || bad "block missing router skill"
+grep -q 'npx skills add' "$t1/AGENTS.md" && ok "block guides skill install" || bad "block missing skill install"
+grep -q 'Router skill' "$t1/CLAUDE.md" && ok "claude router skill" || bad "claude missing router skill"
 grep -q 'có bản mới không' "$t1/AGENTS.md" && ok "block maps plain user asks" || bad "block missing plain-ask mapping"
 grep -q 'Agent-first versions' "$t1/CLAUDE.md" && ok "claude block agent-first" || bad "claude block agent-first"
 
@@ -96,9 +99,9 @@ grep -q 'Absolute compliance' "$t1/CLAUDE.md" && ok "claude compliance" || bad "
 
 # 11. upgrade refreshes stale blocks in one command
 $setup upgrade --target "$t6" >/dev/null
-grep -q 'aidomaincraft agents-block v5' "$t6/AGENTS.md" && ok "upgrade to v5" || bad "upgrade"
+grep -q 'aidomaincraft agents-block v6' "$t6/AGENTS.md" && ok "upgrade to v6" || bad "upgrade"
 $setup check-update --target "$t6" >/dev/null && ok "clean after upgrade" || bad "still stale after upgrade"
-$setup upgrade --target "$t6" | grep -q 'unchanged (already v5)' && ok "upgrade idempotent" || bad "upgrade idempotent"
+$setup upgrade --target "$t6" | grep -q 'unchanged (already v6)' && ok "upgrade idempotent" || bad "upgrade idempotent"
 
 # 12. vendor upgrade refreshes snapshot
 t7=$(mktemp -d); $setup install --target "$t7" --vendor >/dev/null

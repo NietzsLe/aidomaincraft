@@ -97,7 +97,7 @@ Three axes, all visible via one command:
 
 ```bash
 python3 scripts/aidomaincraft_setup.py version --target /path/to/project
-# installer 1.1.0, template blocks v2, source CHARTER v8, installed blocks vN
+# installer 1.1.0, template blocks v6, source CHARTER v11, installed blocks vN
 ```
 
 Check whether a target is behind (exit 0 = up to date, 1 = update available):
@@ -139,10 +139,11 @@ talks; the agent runs the commands:
 | "có bản mới không / any update" | `check-update --target .` (+ `--remote` when network is up) |
 | "bản mới có gì / what's new" | reads newest `CHANGELOG.md` entry, summarizes 2-3 lines |
 | "lên bản mới / upgrade" | asks one confirmation line first, then `upgrade --target .` |
+| "cài skill / install skill" | proposes one line first, then `npx skills add https://github.com/NietzsLe/aidomaincraft --skill aidomaincraft` (fallback: copy `skills/aidomaincraft/` into the agent's skills dir), confirms it triggers |
 
-Rules the block enforces: read-only commands run freely; `upgrade` and
-cloning the source need one notice line + user ok first; offline reports
-`unknown` and keeps working from the local snapshot.
+Rules the block enforces: read-only commands run freely; `upgrade`, skill
+installs, and cloning the source need one notice line + user ok first; offline
+reports `unknown` and keeps working from the local snapshot.
 
 ## Absolute compliance (block v4+)
 

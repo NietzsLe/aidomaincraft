@@ -5,8 +5,9 @@
 - `templates/intrinsic-item-template.md` có checklist nhận item; `VERIFY.md` mục B thêm check case test + using-doc + suite runtime; `CONTRIBUTING.md` thêm luồng PR item nội tại 5 bước (song ngữ).
 - Skill router `skills/aidomaincraft/SKILL.md` (chuẩn Agent Skills mở, opencode/claude/codex dùng chung): trigger khi nhắc aidomaincraft, điều hướng 4 bước tra cứu + thêm item + verify/duy trì, chỉ link không copy lệnh; `tests/test.sh` §16 (frontmatter + trỏ CHARTER/VERIFY/REGISTRY/using-doc + cấm nhúng install block).
 - Block v5 → v6: block đã cài hướng dẫn agent tự cài skill router (propose 1 dòng + `npx skills add ... --skill aidomaincraft` sau user ok + confirm trigger); `tests/test.sh` assert router-skill cả 2 block; `INSTALL.md` thêm hàng “cài skill” vào bảng Via agent.
+- Fix YAML frontmatter skill (user báo `npx skills add` lỗi `Nested mappings ... line 2`: `description:` chứa `:` không quotes): bọc `"..."` quanh description, verify `yaml.safe_load` parse OK (180 ký tự); test §16 thêm assert description quoted.
 - Self-review: case thử `repo khác thêm tool riêng` → đọc §9 + template mất <3 phút → quyết định nhận được vì đủ 5 ý đo được (không phải taste cảm tính).
-- `bash tests/test.sh` 102 pass / 0 fail.
+- `bash tests/test.sh` 103 pass / 0 fail.
 
 ## v10.39 — 2026-11-05 (tooling: phát hiện snapshot CHARTER cũ + installer drift)
 - `install.json` ghi thêm `charter` (CHARTER nguồn lúc snapshot); `doctor` + `check-update` báo snapshot cũ (`snapshot CHARTER vX, source is vY`) và installer lệch (`installed by installer X, current Y`); `upgrade` refresh cả hai.

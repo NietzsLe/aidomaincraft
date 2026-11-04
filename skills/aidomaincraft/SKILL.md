@@ -1,6 +1,6 @@
 ---
 name: aidomaincraft
-description: Tra cứu usecase-first aidomaincraft (UI/media): chọn item theo việc, thêm item mới, review theo VERIFY. Kích hoạt khi user nhắc aidomaincraft hoặc cần lookup/chuẩn làm việc của hệ.
+description: "Tra cứu usecase-first aidomaincraft (UI/media): chọn item theo việc, thêm item mới, review theo VERIFY. Kích hoạt khi user nhắc aidomaincraft hoặc cần lookup/chuẩn làm việc của hệ."
 ---
 
 # aidomaincraft — skill router

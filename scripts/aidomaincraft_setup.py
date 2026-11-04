@@ -391,6 +391,7 @@ def cmd_install(args):
                 "files": sorted(set(manifest.get("files", [])) | set(blocks)),
                 "created_files": sorted(set(manifest.get("created_files", [])) | set(created_files)),
                 "block_versions": block_versions,
+                "charter": charter_version(),
                 "vendor": True,
             })
             data.setdefault("first_installed_at", now())
@@ -514,6 +515,22 @@ def cmd_doctor(args):
         else:
             print(".gitignore: absent (MISSING .aidomaincraft/)")
             ok = False
+        src_cv = charter_version()
+        man_cv = manifest.get("charter")
+        if src_cv is not None:
+            if man_cv is None:
+                print(".aidomaincraft: manifest has no charter stamp (upgrade to record it)")
+                ok = False
+            elif man_cv != src_cv:
+                print(".aidomaincraft: snapshot CHARTER v%s, source is v%d (stale)" % (man_cv, src_cv))
+                print(".aidomaincraft: refresh with: ./scripts/install.sh --target %s --vendor --force" % target)
+                ok = False
+            else:
+                print(".aidomaincraft: snapshot CHARTER v%d (up to date)" % src_cv)
+        man_ver = manifest.get("version")
+        if man_ver is not None and man_ver != INSTALLER_VERSION:
+            print(".aidomaincraft: installed by installer %s, current is %s (upgrade to refresh)" % (man_ver, INSTALLER_VERSION))
+            ok = False
     else:
         print(".aidomaincraft: reference-only (no vendor snapshot)")
     print("result: %s" % ("OK" if ok else "PROBLEMS FOUND"))
@@ -546,6 +563,7 @@ def cmd_version(args):
         print("manifest: installer %s, source %s, ref %s, installed %s" % (
             manifest.get("version", "?"), manifest.get("source", "?"),
             manifest.get("ref", "?"), manifest.get("last_installed_at", "?")))
+        print("manifest charter: v%s" % manifest.get("charter", "?"))
     else:
         print("manifest: none (reference-only or never vendored)")
     return 0
@@ -578,6 +596,18 @@ def cmd_check_update(args):
             need = True
         elif want is not None:
             print("%s: block v%d (up to date)" % (filename, want))
+    manifest = load_manifest(target)
+    if manifest.get("vendor"):
+        src_cv = charter_version()
+        man_cv = manifest.get("charter")
+        if src_cv is not None and man_cv != src_cv:
+            print(".aidomaincraft: snapshot CHARTER v%s, source is v%d (stale snapshot)" % (
+                man_cv if man_cv is not None else "?", src_cv))
+            need = True
+        man_ver = manifest.get("version")
+        if man_ver is not None and man_ver != INSTALLER_VERSION:
+            print(".aidomaincraft: installed by installer %s, current is %s" % (man_ver, INSTALLER_VERSION))
+            need = True
     if args.remote:
         tag, reason = remote_latest_tag(args.source)
         if tag is None:
@@ -590,7 +620,7 @@ def cmd_check_update(args):
                 need = True
     if need:
         print("action: ./scripts/install.sh --target %s%s" % (
-            target, " --vendor --force" if load_manifest(target).get("vendor") else ""))
+            target, " --vendor --force" if manifest.get("vendor") else ""))
         print("result: UPDATE AVAILABLE")
         return 1
     print("result: UP TO DATE")

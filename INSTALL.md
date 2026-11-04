@@ -118,6 +118,9 @@ python3 scripts/aidomaincraft_setup.py upgrade --target /path/to/project
 python3 scripts/aidomaincraft_setup.py upgrade --target /path/to/project --vendor --force
 ```
 
+`upgrade` also refreshes the snapshot's recorded source CHARTER version and the
+installing installer version, so a later `doctor` / `check-update` goes quiet.
+
 Tag scheme: release tags follow the CHARTER version (`v8`, `v9`, ...), so
 `--ref v9` pins knowledge and `--remote` compares against the latest `vN` tag.
 Session start in an installed project: run `doctor` once; if it reports a
@@ -230,4 +233,6 @@ Rules:
 - **Unbalanced markers** — stop, inspect manually; the installer refuses to guess.
 - **`target is not a directory`** — check `--target`.
 - **Blocks outdated** — rerun `install.sh --target ...` (no `--force` needed for blocks).
-- **Vendor snapshot stale** — rerun with `--vendor --force`.
+- **Vendor snapshot stale** — `doctor` / `check-update` report
+  `snapshot CHARTER vX, source is vY (stale)`; rerun with `--vendor --force`
+  (or one-command `upgrade`, which refreshes the recorded CHARTER version too).

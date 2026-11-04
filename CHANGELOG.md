@@ -1,5 +1,11 @@
 # CHANGELOG.md — aidomaincraft
 
+## v11 — 2026-11-05 (CHARTER: chuẩn đóng góp item nội tại + tầng skills)
+- CHARTER v10.9 → v11 (§9 mới: nhận item 5 ý — proposal/chuẩn hóa/runtime/duy trì/skills; §3 ghi nhận tầng `skills/` thuộc tooling).
+- `templates/intrinsic-item-template.md` có checklist nhận item; `VERIFY.md` mục B thêm check case test + using-doc + suite runtime; `CONTRIBUTING.md` thêm luồng PR item nội tại 5 bước (song ngữ).
+- Self-review: case thử `repo khác thêm tool riêng` → đọc §9 + template mất <3 phút → quyết định nhận được vì đủ 5 ý đo được (không phải taste cảm tính).
+- `bash tests/test.sh` 91 pass / 0 fail.
+
 ## v10.39 — 2026-11-05 (tooling: phát hiện snapshot CHARTER cũ + installer drift)
 - `install.json` ghi thêm `charter` (CHARTER nguồn lúc snapshot); `doctor` + `check-update` báo snapshot cũ (`snapshot CHARTER vX, source is vY`) và installer lệch (`installed by installer X, current Y`); `upgrade` refresh cả hai.
 - `tests/test.sh` §15 mới (manifest ghi charter + doctor/check-update bắt snapshot cũ + upgrade refresh + bắt installer drift + sạch sau refresh); `INSTALL.md` ghi rõ cách đọc báo stale.

@@ -11,6 +11,7 @@
 ### B. Chính xác có nguồn (thiếu nguồn là FAIL)
 - [ ] `Tổ chức đứng sau` có link repo/registry + license + số liệu (stars/installs). Item nội tại: mục `Nguồn gốc` (tác giả + commit khai sinh + link về chính repo) + được ghi `N/A` cho stars/installs kèm lý do 1 dòng.
 - [ ] Mọi item khai nguồn gốc khớp `items/REGISTRY.md` (ngoại nhập | nội tại); tài nguyên nội tại đã khai đều tồn tại + chạy được.
+- [ ] Item nội tại có case trong `tests/test.sh`: tài nguyên tồn tại + demo PASS + case FAIL đúng mã; using-doc cặp domain tồn tại; suite runtime (nếu có) ở `.aidomaincraft/<item>/`, git-ignored (CHARTER v11 §9).
 - [ ] Mỗi lệnh copy-paste đã mở docs/source kiểm tra (ghi tên file check: `SKILL.md`, `package.json`, trang install/MCP, script).
 - [ ] Mỗi ngưỡng số có nguồn (ví dụ 84px/52px/container 1440/gutter 64 từ `layout.md`; 4 biến thể từ README React Bits; Floor gate có số).
 - [ ] Không chép mô tả marketing nguyên văn.
@@ -127,6 +128,7 @@ Mục này dạy *cách hỏi*, không chỉ *mục cần có*. Áp dụng nguy�
 ### B. Sourced accuracy (unsourced = FAIL)
 - [ ] Backing org has repo/registry link + license + numbers (stars/installs). Intrinsic items: an `Origin` section (author + birth commit + link to this repo) + `N/A` for stars/installs with a 1-line reason.
 - [ ] Every item declares an origin matching `items/REGISTRY.md` (imported | intrinsic); declared intrinsic resources all exist + run.
+- [ ] Intrinsic items have `tests/test.sh` cases: resources exist + demo PASSes + FAIL cases with the right codes; pair using-docs exist; runtime suites (if any) live under git-ignored `.aidomaincraft/<item>/` (CHARTER v11 §9).
 - [ ] Every copy-paste command checked against docs/source (record which file: `SKILL.md`, `package.json`, install/MCP page, script).
 - [ ] Every numeric bar sourced (e.g. 84px/52px/container 1440/gutter 64 from `layout.md`; 4 flavors from React Bits README; numbered Floor gates).
 - [ ] No verbatim marketing copy.

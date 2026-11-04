@@ -1,5 +1,5 @@
 <!-- BEGIN aidomaincraft -->
-<!-- aidomaincraft agents-block v5 -->
+<!-- aidomaincraft agents-block v6 -->
 ## Aidomaincraft — usecase lookup
 
 This project can use **aidomaincraft** (usecase-first lookup for UI + media work).
@@ -40,6 +40,11 @@ Item details live in the source repo — never copy commands/bars into this proj
     "upgrade / lên bản mới" → ask for confirmation first (one line stating what
     will change), then run `upgrade --target .` (refreshes the vendor snapshot
     when one exists).
+  - Router skill (one-time per agent): if the `aidomaincraft` skill is missing,
+    propose one line ("cài skill aidomaincraft để tra cứu nhanh?"), then run
+    `npx skills add https://github.com/NietzsLe/aidomaincraft --skill aidomaincraft`
+    (fallback: copy `skills/aidomaincraft/` from the source into the agent's
+    skills dir) only after user ok, and confirm it triggers on `aidomaincraft`.
   - Rules: read-only commands (`version`, `check-update`, `doctor`, reading
     CHANGELOG) run freely; write commands (`upgrade`, cloning the source) need
     one line of notice + user ok first.

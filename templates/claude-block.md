@@ -1,5 +1,5 @@
 <!-- BEGIN aidomaincraft -->
-<!-- aidomaincraft claude-block v5 -->
+<!-- aidomaincraft claude-block v6 -->
 ## Aidomaincraft — usecase lookup
 
 This project can use **aidomaincraft** (UI + media lookup). The full rules live
@@ -19,6 +19,12 @@ file is absent).
   on a UI/media task → run the same `doctor` + `check-update` as `AGENTS.md`
   yourself, report one plain line; plain asks map to `version` /
   `check-update` / CHANGELOG summary / `upgrade` (needs user ok first).
+- Router skill (one-time per agent): same rule as `AGENTS.md` — if the
+  `aidomaincraft` skill is missing, propose one line ("cài skill aidomaincraft
+  để tra cứu nhanh?"), then run
+  `npx skills add https://github.com/NietzsLe/aidomaincraft --skill aidomaincraft`
+  (fallback: copy `skills/aidomaincraft/` from the source into the agent's
+  skills dir) only after user ok; confirm it triggers on `aidomaincraft`.
 - Core-fidelity + handoff (same as `AGENTS.md`): after use, state the reused
   artifact (slug/variant/skill/gates); handoff = inputs + delegate command +
   expected output + verify method; only the item's customizable surface is

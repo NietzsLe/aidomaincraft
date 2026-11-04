@@ -1,5 +1,12 @@
 # CHANGELOG.md — aidomaincraft
 
+## v12 — 2026-11-04 (CHARTER: phân biệt runtime của hệ vs thêm item trong runtime)
+- CHARTER v11 → v12 (§10 mới: runtime của hệ chỉ đọc/dùng vs thêm item trong runtime soạn draft để promote; cây quyết định cho agent ở repo đã cài; §3 ghi nhận).
+- `templates/runtime-draft-template.md` mới (1 draft = 1 proposal, `.aidomaincraft/drafts/<x>/` git-ignored + index local `REGISTRY.local.md`, điều kiện promote); `VERIFY.md` mục H (block phân biệt + draft đúng mẫu + chạy được + đường promote); skill router thêm mục §10 (trỏ CHARTER, không copy lệnh).
+- Block v6 → v7: block đã cài có cây phân biệt runtime/intake + index local + cấm commit `.aidomaincraft/`; `templates/VERSIONS` đồng bộ; `tests/test.sh` §16–§17 (skill §10 + CHARTER §10 + draft template + VERIFY H + cả 2 block); `INSTALL.md`/`CONTRIBUTING.md`/`intrinsic-item-template.md` đồng bộ tham chiếu v12.
+- Self-review: case thử `repo đã cài thêm tool riêng chưa ai phủ` → đọc block v7 + §10 mất <3 phút → quyết định soạn draft runtime thay vì đoán lệnh hay sửa thẳng nguồn.
+- `bash tests/test.sh` 115 pass / 0 fail.
+
 ## v11 — 2026-11-05 (CHARTER: chuẩn đóng góp item nội tại + tầng skills)
 - CHARTER v10.9 → v11 (§9 mới: nhận item 5 ý — proposal/chuẩn hóa/runtime/duy trì/skills; §3 ghi nhận tầng `skills/` thuộc tooling).
 - `templates/intrinsic-item-template.md` có checklist nhận item; `VERIFY.md` mục B thêm check case test + using-doc + suite runtime; `CONTRIBUTING.md` thêm luồng PR item nội tại 5 bước (song ngữ).

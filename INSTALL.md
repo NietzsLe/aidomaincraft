@@ -97,7 +97,7 @@ Three axes, all visible via one command:
 
 ```bash
 python3 scripts/aidomaincraft_setup.py version --target /path/to/project
-# installer 1.1.0, template blocks v6, source CHARTER v11, installed blocks vN
+# installer 1.1.0, template blocks v7, source CHARTER v12, installed blocks vN
 ```
 
 Check whether a target is behind (exit 0 = up to date, 1 = update available):

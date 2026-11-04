@@ -15,14 +15,14 @@ t1=$(mktemp -d)
 $setup install --target "$t1" >/dev/null
 [ "$(grep -cF '<!-- BEGIN aidomaincraft -->' "$t1/AGENTS.md")" = "1" ] && ok "agents block count 1" || bad "agents block count"
 [ "$(grep -cF '<!-- BEGIN aidomaincraft -->' "$t1/CLAUDE.md")" = "1" ] && ok "claude block count 1" || bad "claude block count"
-grep -q 'aidomaincraft agents-block v6' "$t1/AGENTS.md" && ok "agents stamp v6" || bad "agents stamp"
-grep -q 'aidomaincraft claude-block v6' "$t1/CLAUDE.md" && ok "claude stamp v6" || bad "claude stamp"
+grep -q 'aidomaincraft agents-block v7' "$t1/AGENTS.md" && ok "agents stamp v7" || bad "agents stamp"
+grep -q 'aidomaincraft claude-block v7' "$t1/CLAUDE.md" && ok "claude stamp v7" || bad "claude stamp"
 [ ! -e "$t1/.aidomaincraft" ] && ok "no vendor dir by default" || bad "vendor dir leaked"
 [ ! -e "$t1/.gitignore" ] && ok "no gitignore by default" || bad "gitignore leaked"
 
 # 2. idempotent reinstall
 out=$($setup install --target "$t1")
-echo "$out" | grep -q 'unchanged (already v6)' && ok "idempotent" || bad "idempotent: $out"
+echo "$out" | grep -q 'unchanged (already v7)' && ok "idempotent" || bad "idempotent: $out"
 
 # 3. custom source/ref renders into block
 t2=$(mktemp -d)
@@ -62,14 +62,14 @@ if $setup install --target "$t5" >/dev/null 2>&1; then bad "unbalanced accepted"
 # 9. version prints 3 axes (installer + template + CHARTER + installed)
 $setup version --target "$t1" > "$t1.ver"
 grep -q 'installer 1.1.0' "$t1.ver" && ok "version installer" || bad "version installer"
-grep -q 'template agents-block.md: v6' "$t1.ver" && ok "version template" || bad "version template"
-grep -q 'source CHARTER: v11' "$t1.ver" && ok "version charter" || bad "version charter"
-grep -q 'AGENTS.md: block v6' "$t1.ver" && ok "version installed" || bad "version installed"
+grep -q 'template agents-block.md: v7' "$t1.ver" && ok "version template" || bad "version template"
+grep -q 'source CHARTER: v12' "$t1.ver" && ok "version charter" || bad "version charter"
+grep -q 'AGENTS.md: block v7' "$t1.ver" && ok "version installed" || bad "version installed"
 
 # 10. check-update up-to-date, then flags a stale v1 block
 $setup check-update --target "$t1" >/dev/null && ok "check-update clean" || bad "check-update clean"
 t6=$(mktemp -d); $setup install --target "$t6" >/dev/null
-sed -i 's/aidomaincraft agents-block v6/aidomaincraft agents-block v1/; s/aidomaincraft claude-block v6/aidomaincraft claude-block v1/' "$t6/AGENTS.md" "$t6/CLAUDE.md"
+sed -i 's/aidomaincraft agents-block v7/aidomaincraft agents-block v1/; s/aidomaincraft claude-block v7/aidomaincraft claude-block v1/' "$t6/AGENTS.md" "$t6/CLAUDE.md"
 if $setup check-update --target "$t6" >/dev/null 2>&1; then bad "check-update missed stale"; else ok "check-update flags stale"; fi
 $setup check-update --target "$t6" 2>&1 | grep -q 'UPDATE AVAILABLE' && ok "suggests update" || bad "no update suggestion"
 $setup doctor --target "$t6" >/dev/null 2>&1 && bad "doctor missed stale" || ok "doctor flags stale"
@@ -99,9 +99,9 @@ grep -q 'Absolute compliance' "$t1/CLAUDE.md" && ok "claude compliance" || bad "
 
 # 11. upgrade refreshes stale blocks in one command
 $setup upgrade --target "$t6" >/dev/null
-grep -q 'aidomaincraft agents-block v6' "$t6/AGENTS.md" && ok "upgrade to v6" || bad "upgrade"
+grep -q 'aidomaincraft agents-block v7' "$t6/AGENTS.md" && ok "upgrade to v7" || bad "upgrade"
 $setup check-update --target "$t6" >/dev/null && ok "clean after upgrade" || bad "still stale after upgrade"
-$setup upgrade --target "$t6" | grep -q 'unchanged (already v6)' && ok "upgrade idempotent" || bad "upgrade idempotent"
+$setup upgrade --target "$t6" | grep -q 'unchanged (already v7)' && ok "upgrade idempotent" || bad "upgrade idempotent"
 
 # 12. vendor upgrade refreshes snapshot
 t7=$(mktemp -d); $setup install --target "$t7" --vendor >/dev/null
@@ -109,7 +109,7 @@ echo STALE > "$t7/.aidomaincraft/CHARTER.md"
 $setup upgrade --target "$t7" >/dev/null
 grep -q STALE "$t7/.aidomaincraft/CHARTER.md" && bad "vendor snapshot not refreshed" || ok "vendor snapshot refreshed"
 
-# 13. REGISTRY in sync with items/ (CHARTER v11 §4b)
+# 13. REGISTRY in sync with items/ (CHARTER v12 §4b)
 reg="$root/items/REGISTRY.md"
 [ -f "$reg" ] && ok "registry exists" || bad "registry missing"
 for d in "$root"/items/*/; do
@@ -176,6 +176,20 @@ grep -q 'VERIFY.md' "$sk" && ok "skill points to VERIFY" || bad "skill no VERIFY
 grep -q 'REGISTRY.md' "$sk" && ok "skill points to REGISTRY" || bad "skill no REGISTRY"
 grep -q 'using-<x>.md' "$sk" && ok "skill points to using-doc" || bad "skill no using-doc"
 if grep -q '<!-- BEGIN aidomaincraft -->' "$sk"; then bad "skill embeds install block"; else ok "skill has no embedded block"; fi
+grep -q '§10' "$sk" && ok "skill runtime-intake section" || bad "skill missing runtime-intake"
+grep -q 'REGISTRY.local.md' "$sk" && ok "skill local index" || bad "skill missing local index"
+
+# 17. runtime intake split (v12 §10 + VERIFY H)
+grep -q '### 10\.' "$root/CHARTER.md" && ok "charter has section 10" || bad "charter missing section 10"
+grep -q 'Runtime của hệ' "$root/CHARTER.md" && ok "charter runtime split VI" || bad "charter missing runtime split VI"
+grep -q 'System runtime' "$root/CHARTER.md" && ok "charter runtime split EN" || bad "charter missing runtime split EN"
+[ -f "$root/templates/runtime-draft-template.md" ] && ok "draft template exists" || bad "draft template missing"
+grep -q 'REGISTRY.local.md' "$root/templates/runtime-draft-template.md" && ok "draft template local index" || bad "draft template missing local index"
+grep -q '### H\.' "$root/VERIFY.md" && ok "verify has H" || bad "verify missing H"
+grep -q 'REGISTRY.local.md' "$root/VERIFY.md" && ok "verify H local index" || bad "verify H missing local index"
+grep -q 'in-runtime intake' "$t1/AGENTS.md" && ok "agents block intake split" || bad "agents block missing intake split"
+grep -q 'REGISTRY.local.md' "$t1/AGENTS.md" && ok "agents block local index" || bad "agents block missing local index"
+grep -q 'in-runtime intake' "$t1/CLAUDE.md" && ok "claude block intake split" || bad "claude block missing intake split"
 
 rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t8" "$t1.ver" "$t1.guide"
 echo "---"

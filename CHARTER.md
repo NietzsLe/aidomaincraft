@@ -1,4 +1,4 @@
-# CHARTER.md — aidomaincraft — v11
+# CHARTER.md — aidomaincraft — v12
 
 ## Tiếng Việt
 
@@ -9,7 +9,7 @@ Tổng hợp kinh nghiệm dùng AI theo lĩnh vực, dưới dạng chỉ dẫn
 - Có: chỉ dẫn usecase, prompt mẫu, pitfalls, tham chiếu tới tool/skill/repo ngoài + đánh giá sử dụng.
 - Không: copy nguyên code/tool ngoài vào đây; lưu log, token, dữ liệu khách hàng.
 
-### 3. Tổ chức (v10: thêm phân loại nguồn gốc item; giữ bộ 3 v9, tooling v8; v10.9: tiếng Việt có dấu bắt buộc; v11: chuẩn đóng góp item nội tại + tầng skills)
+### 3. Tổ chức (v10: thêm phân loại nguồn gốc item; giữ bộ 3 v9, tooling v8; v10.9: tiếng Việt có dấu bắt buộc; v11: chuẩn đóng góp item nội tại + tầng skills; v12: phân biệt runtime của hệ vs thêm item trong runtime)
 - Tầng chung (mỏng): root `README.md`, `AGENTS.md`, `CHARTER.md`, `CHANGELOG.md`.
 - Tầng `items/`: 1 item = 1 thư mục, kiến thức TRUNG LẬP domain của 1 công cụ/giải pháp. `items/<x>/README.md` chứa: là gì, ai làm, cài đặt mọi OS, cơ chế core, **cốt lõi bất biến / phần tùy chỉnh / phân công ai làm gì (bắt buộc từ v9)**, định vị vs đối thủ viral, giá/license, pitfalls chung, bản đồ phủ usecase (mạnh ★ / trung bình / không hỗ trợ + thay thế), tham khảo sử dụng (review sâu + số trung bình có trọng số), được dùng ở domain nào (link ngược).
 - Tầng `domains/`: 1 domain = 1 thư mục lĩnh vực (`domains/ui/`, `domains/media/`...). Mỗi domain có `README.md` làm index chọn item theo usecase (cho phép NHIỀU item cùng phục vụ 1 usecase, mỗi cái 1 cách, kèm tiêu chí phân biệt) + 1 file `using-<item>.md` cho MỖI cặp item-domain (usecase trong domain này, lệnh mẫu cụ thể, lưu ý riêng, điểm mạnh cốt lõi của item CHO domain đó, link về đúng section item gốc).
@@ -83,6 +83,11 @@ Tổng hợp kinh nghiệm dùng AI theo lĩnh vực, dưới dạng chỉ dẫn
 - Duy trì: mọi sửa self-review VERIFY tới 0 FAIL + `tests/test.sh` xanh + `CHANGELOG.md`; 1 tool/1 proposal; xung đột do user quyết, cấm agent tự dung hòa.
 - Tầng `skills/` (từ v11): artifact gọi được cho agent (`SKILL.md` + scripts); docs tra cứu vẫn sống ở `items/`/`domains/`; skill chỉ link về item gốc, cấm copy lệnh/ngưỡng.
 
+### 10. Runtime của hệ vs thêm item trong runtime (từ v12: intake phân tán ở repo đã cài)
+- `Runtime của hệ` là hệ đã cài ở repo khác đang chạy: block `AGENTS.md`/`CLAUDE.md` + `doctor`/`check-update`/`upgrade` + tra cứu 4 bước về nguồn. Chế độ này chỉ đọc/dùng, không đẻ item mới. Offline dùng snapshot `.aidomaincraft/` (git-ignored); thiếu nguồn thì báo thiếu, cấm đoán.
+- `Thêm item trong runtime` là user ở repo đã cài soạn draft mới đúng chuẩn để sau promote thành item nội tại: copy `templates/runtime-draft-template.md` → `.aidomaincraft/drafts/<x>/` (git-ignored, cấm commit) + khai 1 dòng `.aidomaincraft/drafts/REGISTRY.local.md` (index cục bộ, cấm đụng `items/REGISTRY.md` nguồn). 1 draft = 1 proposal, tên kebab-case tiếng Anh; tài nguyên thử nghiệm tự sở hữu, stdlib, không deps nặng; quan sát UI bằng browser thật; log relay đầy đủ; không log/token/PII.
+- Cây quyết định cho agent ở repo đã cài: việc có sẵn trong index nguồn → tra cứu + dùng (runtime của hệ); việc chưa item nào phủ → soạn draft runtime; draft đạt chuẩn (chạy được + có index local + VERIFY H hết FAIL) → promote về nguồn qua clone `src/` + PR theo `CONTRIBUTING.md` (chuẩn hóa khung nội tại §5d + `items/REGISTRY.md` + using-doc cùng commit). Cấm để bản phân kỳ local thành bản thật, cấm commit `.aidomaincraft/`.
+
 ---
 
 ## English
@@ -94,7 +99,7 @@ Collect hands-on AI experience by field as usecase-first guides, reusable when s
 - In: usecase guides, sample prompts, pitfalls, references to external tools/skills/repos + usage reviews.
 - Out: vendored external code/tools; logs, tokens, customer data.
 
-### 3. Organization (v10: item origin classification added; v9 triad kept, tooling stays v8; v10.9: Vietnamese accents required; v11: intrinsic contribution bar + skills layer)
+### 3. Organization (v10: item origin classification added; v9 triad kept, tooling stays v8; v10.9: Vietnamese accents required; v11: intrinsic contribution bar + skills layer; v12: system runtime vs in-runtime intake split)
 - Common layer (thin): root `README.md`, `AGENTS.md`, `CHARTER.md`, `CHANGELOG.md`.
 - `items/` layer: 1 item = 1 folder, DOMAIN-NEUTRAL knowledge of one tool/solution. `items/<x>/README.md` holds: what it is, who builds it, install on every OS, core mechanism, **invariant core / customizable surface / work split (required since v9)**, differentiation vs viral opponents, price/license, shared pitfalls, usecase-coverage map (strong ★ / medium / unsupported + replacement), usage references (deep reviews + weighted averages), where-used backlinks.
 - `domains/` layer: 1 domain = 1 field folder (`domains/ui/`, `domains/media/`...). Each domain has an index `README.md` (usecase → item(s), MULTIPLE items may serve one usecase in different ways with a distinguishing rule) + one `using-<item>.md` per item-domain pair (usecases in this domain, concrete commands, domain-specific notes, core strengths FOR this domain, links to the exact item sections).
@@ -167,3 +172,8 @@ Collect hands-on AI experience by field as usecase-first guides, reusable when s
 - Runtime bar: suites live under git-ignored `.aidomaincraft/<item>/<suite>/`, never committed; stdlib resources, no heavy deps; all UI observations in a real browser; review before build; full relay logs (`start`/`note`/`end`); no logs/tokens/PII.
 - Maintenance: every change passes VERIFY self-review to 0 FAILs + green `tests/test.sh` + `CHANGELOG.md`; 1 tool/1 proposal; conflicts decided by the user.
 - `skills/` layer (since v11): callable agent artifacts (`SKILL.md` + scripts); lookup docs stay in `items/`/`domains/`; skills link to item origins, never copy commands/bars.
+
+### 10. System runtime vs in-runtime item intake (since v12: distributed intake at installed repos)
+- `System runtime` is the installed system running in another repo: `AGENTS.md`/`CLAUDE.md` blocks + `doctor`/`check-update`/`upgrade` + 4-step source lookup. This mode only reads/uses, never creates items. Offline it uses the git-ignored `.aidomaincraft/` snapshot; missing source is reported, never guessed.
+- `In-runtime item intake` is a user at an installed repo drafting a standards-compliant candidate for later promotion to an intrinsic item: copy `templates/runtime-draft-template.md` to git-ignored `.aidomaincraft/drafts/<x>/` (never commit) + declare one line in `.aidomaincraft/drafts/REGISTRY.local.md` (local index, never touch source `items/REGISTRY.md`). 1 draft = 1 proposal, English kebab-case name; self-owned trial resources, stdlib only, no heavy deps; UI observations in a real browser; full relay logs; no logs/tokens/PII.
+- Decision tree for agents at installed repos: job covered by the source index → look up + use (system runtime); job covered by nothing → draft in runtime; draft meeting the bar (runnable + local index + VERIFY H zero FAILs) → promote to source via a `src/` clone + PR per `CONTRIBUTING.md` (§5d intrinsic frame + `items/REGISTRY.md` + using-doc in the same commit). Never treat a diverged local copy as the real version, never commit `.aidomaincraft/`.

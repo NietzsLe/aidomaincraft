@@ -11,7 +11,7 @@
 ### B. Chính xác có nguồn (thiếu nguồn là FAIL)
 - [ ] `Tổ chức đứng sau` có link repo/registry + license + số liệu (stars/installs). Item nội tại: mục `Nguồn gốc` (tác giả + commit khai sinh + link về chính repo) + được ghi `N/A` cho stars/installs kèm lý do 1 dòng.
 - [ ] Mọi item khai nguồn gốc khớp `items/REGISTRY.md` (ngoại nhập | nội tại); tài nguyên nội tại đã khai đều tồn tại + chạy được.
-- [ ] Item nội tại có case trong `tests/test.sh`: tài nguyên tồn tại + demo PASS + case FAIL đúng mã; using-doc cặp domain tồn tại; suite runtime (nếu có) ở `.aidomaincraft/<item>/`, git-ignored (CHARTER v11 §9).
+- [ ] Item nội tại có case trong `tests/test.sh`: tài nguyên tồn tại + demo PASS + case FAIL đúng mã; using-doc cặp domain tồn tại; suite runtime (nếu có) ở `.aidomaincraft/<item>/`, git-ignored (CHARTER v12 §9).
 - [ ] Mỗi lệnh copy-paste đã mở docs/source kiểm tra (ghi tên file check: `SKILL.md`, `package.json`, trang install/MCP, script).
 - [ ] Mỗi ngưỡng số có nguồn (ví dụ 84px/52px/container 1440/gutter 64 từ `layout.md`; 4 biến thể từ README React Bits; Floor gate có số).
 - [ ] Không chép mô tả marketing nguyên văn.
@@ -115,6 +115,12 @@ Mục này dạy *cách hỏi*, không chỉ *mục cần có*. Áp dụng nguy�
 - [ ] `./tests/test.sh` xanh trước khi merge (gồm case block cũ vN-1 → `check-update`/`doctor` báo + `upgrade` hết; case block đủ trigger + ask-first + 5 lớp + hard list + core-fidelity + approval).
 - [ ] Delegate tốn kém (render video, cài skill trả phí, browser/image ngoài) có log user pick artifact cụ thể (slug/variant/skill + giữ/đổi gì + tốn gì) TRƯỚC khi chạy; tự chốt rồi delegate = FAIL (duyệt hướng lớn không thay thế duyệt artifact).
 
+### H. Thêm item trong runtime ở repo đã cài (CHARTER v12 §10, thiếu là FAIL)
+- [ ] Block đã cài (v7+) phân biệt được 2 chế độ: runtime của hệ chỉ đọc/dùng (block + `doctor`/`check-update`/`upgrade` + tra cứu 4 bước) vs thêm item trong runtime (soạn draft khi việc chưa ai phủ).
+- [ ] Draft đúng mẫu `templates/runtime-draft-template.md`: 1 draft = 1 proposal tên kebab-case tiếng Anh + lý do + bằng chứng đã tra index nguồn; sống ở `.aidomaincraft/drafts/<x>/` (git-ignored, cấm commit); index cục bộ `.aidomaincraft/drafts/REGISTRY.local.md`, cấm đụng `items/REGISTRY.md` nguồn.
+- [ ] Draft chạy được: lệnh copy-paste có output + quan sát UI (nếu có) bằng browser thật + tài nguyên stdlib tự sở hữu (không deps nặng) + relay log + không log/token/PII.
+- [ ] Promote đúng đường: draft đạt H hết FAIL → chuẩn hóa khung nội tại §5d ở clone `src/` + khai `items/REGISTRY.md` + using-doc + index 2 đầu cùng commit + VERIFY full 0 FAIL + `tests/test.sh` xanh + `CHANGELOG.md` + PR; cấm coi bản phân kỳ local là bản thật, cấm commit `.aidomaincraft/`.
+
 ---
 
 ## English
@@ -128,7 +134,7 @@ Mục này dạy *cách hỏi*, không chỉ *mục cần có*. Áp dụng nguy�
 ### B. Sourced accuracy (unsourced = FAIL)
 - [ ] Backing org has repo/registry link + license + numbers (stars/installs). Intrinsic items: an `Origin` section (author + birth commit + link to this repo) + `N/A` for stars/installs with a 1-line reason.
 - [ ] Every item declares an origin matching `items/REGISTRY.md` (imported | intrinsic); declared intrinsic resources all exist + run.
-- [ ] Intrinsic items have `tests/test.sh` cases: resources exist + demo PASSes + FAIL cases with the right codes; pair using-docs exist; runtime suites (if any) live under git-ignored `.aidomaincraft/<item>/` (CHARTER v11 §9).
+- [ ] Intrinsic items have `tests/test.sh` cases: resources exist + demo PASSes + FAIL cases with the right codes; pair using-docs exist; runtime suites (if any) live under git-ignored `.aidomaincraft/<item>/` (CHARTER v12 §9).
 - [ ] Every copy-paste command checked against docs/source (record which file: `SKILL.md`, `package.json`, install/MCP page, script).
 - [ ] Every numeric bar sourced (e.g. 84px/52px/container 1440/gutter 64 from `layout.md`; 4 flavors from React Bits README; numbered Floor gates).
 - [ ] No verbatim marketing copy.
@@ -227,3 +233,9 @@ This section teaches *how to ask*, not just *what to include*. Apply verbatim to
 - [ ] Block v5+: absolute 5-class compliance (`must-read/env-gate/must-follow/must-verify/must-not`) + hard list for 4 items + core-fidelity (state reused artifact after use) + handoff format + delegation + adapt-and-approve (A/B/C table + approval gate + `must-not` red line never offered).
 - [ ] `./tests/test.sh` green before merge (incl. stale-block vN-1 → `check-update`/`doctor` flag + `upgrade` clears; block has triggers + ask-first + 5 classes + hard list + core-fidelity + approval).
 - [ ] Costly delegates (video render, paid skill install, outside browser/image) log the user's pick of the concrete artifact (slug/variant/skill + what stays/changes + cost) BEFORE running; self-picking then delegating = FAIL (direction approval never substitutes artifact approval).
+
+### H. In-runtime item intake at installed repos (CHARTER v12 §10, missing = FAIL)
+- [ ] Installed blocks (v7+) tell the two modes apart: system runtime only reads/uses (blocks + `doctor`/`check-update`/`upgrade` + 4-step lookup) vs in-runtime intake (draft when no item covers the job).
+- [ ] Drafts follow `templates/runtime-draft-template.md`: 1 draft = 1 English kebab-case proposal + why + proof the source index was searched; live under git-ignored `.aidomaincraft/drafts/<x>/` (never commit); local index `.aidomaincraft/drafts/REGISTRY.local.md`, never touch source `items/REGISTRY.md`.
+- [ ] Drafts run: copy-paste command with output + UI observations (if any) in a real browser + self-owned stdlib resources (no heavy deps) + relay log + no logs/tokens/PII.
+- [ ] Promotion follows the path: draft passes H with zero FAILs → normalize to the §5d intrinsic frame inside the `src/` clone + declare `items/REGISTRY.md` + using-doc + both index ends in the same commit + full VERIFY 0 FAILs + green `tests/test.sh` + `CHANGELOG.md` + PR; never treat a diverged local copy as the real version, never commit `.aidomaincraft/`.

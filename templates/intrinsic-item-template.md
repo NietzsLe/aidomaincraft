@@ -2,7 +2,7 @@
 
 > Copy file này thành `items/<solution>/README.md`, điền vào chỗ `[...]`, xóa dòng hướng dẫn `>` khi xong. Giữ song ngữ VI trước EN sau. Item nội tại: tri thức + tài nguyên do repo tự định nghĩa và sở hữu, sống trong `items/<x>/` (README + scripts/templates/assets/data). Được trích nguồn ngoài khi so sánh. Khai nguồn gốc ở `items/REGISTRY.md` trong cùng commit.
 >
-> Quy trình nhận item (CHARTER v11 §9): proposal 1 tool/1 đề xuất → chuẩn hóa theo mẫu này → khai REGISTRY + using-doc cùng commit → thử runtime ở `.aidomaincraft/<x>/` (git-ignored) → VERIFY 0 FAIL + test xanh + CHANGELOG.
+> Quy trình nhận item (CHARTER v12 §9): proposal 1 tool/1 đề xuất → chuẩn hóa theo mẫu này → khai REGISTRY + using-doc cùng commit → thử runtime ở `.aidomaincraft/<x>/` (git-ignored) → VERIFY 0 FAIL + test xanh + CHANGELOG.
 
 ## Tiếng Việt
 
@@ -79,4 +79,4 @@
 
 > Same frame in English: Origin (author + birth commit + why) / When to use / When to skip / Apply (prerequisites + commands running in-repo resources) / How it works / Invariant core / Customizable surface / Work split / Differentiating positioning / Coverage map / Decision dossier / Sub-usecases (6 fields each) / Shared steps / Sample prompts / Pitfalls / Usage references (internal evidence: relay logs, CHANGELOG, `test.sh`; external sources when comparing) / In-item resources (match the `tài nguyên` column in `items/REGISTRY.md`) / References / Where used / Back to index. Bilingual VI first EN second.
 >
-> Intake (CHARTER v11 §9): 1 tool/1 proposal → normalize with this template → REGISTRY + using-doc in the same commit → trial runtime under git-ignored `.aidomaincraft/<x>/` → 0 FAILs + green tests + CHANGELOG.
+> Intake (CHARTER v12 §9): 1 tool/1 proposal → normalize with this template → REGISTRY + using-doc in the same commit → trial runtime under git-ignored `.aidomaincraft/<x>/` → 0 FAILs + green tests + CHANGELOG.

@@ -197,6 +197,16 @@ grep -q 'REGISTRY.md' "$t1/AGENTS.md" && ok "agents block dynamic item list" || 
 grep -q 'pull --ff-only' "$t1/CLAUDE.md" && ok "claude block cache refresh" || bad "claude block missing cache refresh"
 grep -q 'REGISTRY.md' "$t1/CLAUDE.md" && ok "claude block dynamic item list" || bad "claude block missing dynamic item list"
 
+# 19. three runtime layers + edit-definition-then-install dev flow (v12.3 §10)
+grep -q 'Ba tầng runtime' "$root/CHARTER.md" && ok "charter three layers VI" || bad "charter missing three layers VI"
+grep -q 'Định nghĩa item' "$root/CHARTER.md" && ok "charter item definition VI" || bad "charter missing item definition VI"
+grep -q 'Runtime của item' "$root/CHARTER.md" && ok "charter item runtime VI" || bad "charter missing item runtime VI"
+grep -q 'Luồng dev đúng' "$root/CHARTER.md" && ok "charter dev flow VI" || bad "charter missing dev flow VI"
+grep -q 'Three runtime layers' "$root/CHARTER.md" && ok "charter three layers EN" || bad "charter missing three layers EN"
+grep -q 'Item definition' "$root/CHARTER.md" && ok "charter item definition EN" || bad "charter missing item definition EN"
+grep -q 'Item runtime' "$root/CHARTER.md" && ok "charter item runtime EN" || bad "charter missing item runtime EN"
+grep -q 'Correct dev flow' "$root/CHARTER.md" && ok "charter dev flow EN" || bad "charter missing dev flow EN"
+
 rm -rf "$t1" "$t2" "$t3" "$t4" "$t5" "$t6" "$t7" "$t8" "$t1.ver" "$t1.guide"
 echo "---"
 echo "pass=$pass fail=$fail"

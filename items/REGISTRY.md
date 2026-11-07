@@ -10,6 +10,7 @@
 | `dembrandt` | ngoại nhập | — (ngoài repo) | ui | v9.4 |
 | `hallmark` | ngoại nhập | — (ngoài repo) | ui | ≤v7 |
 | `logo-design-skill` | ngoại nhập | — (ngoài repo) | media | v9.1 |
+| `opencode-scheduler` | ngoại nhập | — (ngoài repo) | automation | v12.1 |
 | `rea` | ngoại nhập | — (ngoài repo) | reverse | v9.6 |
 | `reactbits` | ngoại nhập | — (ngoài repo) | ui | ≤v7 |
 | `skillry` | ngoại nhập | — (ngoài repo) | ui, media | ≤v7 |

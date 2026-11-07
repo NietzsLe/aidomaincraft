@@ -1,5 +1,12 @@
 # CHANGELOG.md — aidomaincraft
 
+## v12.3 — 2026-11-07 (CHARTER §10: làm rõ 3 tầng runtime + luồng dev sửa-định-nghĩa-rồi-cài)
+- Nguyên nhân (user chỉ ra khi dev draft `autoloop-flows` trong runtime: schema state tiến hóa trên file runtime đang chạy thay vì khuôn trong định nghĩa, repo mới copy draft thiếu khuôn): §10 chỉ phân biệt runtime-của-hệ vs thêm-item-trong-runtime, chưa tách `định nghĩa item` (draft để sửa) khỏi `runtime của item` (bản đã cài-chạy: timer, `.runtime/`, skill copy) nên agent sửa nhầm bản chạy.
+- CHARTER §10 VI+EN thêm 2 mục: `Ba tầng runtime` (hệ = repo đã cài đọc/dùng; định nghĩa = `drafts/<x>/` nguồn sự thật duy nhất; runtime-item = timer + `.runtime/` + skill copy; nhầm 2↔3 mất sửa khi cài lại, nhầm 1↔3 tưởng hệ lo lịch/log) + `Luồng dev đúng` (sửa định nghĩa → cài ra runtime (copy draft + scaffold state từ khuôn + ghi timer + copy skill) → chạy thử → verify → lặp; cấm sửa bản đang chạy, sửa tay ở runtime-item là drift). §3 VI+EN ghi nhận v12.3. `tests/test.sh` §19 mới (assert 3 thuật ngữ VI+EN + scaffold-từ-khuôn trong §10).
+- Self-review: case thử `dev draft multi-repo sửa schema state` → đọc §10 mới mất <3 phút → quyết định sửa khuôn `templates/` trong định nghĩa rồi scaffold lại, thay vì vá file state live (đúng case autoloop-flows 11/2026).
+- `bash tests/test.sh` 129 pass / 0 fail (121 cũ + 8 asserts §19 mới).
+- WARN giữ lại: chưa có (sửa docs + test assert, không đổi hành vi tooling).
+
 ## v12.2 — 2026-11-07 (block v8: refresh-first cache + routing động, sửa lỗi cache cũ giấu item mới)
 - Nguyên nhân (user báo: snapshot local CHARTER v8 chỉ thấy 4 items dù nguồn đã lên 12): block v7 chỉ dặn clone khi chưa có cache, không bao giờ pull; `doctor`/`check-update` chạy từ chính cache cũ nên tự so với chính mình, luôn báo up-to-date giả; block ghi cứng routing UI/media + 4 items nên task domain mới bị skip.
 - Block v7 → v8: giữ nguyên mọi cổng (5 lớp, hard list 4 items + delegation, ask-first, core-fidelity, approval, router skill); đổi `When` thành mọi task khớp bảng routing nguồn + `Routing` thành ví dụ kèm trỏ `README.md`/`items/REGISTRY.md` (cấm coi list ngắn là đủ) + `Source fetch` thành refresh-first (`pull --ff-only`, rớt thì xóa-clone lại, offline thì nêu bản đang đọc) + session start refresh cache trước khi chạy `doctor`/`check-update`. `templates/VERSIONS` đồng bộ v8; `tests/test.sh` §18 mới (2 block đều có `pull --ff-only` + `REGISTRY.md`); `INSTALL.md` (số hiệu v8 + bảng via-agent + troubleshooting cache cũ) và skill router (mô tả đa domain + refresh cache) đồng bộ.

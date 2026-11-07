@@ -1,28 +1,37 @@
 <!-- BEGIN aidomaincraft -->
-<!-- aidomaincraft agents-block v7 -->
+<!-- aidomaincraft agents-block v8 -->
 ## Aidomaincraft — usecase lookup
 
-This project can use **aidomaincraft** (usecase-first lookup for UI + media work).
+This project can use **aidomaincraft** (usecase-first lookup; covered domains
+are listed in the source root `README.md` routing table, not here).
 Source: `https://github.com/NietzsLe/aidomaincraft.git` (ref `main`).
 Full rules live in the source repo (`CHARTER.md` = law, `VERIFY.md` = checklist).
 Item details live in the source repo — never copy commands/bars into this project.
 
-- When: UI task (page system, React effect, sample landing) or media task
-  (launch video, deck, OG image). Otherwise skip — do not load aidomaincraft.
+- When: any task matching a row of the source root `README.md` routing table
+  (UI, media, game, reverse, seo, automation, or later domains — e.g. page
+  system, React effect, launch video, SEO audit, recurring job). No matching
+  row → skip, do not load aidomaincraft.
 - Lookup (4 steps):
   1. Read source `CHARTER.md` (check version there) + root `README.md` routing.
   2. Read `domains/<d>/README.md` (routing + positioning + overlap matrix).
   3. Read `domains/<d>/using-<x>.md` (domain-only commands + notes).
   4. Follow links to `items/<x>/README.md` (single source of truth) and run
      its copy-paste commands (mechanism + numeric bars).
-- Routing: UI → `domains/ui/` (hallmark gated system / reactbits owned bricks /
+- Routing (examples only — the full table lives in source root `README.md`,
+  the full item list in `items/REGISTRY.md`; never treat this short list as
+  complete): UI → `domains/ui/` (hallmark gated system / reactbits owned bricks /
   skillry packaged web taste); media → `domains/media/` (skillry packaged
-  video-deck-OG / awesome-opus5-5-videos free Opus 5.5 prompts).
-- Source fetch: if no cached copy exists, run
-  `git clone --depth 1 --branch main https://github.com/NietzsLe/aidomaincraft.git ~/.cache/aidomaincraft`
-  (fallback `/tmp/aidomaincraft` when HOME is not writable); if offline and
+  video-deck-OG / awesome-opus5-5-videos free Opus 5.5 prompts); other rows
+  (game / reverse / seo / automation) → read the source routing table.
+- Source fetch (refresh-first — the local cache is disposable, never trust it
+  blind): 1. if `~/.cache/aidomaincraft` (fallback `/tmp/aidomaincraft`) exists,
+  refresh it with `git -C ~/.cache/aidomaincraft pull --ff-only` (on failure:
+  delete the cache dir and re-clone as below); 2. if missing, run
+  `git clone --depth 1 --branch main https://github.com/NietzsLe/aidomaincraft.git ~/.cache/aidomaincraft`;
+  3. run `doctor` / `check-update` from the REFRESHED copy; if offline and
   `.aidomaincraft/` exists in this project, use it; otherwise say the source is
-  missing instead of guessing commands.
+  missing (and which copy + version you read) instead of guessing commands.
 - Single source: commands, numeric bars and detailed steps live only in
   `items/*/README.md`; `domains/<d>/using-<x>.md` holds domain-only deltas.
 - System runtime vs in-runtime intake (`CHARTER.md` §10 — know which mode
@@ -35,12 +44,14 @@ Item details live in the source repo — never copy commands/bars into this proj
   `VERIFY.md` H promotes back via a `src/` clone + PR, never as the local
   truth.
 - Agent-first versions (the user only talks, you run the commands):
-  - At session start, when the task touches UI/media: run
+  - At session start, when the task touches a routed domain: refresh the
+    source cache first (`git -C ~/.cache/aidomaincraft pull --ff-only`,
+    re-clone when it fails; fallback `/tmp/aidomaincraft` when HOME is not
+    writable), then run
     `python3 ~/.cache/aidomaincraft/scripts/aidomaincraft_setup.py doctor --target .`
     and `.../aidomaincraft_setup.py check-update --target .` yourself
-    (read-only, no need to ask; fallback `/tmp/aidomaincraft` when HOME is not
-    writable), then report in one plain line, e.g. "lookup blocks v7, up to
-    date" or "blocks v6 installed, v7 available — upgrade?".
+    (read-only, no need to ask), then report in one plain line, e.g. "lookup blocks v8, up to
+    date" or "blocks v7 installed, v8 available — upgrade?".
   - When the user asks in plain words, map and run (no need to explain flags):
     "which version / đang dùng bản nào" → `version --target .`;
     "any update / có bản mới không" → `check-update --target .` (+ `--remote`

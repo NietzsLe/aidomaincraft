@@ -97,7 +97,7 @@ Three axes, all visible via one command:
 
 ```bash
 python3 scripts/aidomaincraft_setup.py version --target /path/to/project
-# installer 1.1.0, template blocks v7, source CHARTER v12, installed blocks vN
+# installer 1.1.0, template blocks v8, source CHARTER v12, installed blocks vN
 ```
 
 Check whether a target is behind (exit 0 = up to date, 1 = update available):
@@ -134,7 +134,7 @@ talks; the agent runs the commands:
 
 | User says | Agent runs |
 |---|---|
-| task touches UI/media (session start) | `doctor` + `check-update` alone, reports one plain line |
+| task touches a routed domain (session start) | refresh cache first (`git -C ~/.cache/aidomaincraft pull --ff-only`, re-clone on failure), then `doctor` + `check-update` alone, reports one plain line |
 | "đang dùng bản nào / which version" | `version --target .` |
 | "có bản mới không / any update" | `check-update --target .` (+ `--remote` when network is up) |
 | "bản mới có gì / what's new" | reads newest `CHANGELOG.md` entry, summarizes 2-3 lines |
@@ -237,3 +237,9 @@ Rules:
 - **Vendor snapshot stale** — `doctor` / `check-update` report
   `snapshot CHARTER vX, source is vY (stale)`; rerun with `--vendor --force`
   (or one-command `upgrade`, which refreshes the recorded CHARTER version too).
+- **Source cache stale (`~/.cache/aidomaincraft` shows old items)** — the
+  cache never refreshes itself: run
+  `git -C ~/.cache/aidomaincraft pull --ff-only` (on failure delete the dir
+  and re-clone per the installed block), then rerun `doctor` /
+  `check-update` from the refreshed copy. Blocks v8+ do this refresh at every
+  session start; blocks v7 or older only clone when missing — upgrade them.

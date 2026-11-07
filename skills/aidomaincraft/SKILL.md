@@ -1,6 +1,6 @@
 ---
 name: aidomaincraft
-description: "Tra cứu usecase-first aidomaincraft (UI/media): chọn item theo việc, thêm item mới, review theo VERIFY. Kích hoạt khi user nhắc aidomaincraft hoặc cần lookup/chuẩn làm việc của hệ."
+description: "Tra cứu usecase-first aidomaincraft (đa domain): chọn item theo việc, thêm item mới, review theo VERIFY. Kích hoạt khi user nhắc aidomaincraft hoặc cần lookup/chuẩn làm việc của hệ."
 ---
 
 # aidomaincraft — skill router
@@ -9,22 +9,27 @@ Skill này điều hướng mọi hướng dẫn làm việc của hệ aidomain
 lệnh hay ngưỡng của item nào — mọi chi tiết sống ở repo nguồn, skill chỉ link.
 
 Nguồn: `https://github.com/NietzsLe/aidomaincraft.git` (ref `main`).
-Nếu chưa có bản local: `git clone --depth 1 --branch main
+Cache local là disposable, không bao giờ tin mù: nếu đã có thì refresh trước
+(`git -C ~/.cache/aidomaincraft pull --ff-only`, rớt thì xóa thư mục rồi
+clone lại như dưới), chưa có mới clone:
+`git clone --depth 1 --branch main
 https://github.com/NietzsLe/aidomaincraft.git ~/.cache/aidomaincraft`
 (fallback `/tmp/aidomaincraft` khi HOME không ghi được). Offline mà project có
-`.aidomaincraft/` thì dùng snapshot đó; không có thì báo thiếu nguồn, cấm đoán.
+`.aidomaincraft/` thì dùng snapshot đó; không có thì báo thiếu nguồn (kèm bản
+đang đọc), cấm đoán.
 
 ## Dùng khi
 
-- User nhắc `aidomaincraft`, cần chọn công cụ theo việc (UI/media), thêm item
+- User nhắc `aidomaincraft`, cần chọn công cụ theo việc (bảng routing ở root
+  `README.md` nguồn — UI/media/game/reverse/seo/automation...), thêm item
   mới, review nội dung theo `VERIFY.md`, hoặc kiểm tra/cập nhật bản cài.
 - Agent thuộc diện hỗ trợ: opencode, claude, codex (chuẩn Agent Skills mở —
   cài 1 lần dùng chung).
 
 ## Bỏ qua khi
 
-- Việc thuần logic/backend, không đụng bề mặt UI/media theo định nghĩa
-  `CHARTER.md` §2. Không cố nhét mọi việc vào hệ.
+- Việc ngoài bảng routing của root `README.md` nguồn, không đụng tri thức hệ
+  theo định nghĩa `CHARTER.md` §2. Không cố nhét mọi việc vào hệ.
 
 ## Luồng tra cứu (4 bước, khớp `AGENTS.md` repo nguồn)
 
@@ -62,7 +67,8 @@ https://github.com/NietzsLe/aidomaincraft.git ~/.cache/aidomaincraft`
 
 - Mọi sửa: self-review `VERIFY.md` tới 0 FAIL (1 FAIL không merge) +
   `bash tests/test.sh` xanh + entry `CHANGELOG.md` (kèm case đã thử).
-- Đầu session chạm UI/media: chạy `doctor` + `check-update` của
+- Đầu session chạm domain đã routing: refresh cache trước (`pull --ff-only`,
+  rớt thì xóa-clone lại), rồi chạy `doctor` + `check-update` của
   `scripts/aidomaincraft_setup.py` (read-only), báo 1 dòng; `upgrade` cần user
   ok trước. Snapshot `.aidomaincraft/` cũ (CHARTER lệch) thì refresh.
 - Cấm tuyệt đối: commit log/token/PII/file local (`.relay/`, `.test/`,

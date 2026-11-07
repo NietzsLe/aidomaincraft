@@ -4,5 +4,5 @@
 # reports vOld -> vNew, and `doctor` flags outdated installs.
 # v1 = any installed block without a stamp line (all installs before this file
 # existed). Templates below are stamped `<!-- aidomaincraft <name> vN -->`.
-agents-block.md v7
-claude-block.md v7
+agents-block.md v8
+claude-block.md v8

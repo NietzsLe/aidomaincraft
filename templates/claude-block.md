@@ -1,26 +1,31 @@
 <!-- BEGIN aidomaincraft -->
-<!-- aidomaincraft claude-block v7 -->
+<!-- aidomaincraft claude-block v8 -->
 ## Aidomaincraft — usecase lookup
 
-This project can use **aidomaincraft** (UI + media lookup). The full rules live
+This project can use **aidomaincraft** (usecase-first lookup; covered domains
+are listed in the source root `README.md` routing table, not here). The full rules live
 in the `aidomaincraft` block of `AGENTS.md` (or in the source repo when that
 file is absent).
 
 - Source: `https://github.com/NietzsLe/aidomaincraft.git` (ref `main`).
-- When: UI task (page system, React effect, sample landing) or media task
-  (launch video, deck, OG image). Otherwise skip.
+- When: any task matching a row of the source root `README.md` routing table
+  (UI, media, game, reverse, seo, automation, or later domains). No matching
+  row → skip.
 - Lookup: source `CHARTER.md` + root `README.md` → `domains/<d>/README.md` →
   `domains/<d>/using-<x>.md` → `items/<x>/README.md` (single source of truth).
-- Fetch when missing:
+  Full item list: `items/REGISTRY.md` (never treat the block's examples as complete).
+- Fetch when missing or stale (cache is disposable, never trust it blind):
+  refresh with `git -C ~/.cache/aidomaincraft pull --ff-only` (on failure:
+  delete the cache dir and re-clone), else
   `git clone --depth 1 --branch main https://github.com/NietzsLe/aidomaincraft.git ~/.cache/aidomaincraft`
   (fallback `/tmp/aidomaincraft`); offline → use local `.aidomaincraft/` if
-  present, else say missing instead of guessing.
+  present, else say missing (with copy + version) instead of guessing.
 - System runtime vs in-runtime intake (same rule as `AGENTS.md`, `CHARTER.md`
   §10): runtime only reads/uses; uncovered jobs become drafts under
   git-ignored `.aidomaincraft/drafts/<x>/` + local index (never source
   `items/REGISTRY.md`, never commit), promoted back via `src/` + PR.
 - Agent-first versions (user only talks, you run the commands): session start
-  on a UI/media task → run the same `doctor` + `check-update` as `AGENTS.md`
+  on a routed-domain task → refresh the cache, then run the same `doctor` + `check-update` as `AGENTS.md`
   yourself, report one plain line; plain asks map to `version` /
   `check-update` / CHANGELOG summary / `upgrade` (needs user ok first).
 - Router skill (one-time per agent): same rule as `AGENTS.md` — if the

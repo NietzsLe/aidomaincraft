@@ -21,6 +21,7 @@
 | Hiểu app/binary/website có evidence để rebuild (reverse) | `domains/reverse/` |
 | Audit SEO site (technical, GEO, drift, report) | `domains/seo/` |
 | Chạy job OpenCode định kỳ (lịch prompt, polling, nhắc việc) | `domains/automation/` |
+| Tra cứu đối thủ/license/độ sống của tool (thẩm tra item mới, chọn hệ) | `domains/lookup/` |
 | Xem gốc 1 tool (cài đặt, cơ chế, giá, review) | `items/<tool>/` |
 | Lĩnh vực khác (sau này: hardware, backend...) | thêm thư mục ngang `domains/<mới>/`, không đổi khung |
 
@@ -49,6 +50,7 @@
 | Evidence-backed app/binary/website understanding for rebuilds (reverse) | `domains/reverse/` |
 | Site SEO audit (technical, GEO, drift, reports) | `domains/seo/` |
 | Recurring OpenCode jobs (prompt schedules, polling, reminders) | `domains/automation/` |
+| Tool opponent/license/vitality lookup (new-item audits, system selection) | `domains/lookup/` |
 | One tool's origin (install, mechanism, price, reviews) | `items/<tool>/` |
 | Other domains (later: hardware, backend...) | add a sibling of `domains/<new>/`, do not change the skeleton |
 

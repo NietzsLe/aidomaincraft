@@ -9,7 +9,7 @@
 | `claude-seo` | ngoại nhập | — (ngoài repo) | seo | v9.5 |
 | `dembrandt` | ngoại nhập | — (ngoài repo) | ui | v9.4 |
 | `hallmark` | ngoại nhập | — (ngoài repo) | ui | ≤v7 |
-| `impeccable` | ngoại nhập | — (ngoài repo) | ui | v12.3 |
+| `impeccable` | ngoại nhập | — (ngoài repo) | ui | v12.4 |
 | `logo-design-skill` | ngoại nhập | — (ngoài repo) | media | v9.1 |
 | `opencode-scheduler` | ngoại nhập | — (ngoài repo) | automation | v12.1 |
 | `rea` | ngoại nhập | — (ngoài repo) | reverse | v9.6 |

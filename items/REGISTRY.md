@@ -11,6 +11,7 @@
 | `hallmark` | ngoại nhập | — (ngoài repo) | ui | ≤v7 |
 | `impeccable` | ngoại nhập | — (ngoài repo) | ui | v12.4 |
 | `logo-design-skill` | ngoại nhập | — (ngoài repo) | media | v9.1 |
+| `opensourcealternatives` | ngoại nhập | — (ngoài repo) | lookup | v12.5 |
 | `opencode-scheduler` | ngoại nhập | — (ngoài repo) | automation | v12.1 |
 | `rea` | ngoại nhập | — (ngoài repo) | reverse | v9.6 |
 | `reactbits` | ngoại nhập | — (ngoài repo) | ui | ≤v7 |

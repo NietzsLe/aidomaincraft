@@ -44,7 +44,7 @@ Usability-first lookup repo. `CHARTER.md` is the law, `VERIFY.md` is the pass/fa
 Never commit logs, tokens, or PII.
 
 <!-- BEGIN relay-logs -->
-<!-- relay-logs agents-block v4 -->
+<!-- relay-logs agents-block v7 -->
 ## Relay — cross-agent work log
 
 This project uses **agent-relay-logs** (`.relay/`). The system is local-only and
@@ -107,21 +107,32 @@ and humans must be able to read your work without asking you.
   badly estimated commands, unlogged scope drift, or `done` without `--verify`.
   Re-run with `--force` to accept the penalty.
 
-**Browser interaction (delegated — you have no browser here, and you do not need one):**
+**Browser interaction (OpenCode browse first when you are OpenCode; otherwise delegate):**
 
-Real-browser work (clicking, typing, logged-in sessions, JS-heavy rendering,
-visual verification) is still yours to order: delegate it to the `claude` CLI,
+If you are running as an OpenCode agent and you have `browse` tools available
+(OpenCode browse — MCP server + Chromium extension, see
+https://opencode.ai/product/browse — drives your real browser with your tabs,
+logins, and extensions; agent tabs open in the background, grouped out of your
+way, and can read pages, click, type, take screenshots, and record tabs, with a
+handoff back to you for login, 2FA, or payment), use them first whenever feasible
+for real-browser work (clicking, typing, logged-in sessions, JS-heavy rendering,
+visual verification). No need to be asked first.
+
+Only when OpenCode browse is unavailable or not feasible for the task,
+delegate real-browser work to the `claude` CLI,
 which drives a remote Chrome. Do this by default whenever such a task comes up
 — no need to be asked first, and no need for local Chrome:
 
 ```bash
-claude --chrome --model sonnet -p "<exactly what to do>" \
+claude --chrome --model haiku -p "<exactly what to do>" \
   --dangerously-skip-permissions --output-format text
 ```
 
 Reading a static page is not this — use `webfetch` for that. Delegate only
 when interaction is required.
-Rules: describe the expected result in the delegated prompt; never paste
+Rules: you MUST use `--model haiku` (the cheapest model) for browser delegation;
+do NOT upgrade to `sonnet`/`opus` unless the user explicitly asks. Describe the
+expected result in the delegated prompt; never paste
 secrets, tokens, or PII into it; log the delegation like any long command
 (`run --eta`); verify the outcome yourself afterwards (re-resolve, re-curl,
 re-read the page) instead of trusting the report blindly.
@@ -165,9 +176,19 @@ checking Codex first.
   (`git@github.com:NietzsLe/agent-relay-logs.git`, shallow clone is enough) and
   run its `install.sh --target .` before starting real work. If you have no
   network access to it, say so instead of working without a log.
-- Run `.relay/relay board` first anyway: if it reports your blocks OUTDATED
-  (installed vX, runtime wants vY), rerun the installer to upgrade, then
-  continue. Never work a whole session on a stale setup in silence.
+- Run `.relay/relay board` first anyway. It only compares the installed blocks
+  against the installed runtime (a local match), never against the installer
+  source: `blocks: vX match runtime vX` means local agreement, NOT "no newer
+  release exists". A stale runtime paired with a stale block (both vX while the
+  source is already vY) still reports a match — that is the outdated-blindness
+  this rule exists to prevent.
+- Source of truth for freshness is the installer checkout:
+  `python3 scripts/relay_setup.py doctor --target <this>` compares the
+  installed blocks AND the installed runtime against the current
+  templates/package. If it reports `outdated` or `stale runtime`, rerun
+  `./scripts/install.sh --target <this> --force --backup`, then continue.
+  If the installer repo is unavailable, say so and treat `board` as
+  local-only. Never work a whole session on a stale setup in silence.
 
 Rules:
 

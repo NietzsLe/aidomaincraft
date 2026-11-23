@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 <!-- BEGIN relay-logs -->
-<!-- relay-logs claude-block v4 -->
+<!-- relay-logs claude-block v7 -->
 ## Relay — cross-agent work log
 
 This project uses **agent-relay-logs** (`.relay/`). The full rules live in the
@@ -19,9 +19,14 @@ absent).
 - Finish: `.relay/relay --session <id> end --status done|partial|abandoned|blocked --summary "..." --done "..." --problem "<problem> => <fix>" --verify "..." --impact "..."`.
 - `relay tick` prints at most one line when something needs you; silence means fine.
   `end` exits 1 on gate violation (still recorded) — fix or `--force`.
-- Browser needed? You have none here — delegate by default, no need to be asked:
-  `claude --chrome --model sonnet -p "<task>" --dangerously-skip-permissions --output-format text`.
-  Static page reads are not this (use `webfetch`). Verify results yourself; never
+- Browser needed? If you are OpenCode and have `browse` tools available
+  (OpenCode browse — MCP server + Chromium extension, see
+  https://opencode.ai/product/browse — your real browser with your tabs and
+  logins), use them first when feasible. Otherwise you have none here —
+  delegate by default, no need to be asked:
+  `claude --chrome --model haiku -p "<task>" --dangerously-skip-permissions --output-format text`.
+  MUST use `--model haiku` (cheapest); never upgrade to sonnet/opus unless the user
+  explicitly asks. Static page reads are not this (use `webfetch`). Verify results yourself; never
   paste secrets into the prompt. If `claude --chrome` is unavailable, say exactly
   what is missing instead of skipping.
 - Images needed? You have no image tool here — but you do via Codex, so
@@ -31,9 +36,13 @@ absent).
   secrets into the prompt. If `codex` is unavailable, say exactly what is
   missing instead of skipping or claiming images are impossible.
 - Session start: if no `.relay/` here (fresh clone — it is git-ignored), fetch
-  the installer repo and run `install.sh --target .` first; if `board` says your
-  blocks are OUTDATED, rerun the installer to upgrade. Never work on a stale
-  setup in silence.
+  the installer repo and run `install.sh --target .` first. `board` only checks
+  a local match (blocks vs installed runtime: `match runtime vX` is NOT "no
+  newer release"); freshness source of truth is the installer checkout:
+  `python3 scripts/relay_setup.py doctor --target <this>` flags `outdated`
+  blocks and `stale runtime` — rerun the installer with `--force --backup` then.
+  If the installer repo is unavailable, say so and treat `board` as local-only.
+  Never work on a stale setup in silence.
 - Detail matters: goal/plan/accept on start, text+next on notes, done/problems/
   verify/metrics/next on end. The log is one file per day
   (`.relay/data/YYYY-MM-DD.jsonl`), cursors in `.relay/cursors/`. Local-only,
